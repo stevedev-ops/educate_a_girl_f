@@ -17,7 +17,7 @@ const SearchBar = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://eduacate-a-girl-b.onrender.com/api/search?q=${encodeURIComponent(searchQuery)}`);
+            const response = await fetch(`https://eduacate-a-girl-b-1.onrender.com/api/search?q=${encodeURIComponent(searchQuery)}`);
             const data = await response.json();
             if (data.message === 'success') {
                 setResults(data.data);

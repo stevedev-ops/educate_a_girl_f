@@ -13,7 +13,7 @@ const OrderConfirmation = () => {
 
     const fetchOrder = async () => {
         try {
-            const response = await fetch(`https://eduacate-a-girl-b.onrender.com/api/orders/${orderId}`);
+            const response = await fetch(`https://eduacate-a-girl-b-1.onrender.com/api/orders/${orderId}`);
             const data = await response.json();
             if (data.message === 'success') {
                 setOrder(data.data);

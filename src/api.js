@@ -1,4 +1,4 @@
-const API_URL = 'https://eduacate-a-girl-b.onrender.com/api';
+const API_URL = 'https://eduacate-a-girl-b-1.onrender.com/api';
 
 export const getImageUrl = (path) => {
     if (!path) return '';
