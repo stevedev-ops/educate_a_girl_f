@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Educate a Rural Girl - Checkout</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b981", // Emerald 500 - Green Primary
+                        "primary-dark": "#059669", // Emerald 600
+                        "accent": "#9333ea", // Purple 600 - Purple Accent
+                        "accent-dark": "#7e22ce", // Purple 700
+                        "background-light": "#fdfbfc",
+                        "background-dark": "#111e21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c30",
+                        "border-light": "#a7f3d0", // Emerald 200 - Light green border to match primary
+                        "border-dark": "#2a4247",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary/30">
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        <div
+            class="w-full lg:w-[58%] xl:w-[60%] flex flex-col border-r border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark order-2 lg:order-1">
+            <header class="px-6 py-6 lg:px-12 lg:pt-8 flex items-center justify-between">
+                <div class="flex items-center gap-3 text-slate-900 dark:text-white">
+                    <div class="size-8 text-primary">
+                        <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold leading-tight tracking-tight text-primary-dark dark:text-primary">
+                        Educate a Rural Girl</h2>
+                </div>
+            </header>
+            <div class="px-6 lg:px-12 py-2">
+                <nav class="flex flex-wrap items-center gap-2 text-sm font-medium">
+                    <a class="text-primary hover:text-primary-dark transition-colors" href="#">Cart</a>
+                    <span class="text-slate-400 material-symbols-outlined text-sm">chevron_right</span>
+                    <a class="text-primary hover:text-primary-dark transition-colors" href="#">Information</a>
+                    <span class="text-slate-400 material-symbols-outlined text-sm">chevron_right</span>
+                    <span class="text-slate-900 dark:text-white font-bold">Shipping</span>
+                    <span class="text-slate-400 material-symbols-outlined text-sm">chevron_right</span>
+                    <span class="text-slate-500 dark:text-slate-400">Payment</span>
+                </nav>
+            </div>
+            <div class="flex-1 px-6 lg:px-12 py-6 max-w-2xl mx-auto lg:mx-0 w-full">
+                <section class="mb-10">
+                    <div class="flex justify-between items-baseline mb-4">
+                        <h2 class="text-xl font-bold tracking-tight">Contact Information</h2>
+                        <div class="text-sm text-slate-500 dark:text-slate-400">
+                            Already have an account? <a class="text-primary hover:underline" href="#">Log in</a>
+                        </div>
+                    </div>
+                    <div class="grid gap-4">
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Email
+                                address</span>
+                            <input
+                                class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow placeholder:text-slate-400"
+                                placeholder="user@example.com" type="email" />
+                        </label>
+                        <div class="flex items-center gap-2">
+                            <input
+                                class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary dark:bg-surface-dark dark:border-border-dark"
+                                id="newsletter" type="checkbox" />
+                            <label class="text-sm text-slate-600 dark:text-slate-400" for="newsletter">Email me with
+                                news and offers</label>
+                        </div>
+                    </div>
+                </section>
+                <section class="mb-10">
+                    <h2 class="text-xl font-bold tracking-tight mb-4">Shipping Address</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">First
+                                name</span>
+                            <input
+                                class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
+                                type="text" />
+                        </label>
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Last
+                                name</span>
+                            <input
+                                class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
+                                type="text" />
+                        </label>
+                        <label class="block md:col-span-2">
+                            <span
+                                class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Address</span>
+                            <input
+                                class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
+                                placeholder="123 Ocean Drive" type="text" />
+                        </label>
+                        <label class="block md:col-span-2">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Apartment,
+                                suite, etc. (optional)</span>
+                            <input
+                                class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
+                                type="text" />
+                        </label>
+                        <label class="block">
+                            <span
+                                class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">City</span>
+                            <input
+                                class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
+                                type="text" />
+                        </label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="block">
+                                <span
+                                    class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Country</span>
+                                <select
+                                    class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow">
+                                    <option>USA</option>
+                                    <option>Canada</option>
+                                    <option>UK</option>
+                                </select>
+                            </label>
+                            <label class="block">
+                                <span class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Postal
+                                    Code</span>
+                                <input
+                                    class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow"
+                                    type="text" />
+                            </label>
+                        </div>
+                    </div>
+                </section>
+                <section class="mb-10">
+                    <h2 class="text-xl font-bold tracking-tight mb-4">Payment Method</h2>
+                    <p class="text-sm text-slate-500 mb-4">All transactions are secure and encrypted.</p>
+                    <div class="border border-border-light dark:border-border-dark rounded-lg overflow-hidden">
+                        <div
+                            class="p-4 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <input checked=""
+                                        class="w-5 h-5 text-primary border-gray-300 focus:ring-primary dark:bg-surface-dark dark:border-border-dark"
+                                        id="cc" name="payment" type="radio" />
+                                    <label class="font-medium" for="cc">Credit Card</label>
+                                </div>
+                                <div class="flex gap-2 text-slate-400">
+                                    <span class="material-symbols-outlined">credit_card</span>
+                                    <span class="material-symbols-outlined">payments</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-8">
+                                <label class="block md:col-span-2">
+                                    <input
+                                        class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        placeholder="Card number" type="text" />
+                                </label>
+                                <label class="block">
+                                    <input
+                                        class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        placeholder="Expiration (MM / YY)" type="text" />
+                                </label>
+                                <label class="block">
+                                    <input
+                                        class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        placeholder="Security code" type="text" />
+                                </label>
+                                <label class="block md:col-span-2">
+                                    <input
+                                        class="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                        placeholder="Name on card" type="text" />
+                                </label>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-[#152327]">
+                            <div class="flex items-center gap-3">
+                                <input
+                                    class="w-5 h-5 text-primary border-gray-300 focus:ring-primary dark:bg-surface-dark dark:border-border-dark"
+                                    id="pp" name="payment" type="radio" />
+                                <label class="font-medium flex items-center gap-2" for="pp">
+                                    PayPal
+                                    <span class="material-symbols-outlined text-blue-600">account_balance_wallet</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="flex flex-col-reverse md:flex-row items-center justify-between gap-6 mt-8">
+                    <a class="flex items-center gap-1 text-primary font-medium hover:underline" href="#">
+                        <span class="material-symbols-outlined text-sm">arrow_back</span>
+                        Return to cart
+                    </a>
+                    <button
+                        class="w-full md:w-auto px-8 py-3 bg-primary hover:bg-primary-dark text-white font-bold rounded-lg shadow-lg shadow-primary/20 transition-all">
+                        Pay Now
+                    </button>
+                </div>
+                <div
+                    class="mt-12 pt-6 border-t border-border-light dark:border-border-dark flex gap-6 text-xs text-slate-400">
+                    <a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Refund Policy</a>
+                    <a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Shipping Policy</a>
+                    <a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Privacy Policy</a>
+                    <a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+        <div
+            class="w-full lg:w-[42%] xl:w-[40%] bg-surface-light dark:bg-surface-dark border-l border-border-light dark:border-border-dark order-1 lg:order-2">
+            <div
+                class="sticky top-0 h-full max-h-screen overflow-y-auto sidebar-scroll p-6 lg:p-12 bg-slate-50 dark:bg-surface-dark/50 lg:bg-transparent">
+                <div class="space-y-6">
+                    <div class="flex gap-4 items-center">
+                        <div
+                            class="relative size-16 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-background-dark overflow-hidden">
+                            <img alt="Product" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp8gmLa04K7UznCndoqeK3dK0J56_HKGrtYLaMD8Re7Auefol4sn-1evzQ5GWog6xRj4FVkD5VY5wDuQqRH2ENqiArfzyDLMQgQJkOHI2Wt_nk86LzhzPvA-ozCgqJYTTuMqq_zsovksLD20TarB7Qvc3Ij20yVswQ3-aiQ1eJYF_BdHuDog2u9q87sD8Tp6mXtHymn90sb2bQmpQKhROQd-KLBBfsElLxAk6n0uEQocAf-meztgDIq65LXgdz2TDSo54RPk32f1U" />
+                            <span
+                                class="absolute -top-2 -right-2 size-5 rounded-full bg-slate-500 text-white text-xs font-bold flex items-center justify-center">1</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-slate-900 dark:text-white">Handwoven Sisal Basket</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Color: Natural</p>
+                        </div>
+                        <span class="font-bold text-slate-900 dark:text-white">$45.00</span>
+                    </div>
+                    <div class="flex gap-4 items-center">
+                        <div
+                            class="relative size-16 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-background-dark overflow-hidden">
+                            <img alt="Product" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtDf-HUFd_lHqiE4ZewjpKzIW7Ynzzq9BFgqAlI6QQPCjVVAZKGcXcphFHoiE8BhAiBFaKvvzEozR3F4b5oZhF9R-CylcVnqM3i2oS5UA1lA2FAqZ8iqPI3Isw8fiKtCM2Lv4SlDe7V1OvoKX6PNR9hib5DaYCMIXtQLb3G8119Kin3ogHal2bynrxsNmiqcOtghukq8MA7l6P4ZEyvWOp-c1G9GLpyeA6DnLmJYD_JncctUbylcOpoDBcYfqoV_A2GOpzHeRJjVk" />
+                            <span
+                                class="absolute -top-2 -right-2 size-5 rounded-full bg-slate-500 text-white text-xs font-bold flex items-center justify-center">2</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-slate-900 dark:text-white">Shea Butter Soap Set</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Scent: Lavender</p>
+                        </div>
+                        <span class="font-bold text-slate-900 dark:text-white">$36.00</span>
+                    </div>
+                </div>
+                <div class="border-t border-border-light dark:border-border-dark my-6 pt-6 space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-600 dark:text-slate-400">Subtotal</span>
+                        <span class="font-bold text-slate-900 dark:text-white">$81.00</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-600 dark:text-slate-400">Shipping</span>
+                        <span class="text-sm font-medium text-slate-500">Calculated at next step</span>
+                    </div>
+                </div>
+                <div class="border-t border-border-light dark:border-border-dark pt-6">
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-lg font-bold text-slate-900 dark:text-white">Total</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-xs text-slate-400">USD</span>
+                            <span class="text-2xl font-black text-slate-900 dark:text-white">$81.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 bg-primary/10 border border-primary/20 rounded-lg p-4 flex gap-3">
+                    <span class="material-symbols-outlined text-primary">volunteer_activism</span>
+                    <p class="text-xs text-slate-700 dark:text-slate-300">
+                        <span class="font-bold text-primary-dark dark:text-primary">Thank you!</span> your purchase will
+                        provide 3 days of meals for a student.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

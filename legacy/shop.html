@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Educate a Rural Girl - Shop with Purpose</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a34a", // Green 600 - Main Brand Color
+                        "secondary": "#7c3aed", // Purple 600 - Accents
+                        "background-light": "#f0fdf4", // Very slight green tint (Green 50)
+                        "background-dark": "#022c22", // Dark green-black
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#064e3b", // Dark green surface
+                        "text-main-light": "#052e16", // Deep green-black
+                        "text-main-dark": "#ecfdf5", // Light green-white
+                        "text-muted-light": "#4b5563", // Neutral grey
+                        "text-muted-dark": "#9ca3af",
+                        "border-light": "#dcfce7", // Green 100 border
+                        "border-dark": "#14532d",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-text-main-light dark:text-text-main-dark transition-colors duration-200 min-h-screen flex flex-col">
+    <header
+        class="sticky top-0 z-50 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark px-4 lg:px-10 py-3 shadow-sm">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between whitespace-nowrap">
+            <div class="flex items-center gap-4">
+                <div class="size-8 text-primary">
+                    <svg class="w-full h-full" fill="currentColor" viewBox="0 0 48 48"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z">
+                        </path>
+                    </svg>
+                </div>
+                <h2 class="text-lg font-bold leading-tight tracking-[-0.015em] hidden sm:block">Educate a Rural Girl
+                </h2>
+            </div>
+            <div class="flex flex-1 justify-end items-center gap-4 lg:gap-8">
+                <nav class="hidden md:flex items-center gap-6 lg:gap-9">
+                    <a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Home</a>
+                    <a class="text-sm font-medium leading-normal hover:text-primary transition-colors"
+                        href="#">About</a>
+                    <a class="text-sm font-medium leading-normal text-primary" href="#">Shop</a>
+                    <a class="text-sm font-medium leading-normal hover:text-primary transition-colors"
+                        href="#">Donate</a>
+                </nav>
+                <div class="flex gap-2">
+                    <button
+                        class="flex items-center justify-center rounded-lg h-10 w-10 bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark hover:bg-primary/10 transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">search</span>
+                    </button>
+                    <button
+                        class="flex items-center justify-center rounded-lg h-10 w-10 bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark hover:bg-primary/10 transition-colors relative">
+                        <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+                        <span class="absolute top-1 right-1 h-2 w-2 bg-secondary rounded-full"></span>
+                    </button>
+                    <button
+                        class="flex items-center justify-center rounded-lg h-10 w-10 bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark hover:bg-primary/10 transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">person</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="relative">
+        <div class="w-full flex flex-col gap-6 bg-cover bg-center bg-no-repeat min-h-[360px] items-center justify-center p-8"
+            data-alt="Abstract vibrant gradient mesh representing community and connection"
+            style='background-image: linear-gradient(rgba(20, 83, 45, 0.7) 0%, rgba(20, 83, 45, 0.9) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuB8V2Y0FPs9AQ-wkvMriEOsh6jc1DXkcceSvB6Wz6g69DuoqeYJw7xON0WZHUeb6oNHo2eEdoYAVqDMx3iiPTQlL1bmoy9F5YVRZT0EFKcJsPo-tUcOh9B4Fp-oN1SBBOPJg_29FKD-ugLND0FouT-wDlv8zZP6ijpQod34V5qn23wcEFap1b_mXCPxQvwBx9bog4wCxMl1ve70i9aJCQFEOnZJeACnolaHTrxzbpalfOd8bcZBtqj7eVDz0GzaKWJ-HNd_15WdCA0");'>
+            <div class="flex flex-col gap-3 text-center max-w-[700px] animate-fade-in-up">
+                <h1 class="text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] drop-shadow-md">
+                    Shop with Purpose
+                </h1>
+                <h2
+                    class="text-gray-100 text-base md:text-lg font-normal leading-relaxed drop-shadow-sm max-w-[500px] mx-auto">
+                    Every purchase supports our mission. 100% of proceeds go directly to the field.
+                </h2>
+            </div>
+        </div>
+    </section>
+    <div class="flex-grow layout-container w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 py-8 lg:py-12">
+        <div class="flex flex-col lg:flex-row gap-8 xl:gap-12">
+            <aside class="w-full lg:w-64 flex-shrink-0 space-y-8">
+                <div>
+                    <h2
+                        class="text-lg font-bold leading-tight tracking-[-0.015em] pb-4 border-b border-border-light dark:border-border-dark mb-4">
+                        Categories</h2>
+                    <ul class="space-y-3">
+                        <li>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input checked=""
+                                    class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-background-dark dark:border-gray-600"
+                                    type="checkbox" />
+                                <span class="text-sm font-medium group-hover:text-primary transition-colors">All
+                                    Products</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-background-dark dark:border-gray-600"
+                                    type="checkbox" />
+                                <span class="text-sm font-medium group-hover:text-primary transition-colors">Handmade
+                                    Crafts</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-background-dark dark:border-gray-600"
+                                    type="checkbox" />
+                                <span class="text-sm font-medium group-hover:text-primary transition-colors">Sustainable
+                                    Apparel</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-background-dark dark:border-gray-600"
+                                    type="checkbox" />
+                                <span class="text-sm font-medium group-hover:text-primary transition-colors">Education
+                                    Kits</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-background-dark dark:border-gray-600"
+                                    type="checkbox" />
+                                <span class="text-sm font-medium group-hover:text-primary transition-colors">Virtual
+                                    Gifts</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2
+                        class="text-lg font-bold leading-tight tracking-[-0.015em] pb-4 border-b border-border-light dark:border-border-dark mb-4">
+                        Price Range</h2>
+                    <div class="flex items-center gap-4">
+                        <input
+                            class="w-full rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark py-2 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                            placeholder="Min" type="number" />
+                        <span class="text-text-muted-light">-</span>
+                        <input
+                            class="w-full rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark py-2 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                            placeholder="Max" type="number" />
+                    </div>
+                </div>
+                <div>
+                    <h2
+                        class="text-lg font-bold leading-tight tracking-[-0.015em] pb-4 border-b border-border-light dark:border-border-dark mb-4">
+                        Impact Goal</h2>
+                    <ul class="space-y-3">
+                        <li>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-background-dark dark:border-gray-600"
+                                    type="checkbox" />
+                                <span class="text-sm font-medium group-hover:text-primary transition-colors">Supports
+                                    Education</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-background-dark dark:border-gray-600"
+                                    type="checkbox" />
+                                <span
+                                    class="text-sm font-medium group-hover:text-primary transition-colors">Eco-Friendly</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-background-dark dark:border-gray-600"
+                                    type="checkbox" />
+                                <span class="text-sm font-medium group-hover:text-primary transition-colors">Women
+                                    Empowerment</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+            <main class="flex-1 flex flex-col gap-6">
+                <div
+                    class="flex flex-col md:flex-row gap-4 items-center justify-between bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-border-light dark:border-border-dark">
+                    <label
+                        class="flex w-full md:max-w-md items-center gap-2 rounded-lg bg-background-light dark:bg-background-dark px-3 py-2 border border-transparent focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                        <span
+                            class="material-symbols-outlined text-text-muted-light dark:text-text-muted-dark">search</span>
+                        <input
+                            class="w-full bg-transparent border-none p-0 text-sm focus:ring-0 placeholder:text-text-muted-light dark:placeholder:text-text-muted-dark text-text-main-light dark:text-text-main-dark"
+                            placeholder="Search for crafts, apparel, and more..." value="" />
+                    </label>
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <span
+                            class="text-sm font-medium whitespace-nowrap text-text-muted-light dark:text-text-muted-dark hidden md:block">Sort
+                            by:</span>
+                        <div class="relative w-full md:w-48">
+                            <select
+                                class="w-full appearance-none rounded-lg bg-background-light dark:bg-background-dark border-none py-2 pl-3 pr-10 text-sm font-medium focus:ring-1 focus:ring-primary cursor-pointer text-text-main-light dark:text-text-main-dark">
+                                <option>Relevance</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                                <option>Newest Arrivals</option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted-light text-lg">expand_more</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div
+                        class="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border-light dark:border-border-dark">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100"
+                                data-alt="Handwoven basket with intricate colorful patterns"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcGOfwzn2lLP0O9xpdkKhevvV2An0zVzIRbgX6LKTTOeK0uG8wRpHM1BB-67hO4FKMol1T1xc8U8kOqiHubqQgf_2AB3IFl0qXw_QhZExBC2ANi-621sEA397h59bmwj9UuRvbQQYcZzCB7HwL5nUVmP-_AbdMVxe0LeWMdABazFl6vCUsukazKJC3EpWEKS47BCB6_RvI2ptJPOMzNy1ljfO_m9DFF2fqrWZK2pQ5X5YzvC_hIsYatsMWgNJvuK6yagorNsVhkKk" />
+                            <div class="absolute top-3 left-3">
+                                <span
+                                    class="bg-white/90 dark:bg-black/80 backdrop-blur-sm text-text-main-light dark:text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                    <span
+                                        class="material-symbols-outlined text-[14px] text-primary">volunteer_activism</span>
+                                    Fair Trade
+                                </span>
+                            </div>
+                            <button
+                                class="absolute bottom-4 right-4 h-10 w-10 bg-primary text-white rounded-full flex items-center justify-center translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 shadow-md hover:scale-110">
+                                <span class="material-symbols-outlined">add_shopping_cart</span>
+                            </button>
+                        </div>
+                        <div class="p-4 flex flex-col gap-2 flex-grow">
+                            <h3 class="text-base font-bold text-text-main-light dark:text-white line-clamp-1">Artisan
+                                Woven Basket</h3>
+                            <p class="text-xs text-text-muted-light dark:text-text-muted-dark line-clamp-1">Provides
+                                income for 3 artisans</p>
+                            <div class="flex items-center justify-between mt-auto pt-2">
+                                <span class="text-lg font-bold text-secondary">$45.00</span>
+                                <div class="flex gap-1 text-yellow-400">
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span
+                                        class="material-symbols-outlined text-[16px] fill-current text-gray-300">star</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border-light dark:border-border-dark">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100"
+                                data-alt="Canvas tote bag with minimalist leaf print"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPS-rXHURKypGuV60zLR1IW1715_lVDf9ZaJC-y5JBy8kTXkWv_0WNW4_QY03-DTbwj8QZqMoGvDNEhVlXMHh2Fl1u0soYKa2-Ilo_RCk1vgaTcW9hNEabaF3FOaD0X7r8pt5uOy3o3CLG4sCJMzPT2ncYsVhnhqOHZ-XN7VrFackHO0ODaP9DOZ1Uuv9Q3qOEdkQrajpNGo7DH78J2FkHrs0ydGyWNRjC0aB8eCqczEBN56wif0HawNawePq_SHoCpS3Cricf188" />
+                            <div class="absolute top-3 left-3">
+                                <span
+                                    class="bg-white/90 dark:bg-black/80 backdrop-blur-sm text-text-main-light dark:text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px] text-primary">eco</span>
+                                    Eco-Friendly
+                                </span>
+                            </div>
+                            <button
+                                class="absolute bottom-4 right-4 h-10 w-10 bg-primary text-white rounded-full flex items-center justify-center translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 shadow-md hover:scale-110">
+                                <span class="material-symbols-outlined">add_shopping_cart</span>
+                            </button>
+                        </div>
+                        <div class="p-4 flex flex-col gap-2 flex-grow">
+                            <h3 class="text-base font-bold text-text-main-light dark:text-white line-clamp-1">Organic
+                                Cotton Totebag</h3>
+                            <p class="text-xs text-text-muted-light dark:text-text-muted-dark line-clamp-1">Saves 500g
+                                of plastic waste</p>
+                            <div class="flex items-center justify-between mt-auto pt-2">
+                                <span class="text-lg font-bold text-secondary">$25.00</span>
+                                <div class="flex gap-1 text-yellow-400">
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border-light dark:border-border-dark ring-1 ring-primary/20">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <div class="h-full w-full bg-gradient-to-br from-green-100 to-primary/30 flex items-center justify-center"
+                                data-alt="Abstract illustration of hands holding a growing plant">
+                                <span class="material-symbols-outlined text-6xl text-primary/60">forest</span>
+                            </div>
+                            <div class="absolute top-3 left-3">
+                                <span
+                                    class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">favorite</span>
+                                    Donation
+                                </span>
+                            </div>
+                            <button
+                                class="absolute bottom-4 right-4 h-10 w-10 bg-primary text-white rounded-full flex items-center justify-center translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 shadow-md hover:scale-110">
+                                <span class="material-symbols-outlined">add_shopping_cart</span>
+                            </button>
+                        </div>
+                        <div class="p-4 flex flex-col gap-2 flex-grow">
+                            <h3 class="text-base font-bold text-text-main-light dark:text-white line-clamp-1">Plant a
+                                Tree</h3>
+                            <p class="text-xs text-text-muted-light dark:text-text-muted-dark line-clamp-1">
+                                Reforestation in Amazonia</p>
+                            <div class="flex items-center justify-between mt-auto pt-2">
+                                <span class="text-lg font-bold text-secondary">$10.00</span>
+                                <span
+                                    class="text-xs font-semibold text-text-muted-light bg-background-light dark:bg-background-dark px-2 py-1 rounded">Tax
+                                    Deductible</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border-light dark:border-border-dark">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100"
+                                data-alt="Stack of educational books and pencils"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqHcb4uvSmzMgn-FnmSe_GFq8TgQbwzVMw9YqGpoqfRWHs8yKySCdi6u4qWb2ov_5sn436AKA0ckFNaVtLFZ55tRmDO87CyOKsQMZS-Kcc_q5m2uSvT_u6u8O9yOORau5uqbKB_sFZpgom-wuDSk7HjW2kihPUiIhERpdjSB3qh-qqa1SEu35tbAlVTbFRKHafxeplQ1vOp7TWfn0hOrdovGpVKsv8WKTVf7ulIVpIHsG34JKn30Sn8XxAedjcHIlp-PvuaGFyQco" />
+                            <div class="absolute top-3 left-3">
+                                <span
+                                    class="bg-white/90 dark:bg-black/80 backdrop-blur-sm text-text-main-light dark:text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px] text-primary">school</span>
+                                    Education
+                                </span>
+                            </div>
+                            <button
+                                class="absolute bottom-4 right-4 h-10 w-10 bg-primary text-white rounded-full flex items-center justify-center translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 shadow-md hover:scale-110">
+                                <span class="material-symbols-outlined">add_shopping_cart</span>
+                            </button>
+                        </div>
+                        <div class="p-4 flex flex-col gap-2 flex-grow">
+                            <h3 class="text-base font-bold text-text-main-light dark:text-white line-clamp-1">School
+                                Supply Kit</h3>
+                            <p class="text-xs text-text-muted-light dark:text-text-muted-dark line-clamp-1">Supports one
+                                student for a year</p>
+                            <div class="flex items-center justify-between mt-auto pt-2">
+                                <span class="text-lg font-bold text-secondary">$35.00</span>
+                                <div class="flex gap-1 text-yellow-400">
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span
+                                        class="material-symbols-outlined text-[16px] fill-current text-gray-300">star</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border-light dark:border-border-dark">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100"
+                                data-alt="Clay pottery mug with rustic finish"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmnSJwS_nrvaeKHa1xSwB1TXueNunpfgp-VDJJoboIaEPQkqqBEl0P1-q5_g4_3eDhFH8H7gNMP7bwdFpX0RfEWEJCNl-J7tkPiwHWfOskCsUM6CxeTsUXJUQod4KTuO0ldyhABnlDoSvoDOGv0sqAGoNuNNG9mcgbiqP8sj9g-LHom2dwnvkjEesQynonwZEZHfmNf4mKP1MNYM5NqRjUAZftuxRc8pRlO6kCiLTQuTcB8yTO3gRzOUCc_nhcwBdcSFYNfazxvZg" />
+                            <div class="absolute top-3 left-3">
+                                <span
+                                    class="bg-white/90 dark:bg-black/80 backdrop-blur-sm text-text-main-light dark:text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px] text-orange-500">palette</span>
+                                    Artisan
+                                </span>
+                            </div>
+                            <button
+                                class="absolute bottom-4 right-4 h-10 w-10 bg-primary text-white rounded-full flex items-center justify-center translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 shadow-md hover:scale-110">
+                                <span class="material-symbols-outlined">add_shopping_cart</span>
+                            </button>
+                        </div>
+                        <div class="p-4 flex flex-col gap-2 flex-grow">
+                            <h3 class="text-base font-bold text-text-main-light dark:text-white line-clamp-1">Handmade
+                                Clay Mug</h3>
+                            <p class="text-xs text-text-muted-light dark:text-text-muted-dark line-clamp-1">Crafted by
+                                local women's coop</p>
+                            <div class="flex items-center justify-between mt-auto pt-2">
+                                <span class="text-lg font-bold text-secondary">$18.00</span>
+                                <div class="flex gap-1 text-yellow-400">
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span
+                                        class="material-symbols-outlined text-[16px] fill-current text-gray-300">star</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border-light dark:border-border-dark">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100"
+                                data-alt="Soft woven scarf on a wooden table"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA3W6hB29dRwwn4ejgelaStbUmoMq9f357Bv3g9JkekQipkphtCKs_6OhSycGnJgASHD0U4iswV7waNB3fKsXZmsEPmzf6zqjTzfG2Rvn_gMRIJgfA5w1VvkXmKrCVWwqx95kiylk4aZMNQeO3LlvUiEFXxcjtQbHsef6A012_T1YRw2_S-4xjAraoXYTJzWkqlbFWV6dQmwirpoejnqBTXE2j2GYkKmzrN4VpELAYcpNV3SE1WNBOqf-YeKoOVJCdoi8Gex2iH8o" />
+                            <div class="absolute top-3 left-3">
+                                <span
+                                    class="bg-white/90 dark:bg-black/80 backdrop-blur-sm text-text-main-light dark:text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px] text-primary">checkroom</span>
+                                    Apparel
+                                </span>
+                            </div>
+                            <button
+                                class="absolute bottom-4 right-4 h-10 w-10 bg-primary text-white rounded-full flex items-center justify-center translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 shadow-md hover:scale-110">
+                                <span class="material-symbols-outlined">add_shopping_cart</span>
+                            </button>
+                        </div>
+                        <div class="p-4 flex flex-col gap-2 flex-grow">
+                            <h3 class="text-base font-bold text-text-main-light dark:text-white line-clamp-1">Fair Trade
+                                Scarf</h3>
+                            <p class="text-xs text-text-muted-light dark:text-text-muted-dark line-clamp-1">100% Organic
+                                Wool</p>
+                            <div class="flex items-center justify-between mt-auto pt-2">
+                                <span class="text-lg font-bold text-secondary">$32.00</span>
+                                <div class="flex gap-1 text-yellow-400">
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                                    <span
+                                        class="material-symbols-outlined text-[16px] fill-current text-gray-300">star</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center pt-8">
+                    <nav class="flex gap-2">
+                        <button
+                            class="h-10 w-10 rounded-lg flex items-center justify-center border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark hover:bg-background-light dark:hover:bg-background-dark text-text-muted-light dark:text-text-muted-dark transition-colors">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <button
+                            class="h-10 w-10 rounded-lg flex items-center justify-center bg-primary text-white font-bold">1</button>
+                        <button
+                            class="h-10 w-10 rounded-lg flex items-center justify-center border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark hover:bg-background-light dark:hover:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors">2</button>
+                        <button
+                            class="h-10 w-10 rounded-lg flex items-center justify-center border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark hover:bg-background-light dark:hover:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors">3</button>
+                        <button
+                            class="h-10 w-10 rounded-lg flex items-center justify-center border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark hover:bg-background-light dark:hover:bg-background-dark text-text-muted-light dark:text-text-muted-dark transition-colors">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    </nav>
+                </div>
+            </main>
+        </div>
+    </div>
+    <footer class="bg-surface-light dark:bg-surface-dark border-t border-border-light dark:border-border-dark mt-auto">
+        <div class="layout-container px-4 lg:px-12 py-10 max-w-[1440px] mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2 text-primary">
+                        <div class="size-6">
+                            <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-text-main-light dark:text-white text-lg font-bold">Educate a Rural Girl</h2>
+                    </div>
+                    <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Empowering communities through
+                        ethical commerce. Every purchase makes a difference.</p>
+                </div>
+                <div>
+                    <h3 class="text-text-main-light dark:text-white font-bold mb-4">Shop</h3>
+                    <ul class="space-y-2 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <li><a class="hover:text-primary" href="#">All Products</a></li>
+                        <li><a class="hover:text-primary" href="#">New Arrivals</a></li>
+                        <li><a class="hover:text-primary" href="#">Gifts for Good</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-text-main-light dark:text-white font-bold mb-4">Support</h3>
+                    <ul class="space-y-2 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <li><a class="hover:text-primary" href="#">FAQs</a></li>
+                        <li><a class="hover:text-primary" href="#">Shipping &amp; Returns</a></li>
+                        <li><a class="hover:text-primary" href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-text-main-light dark:text-white font-bold mb-4">Join our Mission</h3>
+                    <div class="flex flex-col gap-3">
+                        <input
+                            class="bg-background-light dark:bg-background-dark border-none rounded-lg text-sm p-3 w-full focus:ring-1 focus:ring-primary"
+                            placeholder="Enter your email" type="email" />
+                        <button
+                            class="bg-primary text-white font-bold text-sm py-2 px-4 rounded-lg hover:bg-opacity-90 transition-opacity">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="border-t border-border-light dark:border-border-dark mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-text-muted-light dark:text-text-muted-dark">© 2023 Educate a Rural Girl. All
+                    rights reserved. Registered Non-Profit.</p>
+                <div class="flex gap-4">
+                    <span
+                        class="material-symbols-outlined text-text-muted-light dark:text-text-muted-dark text-[20px]">lock</span>
+                    <span class="text-xs text-text-muted-light dark:text-text-muted-dark self-center">Secure
+                        Checkout</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
