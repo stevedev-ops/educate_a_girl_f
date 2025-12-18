@@ -17,7 +17,7 @@ export const WishlistProvider = ({ children }) => {
 
     const fetchWishlist = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/api/wishlist/${sessionId}`, { cache: 'no-store' });
+            const response = await fetch(`https://eduacate-a-girl-b.onrender.com/api/wishlist/${sessionId}`, { cache: 'no-store' });
             const data = await response.json();
             if (data.message === 'success') {
                 setWishlistItems(data.data);
@@ -29,7 +29,7 @@ export const WishlistProvider = ({ children }) => {
 
     const addToWishlist = async (product_id) => {
         try {
-            const response = await fetch('http://localhost:3001/api/wishlist', {
+            const response = await fetch('https://eduacate-a-girl-b.onrender.com/api/wishlist', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ session_id: sessionId, product_id })
@@ -47,7 +47,7 @@ export const WishlistProvider = ({ children }) => {
 
     const removeFromWishlist = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3001/api/wishlist/${id}`, {
+            const response = await fetch(`https://eduacate-a-girl-b.onrender.com/api/wishlist/${id}`, {
                 method: 'DELETE'
             });
             const data = await response.json();
