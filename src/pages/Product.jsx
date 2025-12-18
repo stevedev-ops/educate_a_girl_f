@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
+import { getImageUrl } from '../api';
 
 const Product = () => {
     const { id } = useParams();
@@ -124,7 +125,7 @@ const Product = () => {
                         <img
                             alt={`${product.name} - Main view`}
                             className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                            src={product.images[activeImage]}
+                            src={getImageUrl(product.images[activeImage])}
                             loading="eager"
                         />
                     </div>
@@ -134,7 +135,7 @@ const Product = () => {
                                 key={idx}
                                 onClick={() => setActiveImage(idx)}
                                 className={`aspect-square overflow-hidden rounded-lg border-2 ${activeImage === idx ? 'border-primary ring-offset-2' : 'border-transparent'} hover:border-slate-300 transition-colors`}>
-                                <img alt={`View ${idx + 1}`} className="h-full w-full rounded-md object-cover" src={img} />
+                                <img alt={`View ${idx + 1}`} className="h-full w-full rounded-md object-cover" src={getImageUrl(img)} />
                             </button>
                         ))}
                     </div>
@@ -241,7 +242,7 @@ const Product = () => {
                                         <img
                                             alt={`Featured Artisan: ${product.story.author}`}
                                             className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm"
-                                            src={product.story.image}
+                                            src={getImageUrl(product.story.image)}
                                             loading="lazy"
                                         />
                                         <div>

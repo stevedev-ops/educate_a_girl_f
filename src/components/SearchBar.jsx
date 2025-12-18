@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../api';
 
 const SearchBar = () => {
     const [query, setQuery] = useState('');
@@ -61,7 +62,7 @@ const SearchBar = () => {
                                     onClick={() => setIsOpen(false)}
                                 >
                                     <img
-                                        src={product.images && JSON.parse(product.images)[0]}
+                                        src={getImageUrl(product.images && JSON.parse(product.images)[0])}
                                         alt={product.name}
                                         className="w-12 h-12 object-cover rounded"
                                         loading="lazy"

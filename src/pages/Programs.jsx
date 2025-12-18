@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useContent } from '../context/ContentContext';
 import SEO from '../components/SEO';
+import { getImageUrl } from '../api';
 
 const Programs = () => {
     const { programs } = useContent();
@@ -69,7 +70,7 @@ const Programs = () => {
                             <img
                                 alt={`Illustration for ${program.title} initiative`}
                                 className="w-full h-full object-cover"
-                                src={program.image}
+                                src={getImageUrl(program.image)}
                                 loading="lazy"
                             />
                         </div>

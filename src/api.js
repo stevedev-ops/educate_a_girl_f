@@ -1,5 +1,13 @@
 const API_URL = 'https://eduacate-a-girl-b.onrender.com/api';
 
+export const getImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http') || path.startsWith('data:')) return path;
+    const baseUrl = API_URL.replace('/api', '');
+    return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+
+
 const handleResponse = async (response) => {
     if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Unknown error' }));

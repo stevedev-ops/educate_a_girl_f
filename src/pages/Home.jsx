@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { useContent } from '../context/ContentContext';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
+import { getImageUrl } from '../api';
 
 const Home = () => {
     const { addToCart, cartItems } = useCart();
@@ -41,7 +42,7 @@ const Home = () => {
                             <img
                                 alt="Rural girls in classroom learning together"
                                 className="h-full w-full object-cover opacity-60"
-                                src={hero.image}
+                                src={getImageUrl(hero.image)}
                                 loading="eager"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
@@ -206,7 +207,7 @@ const Home = () => {
                                     <img
                                         alt={`${product.name} - Fair trade handmade product`}
                                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                        src={product.images[0]}
+                                        src={getImageUrl(product.images[0])}
                                         loading="lazy"
                                     />
                                     <div className="absolute right-3 top-3 rounded-full bg-secondary text-white px-2 py-1 text-xs font-bold shadow-sm">
@@ -257,7 +258,7 @@ const Home = () => {
                                     <img
                                         alt={`${story.name}, ${story.role} at EARG`}
                                         className="h-12 w-12 rounded-full object-cover"
-                                        src={story.image}
+                                        src={getImageUrl(story.image)}
                                         loading="lazy"
                                     />
                                     <div>

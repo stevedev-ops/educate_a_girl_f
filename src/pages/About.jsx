@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useContent } from '../context/ContentContext';
 import SEO from '../components/SEO';
+import { getImageUrl } from '../api';
 
 const About = () => {
     const { journey, team, stories, settings } = useContent();
@@ -268,7 +269,7 @@ const About = () => {
                                     <img
                                         alt={`${member.name} - ${member.role} at EARG`}
                                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        src={member.image}
+                                        src={getImageUrl(member.image)}
                                         loading="lazy"
                                     />
                                 </div>
@@ -296,7 +297,7 @@ const About = () => {
                                 <div className="flex items-center gap-4">
                                     <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden">
                                         <img
-                                            src={story.image}
+                                            src={getImageUrl(story.image)}
                                             alt={`Portrait of ${story.name}`}
                                             className="h-full w-full object-cover"
                                             loading="lazy"

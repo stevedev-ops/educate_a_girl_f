@@ -4,6 +4,7 @@ import { useContent } from '../context/ContentContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
+import { getImageUrl } from '../api';
 import SEO from '../components/SEO';
 import Pagination from '../components/Pagination';
 
@@ -191,7 +192,7 @@ const Shop = () => {
                                         <Link to={`/product/${product.id}`} key={product.id} className="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border-light dark:border-border-dark bg-white dark:bg-gray-800">
                                             <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
                                                 {/* Handle JSON parsed images vs potential array issues, though API ensures array */}
-                                                <img className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100" src={product.images && product.images[0]} alt={product.name} loading="lazy" />
+                                                <img className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100" src={getImageUrl(product.images && product.images[0])} alt={product.name} loading="lazy" />
                                                 {product.stock <= 0 && (
                                                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                                                         <span className="text-white font-black text-2xl tracking-wider">OUT OF STOCK</span>

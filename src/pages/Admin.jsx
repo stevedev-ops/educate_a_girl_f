@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useContent } from '../context/ContentContext';
 import ImageUploader from '../components/ImageUploader';
 import toast from 'react-hot-toast';
+import { getImageUrl } from '../api';
+
 
 const Admin = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -336,7 +338,7 @@ const ProductsEditor = () => {
                 <div className="grid grid-cols-1 gap-4">
                     {allProducts.map(product => (
                         <div key={product.id} className="flex gap-4 p-4 border rounded-lg dark:border-neutral-700 items-center">
-                            <img src={product.images && product.images[0]} alt={product.name} className="w-16 h-16 object-cover rounded bg-gray-100" />
+                            <img src={getImageUrl(product.images && product.images[0])} alt={product.name} className="w-16 h-16 object-cover rounded bg-gray-100" />
                             <div className="flex-1">
                                 <h3 className="font-bold dark:text-white flex items-center gap-2">
                                     {product.name}
@@ -380,7 +382,7 @@ const GalleryEditor = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {gallery.map(img => (
                     <div key={img.id} className="relative group rounded-lg overflow-hidden aspect-square border dark:border-neutral-700">
-                        <img src={img.url} className="w-full h-full object-cover" />
+                        <img src={getImageUrl(img.url)} className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <button onClick={() => removeImageFromGallery(img.id)} className="bg-red-600 text-white p-2 rounded-full">
                                 <span className="material-symbols-outlined">delete</span>
@@ -638,7 +640,7 @@ const TeamEditor = () => {
                             </div>
                         ) : (
                             <div className="flex gap-4 items-center">
-                                <img src={member.image} alt={member.name} className="size-12 rounded-full object-cover" />
+                                <img src={getImageUrl(member.image)} alt={member.name} className="size-12 rounded-full object-cover" />
                                 <div className="flex-1">
                                     <h3 className="font-bold dark:text-white">{member.name}</h3>
                                     <p className="text-xs text-primary">{member.role}</p>
