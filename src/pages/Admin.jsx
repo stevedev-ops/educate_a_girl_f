@@ -225,7 +225,11 @@ const ProductsEditor = () => {
 
     const startEdit = (product) => {
         setEditingId(product.id);
-        const p = { ...product, isHomeFeatured: homeProductIds.includes(product.id) };
+        const p = {
+            ...product,
+            isHomeFeatured: homeProductIds.includes(product.id),
+            stock: product.stock !== undefined ? product.stock : 0
+        };
         setFormData(p);
     };
 
