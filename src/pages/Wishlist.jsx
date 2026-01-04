@@ -3,6 +3,7 @@ import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
+import { getImageUrl } from '../api';
 
 const Wishlist = () => {
     const { cartItems, addToCart } = useCart();
@@ -52,7 +53,7 @@ const Wishlist = () => {
                     {wishlistItems.map((item) => (
                         <div key={item.id} className="bg-white dark:bg-surface-dark rounded-lg shadow-md overflow-hidden">
                             <Link to={`/product/${item.product_id}`}>
-                                <img src={item.images[0]} alt={`${item.name} - Saved in my wishlist`} className="w-full h-48 object-cover" loading="lazy" />
+                                <img src={getImageUrl(item.images[0])} alt={`${item.name} - Saved in my wishlist`} className="w-full h-48 object-cover" loading="lazy" />
                             </Link>
                             <div className="p-4">
                                 <Link to={`/product/${item.product_id}`}>

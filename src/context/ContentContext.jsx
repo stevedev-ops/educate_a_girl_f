@@ -49,7 +49,25 @@ export const ContentProvider = ({ children }) => {
                     fetchSettings('contact_info'), fetchSettings('impact_stats'), fetchSettings('home_hero'), fetchSettings('about_hero')
                 ]);
 
-                setAllProducts(p || []);
+                const normalizedProducts = (p || []).map(product => {
+                    if (typeof product.images === 'string') {
+                        try { product.images = JSON.parse(product.images); }
+                        catch (e) { product.images = []; }
+                    }
+                    if (!Array.isArray(product.images)) product.images = [];
+
+                    if (typeof product.details === 'string') {
+                        try { product.details = JSON.parse(product.details); }
+                        catch (e) { product.details = []; }
+                    }
+                    if (typeof product.story === 'string') {
+                        try { product.story = JSON.parse(product.story); }
+                        catch (e) { product.story = null; }
+                    }
+                    return product;
+                });
+
+                setAllProducts(normalizedProducts);
                 setGallery(g || []);
                 setStories(s || []);
                 setTeam(t || []);

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getGuestId } from '../utils/identity';
+import { API_URL } from '../api';
 
 const WishlistContext = createContext();
 
@@ -17,10 +18,19 @@ export const WishlistProvider = ({ children }) => {
 
     const fetchWishlist = async () => {
         try {
-            const response = await fetch(`https://eduacate-a-girl-b.onrender.com/api/wishlist/${sessionId}`, { cache: 'no-store' });
+            const response = await fetch(`${API_URL}/wishlist/${sessionId}`, { cache: 'no-store' });
             const data = await response.json();
             if (data.message === 'success') {
-                setWishlistItems(data.data);
+                const normalizedData = (data.data || []).map(item => {
+                    if (typeof item.images === 'string') {
+                        try { item.images = JSON.parse(item.images); }
+                        catch (e) { item.images = []; }
+                    }
+                    if (!Array.isArray(item.images)) item.images = [];
+                    item.price = parseFloat(item.price) || 0;
+                    return item;
+                });
+                setWishlistItems(normalizedData);
             }
         } catch (error) {
             console.error('Failed to fetch wishlist:', error);
@@ -29,7 +39,7 @@ export const WishlistProvider = ({ children }) => {
 
     const addToWishlist = async (product_id) => {
         try {
-            const response = await fetch('https://eduacate-a-girl-b.onrender.com/api/wishlist', {
+            const response = await fetch(`${API_URL}/wishlist`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ session_id: sessionId, product_id })
@@ -47,7 +57,7 @@ export const WishlistProvider = ({ children }) => {
 
     const removeFromWishlist = async (id) => {
         try {
-            const response = await fetch(`https://eduacate-a-girl-b.onrender.com/api/wishlist/${id}`, {
+            const response = await fetch(`${API_URL}/wishlist/${id}`, {
                 method: 'DELETE'
             });
             const data = await response.json();

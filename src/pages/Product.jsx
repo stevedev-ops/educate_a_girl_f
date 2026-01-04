@@ -38,8 +38,29 @@ const Product = () => {
             fetchProductById(id),
             fetchProductReviews(id)
         ]).then(([productData, reviewsData]) => {
+            // Normalize product data
+            if (productData) {
+                if (typeof productData.images === 'string') {
+                    try { productData.images = JSON.parse(productData.images); }
+                    catch (e) { productData.images = []; }
+                }
+                if (!Array.isArray(productData.images)) productData.images = [];
+
+                if (typeof productData.details === 'string') {
+                    try { productData.details = JSON.parse(productData.details); }
+                    catch (e) { productData.details = []; }
+                }
+                if (typeof productData.story === 'string') {
+                    try { productData.story = JSON.parse(productData.story); }
+                    catch (e) { productData.story = null; }
+                }
+            }
             setProduct(productData);
             setReviews(reviewsData);
+            setLoading(false);
+        }).catch(err => {
+            console.error("Failed to fetch product:", err);
+            toast.error("Failed to load product details");
             setLoading(false);
         });
     }, [id]);
@@ -155,7 +176,7 @@ const Product = () => {
                             {product.name}
                         </h1>
                         <div className="flex items-end gap-3">
-                            <span className="text-3xl font-bold text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
+                            <span className="text-3xl font-bold text-slate-900 dark:text-white">${parseFloat(product.price).toFixed(2)}</span>
                         </div>
                     </div>
                     <div className="mb-8 rounded-xl bg-secondary/10 border border-secondary/20 p-4 flex items-start gap-4">
