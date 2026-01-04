@@ -1,7 +1,17 @@
-const API_URL = 'https://eduacate-a-girl-b-1.onrender.com/api';
+const API_URL = 'https://eduacate-a-girl-b.onrender.com/api';
 
 export const getImageUrl = (path) => {
     if (!path) return '';
+    // If it's a JSON string like '["..."]', take the first item
+    if (typeof path === 'string' && path.startsWith('[')) {
+        try {
+            const parsed = JSON.parse(path);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                path = parsed[0];
+            }
+        } catch (e) { /* ignore */ }
+    }
+    if (typeof path !== 'string') return '';
     if (path.startsWith('http') || path.startsWith('data:')) return path;
     const baseUrl = API_URL.replace('/api', '');
     return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;

@@ -258,11 +258,11 @@ const Shop = () => {
                                                     <div className="flex flex-col">
                                                         {product.offerPrice ? (
                                                             <>
-                                                                <span className="text-sm text-gray-400 line-through">${product.price.toFixed(2)}</span>
-                                                                <span className="text-lg font-bold text-red-600">${product.offerPrice.toFixed(2)}</span>
+                                                                <span className="text-sm text-gray-400 line-through">${parseFloat(product.price).toFixed(2)}</span>
+                                                                <span className="text-lg font-bold text-red-600">${parseFloat(product.offerPrice).toFixed(2)}</span>
                                                             </>
                                                         ) : (
-                                                            <span className="text-lg font-bold text-secondary">${product.price.toFixed(2)}</span>
+                                                            <span className="text-lg font-bold text-secondary">${parseFloat(product.price).toFixed(2)}</span>
                                                         )}
                                                     </div>
                                                     <div className="flex gap-1 text-yellow-400">
