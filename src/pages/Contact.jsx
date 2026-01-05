@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useContent } from '../context/ContentContext';
 import SEO from '../components/SEO';
+import { sanitizeText } from '../utils/validation';
 
 const Contact = () => {
     const { settings, sendContactMessage } = useContent();
@@ -47,10 +48,11 @@ const Contact = () => {
         setErrors({});
 
         try {
+            // Sanitize all inputs before sending
             await sendContactMessage({
-                name: `${formData.firstName} ${formData.lastName}`,
-                email: formData.email,
-                message: formData.message
+                name: sanitizeText(`${formData.firstName} ${formData.lastName}`),
+                email: sanitizeText(formData.email),
+                message: sanitizeText(formData.message)
             });
 
             setSubmitted(true);
@@ -169,8 +171,8 @@ const Contact = () => {
                             <button
                                 disabled={loading || submitted}
                                 className={`w-full font-bold py-4 rounded-lg shadow-lg transition-all transform ${loading || submitted
-                                        ? 'bg-gray-400 cursor-not-allowed'
-                                        : 'bg-primary hover:bg-primary-dark hover:shadow-xl active:scale-[0.98] text-white'
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-primary hover:bg-primary-dark hover:shadow-xl active:scale-[0.98] text-white'
                                     }`}
                             >
                                 {loading ? (

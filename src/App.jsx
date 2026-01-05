@@ -16,33 +16,55 @@ import Wishlist from './pages/Wishlist';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import NotFound from './pages/NotFound';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
-    <Routes>
-      {/* Admin Route - Standalone (No Header/Footer) */}
-      <Route path="/admin" element={<Admin />} />
+    <ErrorBoundary title="Application Error" message="The app encountered an unexpected error.">
+      <Routes>
+        {/* Admin Route - Standalone with own error boundary */}
+        <Route path="/admin" element={
+          <ErrorBoundary title="Admin Panel Error" message="The admin panel encountered an error.">
+            <Admin />
+          </ErrorBoundary>
+        } />
 
-      {/* Public Routes - With Header/Footer Layout */}
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="programs" element={<Programs />} />
-        <Route path="gallery" element={<Gallery />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="donate" element={<Donate />} />
-        <Route path="shop" element={<Shop />} />
-        <Route path="product/:id" element={<Product />} />
-        <Route path="wishlist" element={<Wishlist />} />
-        <Route path="privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="terms-of-service" element={<TermsOfService />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
+        {/* Public Routes - With Header/Footer Layout */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="programs" element={<Programs />} />
+          <Route path="gallery" element={<Gallery />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="donate" element={<Donate />} />
 
-      {/* Checkout Routes - Standalone (No Header/Footer) */}
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
-    </Routes>
+          {/* Shop routes with error boundary */}
+          <Route path="shop" element={
+            <ErrorBoundary title="Shop Error" message="We couldn't load the shop.">
+              <Shop />
+            </ErrorBoundary>
+          } />
+          <Route path="product/:id" element={
+            <ErrorBoundary title="Product Error" message="We couldn't load this product.">
+              <Product />
+            </ErrorBoundary>
+          } />
+
+          <Route path="wishlist" element={<Wishlist />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="terms-of-service" element={<TermsOfService />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+
+        {/* Checkout Routes - Standalone */}
+        <Route path="/checkout" element={
+          <ErrorBoundary title="Checkout Error" message="There was an issue with checkout.">
+            <Checkout />
+          </ErrorBoundary>
+        } />
+        <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+      </Routes>
+    </ErrorBoundary>
   );
 }
 

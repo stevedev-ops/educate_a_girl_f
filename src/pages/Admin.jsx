@@ -3,6 +3,7 @@ import { useContent } from '../context/ContentContext';
 import ImageUploader from '../components/ImageUploader';
 import toast from 'react-hot-toast';
 import { getImageUrl } from '../api';
+import { validateProduct, sanitizeText } from '../utils/validation';
 
 
 const Admin = () => {
@@ -20,7 +21,7 @@ const Admin = () => {
                             <span className="material-symbols-outlined text-primary text-4xl">admin_panel_settings</span>
                         </div>
                         <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Admin Panel</h1>
-                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-2">Educate A Girl Foundation</p>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-2">Educate A RURAL Girl Foundation</p>
                     </div>
                     <div className="flex flex-col gap-4">
                         <div>
@@ -61,7 +62,7 @@ const Admin = () => {
                 <div className="flex justify-between items-center mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-700">
                     <div>
                         <h1 className="text-3xl font-bold dark:text-white">Admin Dashboard</h1>
-                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Educate A Girl Foundation - Content Management</p>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Educate A RURAL Girl Foundation - Content Management</p>
                     </div>
                     <button
                         onClick={() => setIsAuthenticated(false)}
@@ -211,11 +212,31 @@ const ProductsEditor = () => {
             tempImage: '' // Clear temp
         };
 
+        // Validate product data
+        const validation = validateProduct(productToSave);
+        if (!validation.isValid) {
+            validation.errors.forEach(error => toast.error(error));
+            return; // Stop saving if validation fails
+        }
+
+        // Sanitize text fields to prevent XSS
+        const sanitizedProduct = {
+            ...productToSave,
+            name: sanitizeText(productToSave.name),
+            description: sanitizeText(productToSave.description),
+            material: sanitizeText(productToSave.material),
+            dimensions: sanitizeText(productToSave.dimensions),
+            origin: sanitizeText(productToSave.origin),
+            impact: sanitizeText(productToSave.impact)
+        };
+
         // Strip UI-only fields if needed, but API ignores extras
         if (editingId === 'new') {
-            savedId = await addProduct(productToSave);
+            savedId = await addProduct(sanitizedProduct);
+            toast.success('Product added successfully!');
         } else {
-            await updateProduct(productToSave);
+            await updateProduct(sanitizedProduct);
+            toast.success('Product updated successfully!');
         }
 
         // Handle Home Value
