@@ -24,8 +24,17 @@ const CheckoutContent = () => {
         return currentProduct?.stock ?? 0;
     };
 
+    // Check if products data has loaded (to avoid false positives during loading)
+    const isDataLoaded = allProducts && allProducts.length > 0;
+
     // Check if any cart items are out of stock
-    const hasOutOfStockItems = cartItems.some(item => getCurrentStock(item.id) <= 0);
+    const hasOutOfStockItems = isDataLoaded && cartItems.some(item => getCurrentStock(item.id) <= 0);
+
+    // Check if any cart items have quantity exceeding available stock
+    const hasExcessQuantity = isDataLoaded && cartItems.some(item => {
+        const stock = getCurrentStock(item.id);
+        return stock > 0 && item.quantity > stock;
+    });
 
     const stripe = useStripe();
     const elements = useElements();
@@ -241,11 +250,11 @@ const CheckoutContent = () => {
                         </Link>
                         <button
                             onClick={handlePayment}
-                            disabled={isProcessing || (!stripe && paymentMethod === 'stripe') || hasOutOfStockItems}
-                            className={`w-full md:w-auto px-8 py-3 text-white font-bold rounded-lg shadow-lg transition-all flex items-center justify-center gap-2 ${hasOutOfStockItems ? 'bg-gray-400 cursor-not-allowed' :
+                            disabled={isProcessing || (!stripe && paymentMethod === 'stripe') || hasOutOfStockItems || hasExcessQuantity}
+                            className={`w-full md:w-auto px-8 py-3 text-white font-bold rounded-lg shadow-lg transition-all flex items-center justify-center gap-2 ${(hasOutOfStockItems || hasExcessQuantity) ? 'bg-gray-400 cursor-not-allowed' :
                                 paymentMethod === 'paystack' ? 'bg-secondary hover:bg-secondary-dark shadow-secondary/20' : 'bg-primary hover:bg-primary-dark shadow-primary/20'
                                 }`}>
-                            {hasOutOfStockItems ? 'Remove Out of Stock Items' : isProcessing ? 'Processing...' : `Pay $${cartTotal.toFixed(2)}`}
+                            {hasOutOfStockItems || hasExcessQuantity ? 'Adjust Cart Before Checkout' : isProcessing ? 'Processing...' : `Pay $${cartTotal.toFixed(2)}`}
                         </button>
                     </div>
                 </div>
@@ -268,6 +277,11 @@ const CheckoutContent = () => {
                                         <p className="text-xs text-slate-500 dark:text-slate-400">{item.category}</p>
                                         {isOutOfStock && (
                                             <p className="text-xs font-bold text-red-600 mt-1">⚠️ OUT OF STOCK</p>
+                                        )}
+                                        {!isOutOfStock && item.quantity > currentStock && (
+                                            <p className="text-xs font-bold text-orange-600 mt-1">
+                                                ⚠️ Only {currentStock} available (you have {item.quantity} in cart)
+                                            </p>
                                         )}
                                         <div className="flex items-center gap-2 mt-2">
                                             <button
@@ -315,6 +329,11 @@ const CheckoutContent = () => {
                     {hasOutOfStockItems && (
                         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 my-4">
                             <p className="text-sm font-bold text-red-800 dark:text-red-200">⚠️ Some items in your cart are now out of stock. Please remove them before checkout.</p>
+                        </div>
+                    )}
+                    {!hasOutOfStockItems && hasExcessQuantity && (
+                        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4 my-4">
+                            <p className="text-sm font-bold text-orange-800 dark:text-orange-200">⚠️ Some items in your cart exceed available stock. Please reduce quantities before checkout.</p>
                         </div>
                     )}
                     <div className="border-t border-border-light dark:border-border-dark pt-6">
