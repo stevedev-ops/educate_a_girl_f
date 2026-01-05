@@ -727,212 +727,280 @@ const SettingsEditor = () => {
                                 onChange={e => updateSetting(section, { ...data, [key]: e.target.value })}
                             />
                         ) : null}
-                        {/* Complex objects like stats array require more complex UI, skipping for simplicity or simplified to JSON string area */}
+                        {section === 'impact_stats' && Array.isArray(data) && (
+                            <div className="space-y-4">
+                                {data.map((item, idx) => (
+                                    <div key={idx} className="p-4 border rounded bg-white dark:bg-neutral-800 dark:border-neutral-700 relative group">
+                                        <button
+                                            onClick={() => {
+                                                const newData = [...data];
+                                                newData.splice(idx, 1);
+                                                updateSetting(section, newData);
+                                            }}
+                                            className="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <span className="material-symbols-outlined">delete</span>
+                                        </button>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 mb-1">Label</label>
+                                                <input
+                                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                                    value={item.label}
+                                                    onChange={e => {
+                                                        const newData = [...data];
+                                                        newData[idx] = { ...item, label: e.target.value };
+                                                        updateSetting(section, newData);
+                                                    }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 mb-1">Value</label>
+                                                <input
+                                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                                    value={item.value}
+                                                    onChange={e => {
+                                                        const newData = [...data];
+                                                        newData[idx] = { ...item, value: e.target.value };
+                                                        updateSetting(section, newData);
+                                                    }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 mb-1">Icon (Material Symbol)</label>
+                                                <input
+                                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                                    value={item.icon}
+                                                    onChange={e => {
+                                                        const newData = [...data];
+                                                        newData[idx] = { ...item, icon: e.target.value };
+                                                        updateSetting(section, newData);
+                                                    }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 mb-1">Trend</label>
+                                                <input
+                                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                                    value={item.trend}
+                                                    onChange={e => {
+                                                        const newData = [...data];
+                                                        newData[idx] = { ...item, trend: e.target.value };
+                                                        updateSetting(section, newData);
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                <button
+                                    onClick={() => updateSetting(section, [...data, { label: 'New Stat', value: '0', icon: 'star', trend: '+0%' }])}
+                                    className="w-full py-2 bg-secondary/10 text-secondary font-bold rounded hover:bg-secondary/20 dashed border-2 border-secondary/30"
+                                >
+                                    + Add Statistic
+                                </button>
+                            </div>
+                        )}
                     </div>
-                ))}
-                {section === 'impact_stats' && (
-                    <p className="text-sm text-gray-500">Note: Stats are complex objects. Ideally implemented with list editor. For now, use Seed Data.</p>
-                )}
-            </div>
-        );
+                );
     };
 
-    return (
-        <div>
-            <h2 className="text-xl font-bold mb-6 dark:text-white">General Settings</h2>
-            <div className="flex gap-2 mb-6">
-                {['contact_info', 'home_hero', 'about_hero', 'impact_stats'].map(s => (
-                    <button key={s} onClick={() => setSection(s)} className={`px-4 py-2 rounded-lg font-medium ${section === s ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-neutral-700 dark:text-white'}`}>
-                        {s.replace('_', ' ')}
-                    </button>
-                ))}
-            </div>
-            <div className="p-4 border rounded dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900">
-                {settings[section] ? renderForm() : <p>Loading...</p>}
-            </div>
-        </div>
-    );
+                return (
+                <div>
+                    <h2 className="text-xl font-bold mb-6 dark:text-white">General Settings</h2>
+                    <div className="flex gap-2 mb-6">
+                        {['contact_info', 'home_hero', 'about_hero', 'impact_stats'].map(s => (
+                            <button key={s} onClick={() => setSection(s)} className={`px-4 py-2 rounded-lg font-medium ${section === s ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-neutral-700 dark:text-white'}`}>
+                                {s.replace('_', ' ')}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="p-4 border rounded dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900">
+                        {settings[section] ? renderForm() : <p>Loading...</p>}
+                    </div>
+                </div>
+                );
 };
 
 const MessagesViewer = () => {
-    const { messages, markMessageRead, deleteMessage } = useContent();
-    const [filter, setFilter] = useState('all'); // all, unread
-    const [search, setSearch] = useState('');
-    const [expandedId, setExpandedId] = useState(null);
+    const {messages, markMessageRead, deleteMessage} = useContent();
+                const [filter, setFilter] = useState('all'); // all, unread
+                const [search, setSearch] = useState('');
+                const [expandedId, setExpandedId] = useState(null);
 
     const filteredMessages = messages.filter(m => {
         const matchesFilter = filter === 'all' || (filter === 'unread' && !m.read);
-        const matchesSearch = m.name.toLowerCase().includes(search.toLowerCase()) ||
-            m.email.toLowerCase().includes(search.toLowerCase()) ||
-            m.message.toLowerCase().includes(search.toLowerCase());
-        return matchesFilter && matchesSearch;
+                const matchesSearch = m.name.toLowerCase().includes(search.toLowerCase()) ||
+                m.email.toLowerCase().includes(search.toLowerCase()) ||
+                m.message.toLowerCase().includes(search.toLowerCase());
+                return matchesFilter && matchesSearch;
     });
 
     const unreadCount = messages.filter(m => !m.read).length;
 
     const handleToggle = (msg) => {
         if (expandedId === msg.id) {
-            setExpandedId(null);
+                    setExpandedId(null);
         } else {
-            setExpandedId(msg.id);
-            if (!msg.read) {
-                markMessageRead(msg.id, true);
+                    setExpandedId(msg.id);
+                if (!msg.read) {
+                    markMessageRead(msg.id, true);
             }
         }
     };
 
     const handleDelete = (id) => {
         if (confirm('Are you sure you want to delete this message?')) {
-            deleteMessage(id);
-            if (expandedId === id) setExpandedId(null);
+                    deleteMessage(id);
+                if (expandedId === id) setExpandedId(null);
         }
     };
 
-    return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold dark:text-white">
-                    Inbox <span className="text-sm font-normal text-gray-500 ml-2">({unreadCount} unread)</span>
-                </h2>
-                <div className="flex gap-4">
-                    <input
-                        placeholder="Search messages..."
-                        className="p-2 border rounded dark:bg-neutral-900 dark:text-white"
-                        value={search}
-                        onChange={e => setSearch(e.target.value)}
-                    />
-                    <div className="flex border rounded overflow-hidden">
-                        <button
-                            onClick={() => setFilter('all')}
-                            className={`px-4 py-2 text-sm font-medium ${filter === 'all' ? 'bg-primary text-white' : 'bg-white dark:bg-neutral-800 dark:text-gray-300'}`}
-                        >
-                            All
-                        </button>
-                        <button
-                            onClick={() => setFilter('unread')}
-                            className={`px-4 py-2 text-sm font-medium ${filter === 'unread' ? 'bg-primary text-white' : 'bg-white dark:bg-neutral-800 dark:text-gray-300'}`}
-                        >
-                            Unread
-                        </button>
+                return (
+                <div>
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-xl font-bold dark:text-white">
+                            Inbox <span className="text-sm font-normal text-gray-500 ml-2">({unreadCount} unread)</span>
+                        </h2>
+                        <div className="flex gap-4">
+                            <input
+                                placeholder="Search messages..."
+                                className="p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                            />
+                            <div className="flex border rounded overflow-hidden">
+                                <button
+                                    onClick={() => setFilter('all')}
+                                    className={`px-4 py-2 text-sm font-medium ${filter === 'all' ? 'bg-primary text-white' : 'bg-white dark:bg-neutral-800 dark:text-gray-300'}`}
+                                >
+                                    All
+                                </button>
+                                <button
+                                    onClick={() => setFilter('unread')}
+                                    className={`px-4 py-2 text-sm font-medium ${filter === 'unread' ? 'bg-primary text-white' : 'bg-white dark:bg-neutral-800 dark:text-gray-300'}`}
+                                >
+                                    Unread
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        {filteredMessages.length === 0 ? (
+                            <p className="text-center text-gray-500 py-8">No messages found.</p>
+                        ) : (
+                            filteredMessages.map((m, i) => (
+                                <div key={m.id || i} className={`border rounded-lg transition-all ${!m.read ? 'border-primary/30 shadow-sm' : 'border-gray-200 dark:border-neutral-800'}`}>
+                                    <div
+                                        onClick={() => handleToggle(m)}
+                                        className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-900 transition-colors ${expandedId === m.id ? 'bg-gray-50 dark:bg-neutral-900' : 'bg-white dark:bg-neutral-800'}`}
+                                    >
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex-1">
+                                                <h3 className={`font-bold ${!m.read ? 'text-primary' : 'dark:text-white'}`}>
+                                                    {m.name}
+                                                    {!m.read && <span className="ml-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>}
+                                                </h3>
+                                                <div className="text-sm text-gray-500">{m.email}</div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs text-gray-400">{new Date(m.date).toLocaleDateString()}</span>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDelete(m.id);
+                                                    }}
+                                                    className="text-red-600 hover:text-red-700 p-1"
+                                                    title="Delete message"
+                                                >
+                                                    <span className="material-symbols-outlined text-[20px]">delete</span>
+                                                </button>
+                                                <span className={`material-symbols-outlined text-gray-400 transition-transform ${expandedId === m.id ? 'rotate-180' : ''}`}>
+                                                    expand_more
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {expandedId === m.id && (
+                                        <div className="px-4 pb-4 border-t dark:border-neutral-700 pt-3 bg-gray-50 dark:bg-neutral-900">
+                                            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap text-sm">{m.message}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
-            </div>
-
-            <div className="space-y-2">
-                {filteredMessages.length === 0 ? (
-                    <p className="text-center text-gray-500 py-8">No messages found.</p>
-                ) : (
-                    filteredMessages.map((m, i) => (
-                        <div key={m.id || i} className={`border rounded-lg transition-all ${!m.read ? 'border-primary/30 shadow-sm' : 'border-gray-200 dark:border-neutral-800'}`}>
-                            <div
-                                onClick={() => handleToggle(m)}
-                                className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-900 transition-colors ${expandedId === m.id ? 'bg-gray-50 dark:bg-neutral-900' : 'bg-white dark:bg-neutral-800'}`}
-                            >
-                                <div className="flex justify-between items-start">
-                                    <div className="flex-1">
-                                        <h3 className={`font-bold ${!m.read ? 'text-primary' : 'dark:text-white'}`}>
-                                            {m.name}
-                                            {!m.read && <span className="ml-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>}
-                                        </h3>
-                                        <div className="text-sm text-gray-500">{m.email}</div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-xs text-gray-400">{new Date(m.date).toLocaleDateString()}</span>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDelete(m.id);
-                                            }}
-                                            className="text-red-600 hover:text-red-700 p-1"
-                                            title="Delete message"
-                                        >
-                                            <span className="material-symbols-outlined text-[20px]">delete</span>
-                                        </button>
-                                        <span className={`material-symbols-outlined text-gray-400 transition-transform ${expandedId === m.id ? 'rotate-180' : ''}`}>
-                                            expand_more
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            {expandedId === m.id && (
-                                <div className="px-4 pb-4 border-t dark:border-neutral-700 pt-3 bg-gray-50 dark:bg-neutral-900">
-                                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap text-sm">{m.message}</p>
-                                </div>
-                            )}
-                        </div>
-                    ))
-                )}
-            </div>
-        </div>
-    );
+                );
 };
 
 const ReviewsManager = () => {
-    const { pendingReviews, approveReview, deleteReview } = useContent();
+    const {pendingReviews, approveReview, deleteReview} = useContent();
 
     const handleApprove = async (id) => {
-        await approveReview(id);
-        toast.success('Review approved!');
+                    await approveReview(id);
+                toast.success('Review approved!');
     };
 
     const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this review?')) {
-            await deleteReview(id);
-            toast.success('Review deleted');
+                    await deleteReview(id);
+                toast.success('Review deleted');
         }
     };
 
-    return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold dark:text-white">
-                    Pending Reviews <span className="text-sm font-normal text-gray-500 ml-2">({pendingReviews.length})</span>
-                </h2>
-            </div>
+                return (
+                <div>
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-xl font-bold dark:text-white">
+                            Pending Reviews <span className="text-sm font-normal text-gray-500 ml-2">({pendingReviews.length})</span>
+                        </h2>
+                    </div>
 
-            <div className="space-y-4">
-                {pendingReviews.length === 0 ? (
-                    <p className="text-center text-gray-500 py-8">No pending reviews.</p>
-                ) : (
-                    pendingReviews.map(review => (
-                        <div key={review.id} className="p-4 border rounded-lg dark:border-neutral-700 bg-white dark:bg-neutral-800">
-                            <div className="flex justify-between items-start mb-3">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <h3 className="font-bold dark:text-white">{review.user_name}</h3>
-                                        <span className="text-xs text-gray-500">→</span>
-                                        <span className="text-sm text-primary font-medium">{review.product_name}</span>
+                    <div className="space-y-4">
+                        {pendingReviews.length === 0 ? (
+                            <p className="text-center text-gray-500 py-8">No pending reviews.</p>
+                        ) : (
+                            pendingReviews.map(review => (
+                                <div key={review.id} className="p-4 border rounded-lg dark:border-neutral-700 bg-white dark:bg-neutral-800">
+                                    <div className="flex justify-between items-start mb-3">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <h3 className="font-bold dark:text-white">{review.user_name}</h3>
+                                                <span className="text-xs text-gray-500">→</span>
+                                                <span className="text-sm text-primary font-medium">{review.product_name}</span>
+                                            </div>
+                                            <div className="flex gap-1 mb-2">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <span key={i} className={`material-symbols-outlined text-[16px] fill-current ${i < review.rating ? 'text-amber-400' : 'text-gray-300'}`}>star</span>
+                                                ))}
+                                            </div>
+                                            {review.user_email && <p className="text-xs text-gray-500">{review.user_email}</p>}
+                                        </div>
+                                        <span className="text-xs text-gray-400">{new Date(review.created_at).toLocaleDateString()}</span>
                                     </div>
-                                    <div className="flex gap-1 mb-2">
-                                        {[...Array(5)].map((_, i) => (
-                                            <span key={i} className={`material-symbols-outlined text-[16px] fill-current ${i < review.rating ? 'text-amber-400' : 'text-gray-300'}`}>star</span>
-                                        ))}
+                                    <p className="text-gray-700 dark:text-gray-300 mb-4">{review.comment}</p>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => handleApprove(review.id)}
+                                            className="bg-green-600 text-white px-4 py-2 rounded font-bold hover:bg-green-700 transition-colors"
+                                        >
+                                            Approve
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(review.id)}
+                                            className="bg-red-600 text-white px-4 py-2 rounded font-bold hover:bg-red-700 transition-colors"
+                                        >
+                                            Delete
+                                        </button>
                                     </div>
-                                    {review.user_email && <p className="text-xs text-gray-500">{review.user_email}</p>}
                                 </div>
-                                <span className="text-xs text-gray-400">{new Date(review.created_at).toLocaleDateString()}</span>
-                            </div>
-                            <p className="text-gray-700 dark:text-gray-300 mb-4">{review.comment}</p>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => handleApprove(review.id)}
-                                    className="bg-green-600 text-white px-4 py-2 rounded font-bold hover:bg-green-700 transition-colors"
-                                >
-                                    Approve
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(review.id)}
-                                    className="bg-red-600 text-white px-4 py-2 rounded font-bold hover:bg-red-700 transition-colors"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
-        </div>
-    );
+                            ))
+                        )}
+                    </div>
+                </div>
+                );
 };
 
-export default Admin;
+                export default Admin;
