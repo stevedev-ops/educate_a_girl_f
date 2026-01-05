@@ -210,9 +210,6 @@ const Home = () => {
                                         src={getImageUrl(product.images[0])}
                                         loading="lazy"
                                     />
-                                    <div className="absolute right-3 top-3 rounded-full bg-secondary text-white px-2 py-1 text-xs font-bold shadow-sm">
-                                        Featured
-                                    </div>
                                 </div>
                                 <div className="flex flex-1 flex-col justify-between p-4">
                                     <div>
