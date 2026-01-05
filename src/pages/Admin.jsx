@@ -712,114 +712,123 @@ const ProgramsEditor = () => {
 const SettingsEditor = () => {
     const { settings, updateSetting } = useContent();
     const [section, setSection] = useState('contact_info');
+    const [localData, setLocalData] = useState(null);
 
-    // Helper to render form fields based on section
-    const renderForm = () => {
-        const data = settings[section] || {};
-        return (
-            <div className="space-y-4">
-                {Object.keys(data).map(key => (
-                    <div key={key}>
-                        <label className="block text-sm font-bold capitalize mb-1 dark:text-white">{key.replace('_', ' ')}</label>
-                        {typeof data[key] === 'string' || typeof data[key] === 'number' ? (
-                            <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
-                                value={data[key]}
-                                onChange={e => updateSetting(section, { ...data, [key]: e.target.value })}
-                            />
-                        ) : null}
-                        {section === 'impact_stats' && Array.isArray(data) && (
-                            <div className="space-y-4">
-                                {data.map((item, idx) => (
-                                    <div key={idx} className="p-4 border rounded bg-white dark:bg-neutral-800 dark:border-neutral-700 relative group">
-                                        <button
-                                            onClick={() => {
-                                                const newData = [...data];
-                                                newData.splice(idx, 1);
-                                                updateSetting(section, newData);
-                                            }}
-                                            className="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                            <span className="material-symbols-outlined">delete</span>
-                                        </button>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 mb-1">Label</label>
-                                                <input
-                                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
-                                                    value={item.label}
-                                                    onChange={e => {
-                                                        const newData = [...data];
-                                                        newData[idx] = { ...item, label: e.target.value };
-                                                        updateSetting(section, newData);
-                                                    }}
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 mb-1">Value</label>
-                                                <input
-                                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
-                                                    value={item.value}
-                                                    onChange={e => {
-                                                        const newData = [...data];
-                                                        newData[idx] = { ...item, value: e.target.value };
-                                                        updateSetting(section, newData);
-                                                    }}
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 mb-1">Icon (Material Symbol)</label>
-                                                <input
-                                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
-                                                    value={item.icon}
-                                                    onChange={e => {
-                                                        const newData = [...data];
-                                                        newData[idx] = { ...item, icon: e.target.value };
-                                                        updateSetting(section, newData);
-                                                    }}
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 mb-1">Trend</label>
-                                                <input
-                                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
-                                                    value={item.trend}
-                                                    onChange={e => {
-                                                        const newData = [...data];
-                                                        newData[idx] = { ...item, trend: e.target.value };
-                                                        updateSetting(section, newData);
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                                <button
-                                    onClick={() => updateSetting(section, [...data, { label: 'New Stat', value: '0', icon: 'star', trend: '+0%' }])}
-                                    className="w-full py-2 bg-secondary/10 text-secondary font-bold rounded hover:bg-secondary/20 dashed border-2 border-secondary/30"
-                                >
-                                    + Add Statistic
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                );
+    React.useEffect(() => {
+        setLocalData(settings[section] || {});
+    }, [section, settings]);
+
+    const handleSave = () => {
+        updateSetting(section, localData);
+        toast.success('Settings saved successfully!');
     };
 
-                return (
-                <div>
-                    <h2 className="text-xl font-bold mb-6 dark:text-white">General Settings</h2>
-                    <div className="flex gap-2 mb-6">
-                        {['contact_info', 'home_hero', 'about_hero', 'impact_stats'].map(s => (
-                            <button key={s} onClick={() => setSection(s)} className={`px-4 py-2 rounded-lg font-medium ${section === s ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-neutral-700 dark:text-white'}`}>
-                                {s.replace('_', ' ')}
-                            </button>
-                        ))}
+    if (!localData) return <p>Loading...</p>;
+
+    const renderForm = () => {
+        if (section === 'home_hero' || section === 'about_hero') {
+            const defaults = { title: '', subtitle: '', image: '' };
+            const merged = { ...defaults, ...localData };
+            return (
+                <div className="space-y-4">
+                    <div>
+                        <label className="blocktext-sm font-bold mb-1 dark:text-white">Title</label>
+                        <textarea className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" rows="2" value={merged.title || ''} onChange={e => setLocalData({ ...merged, title: e.target.value })} />
                     </div>
-                    <div className="p-4 border rounded dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900">
-                        {settings[section] ? renderForm() : <p>Loading...</p>}
+                    <div>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Subtitle</label>
+                        <textarea className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" rows="3" value={merged.subtitle || ''} onChange={e => setLocalData({ ...merged, subtitle: e.target.value })} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Background Image</label>
+                        <ImageUploader value={merged.image || ''} onChange={url => setLocalData({ ...merged, image: url })} placeholder="Image URL" />
                     </div>
                 </div>
-                );
+            );
+        }
+        if (section === 'contact_info') {
+            const defaults = { email: '', phone: '', address: '', instagram: '', facebook: '', twitter: '' };
+            const merged = { ...defaults, ...localData };
+            return (
+                <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {Object.keys(merged).map(key => (
+                            <div key={key}>
+                                <label className="block text-sm font-bold capitalize mb-1 dark:text-white">{key}</label>
+                                <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={merged[key] || ''} onChange={e => setLocalData({ ...merged, [key]: e.target.value })} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+        if (section === 'impact_stats') {
+            const data = Array.isArray(localData) ? localData : [];
+            return (
+                <div className="space-y-4">
+                    {data.map((item, idx) => (
+                        <div key={idx} className="p-4 border rounded bg-white dark:bg-neutral-800 dark:border-neutral-700 relative group">
+                            <button onClick={() => { const newData = [...data]; newData.splice(idx, 1); setLocalData(newData); }} className="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span className="material-symbols-outlined">delete</span>
+                            </button>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Label</label>
+                                    <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={item.label} onChange={e => { const newData = [...data]; newData[idx] = { ...item, label: e.target.value }; setLocalData(newData); }} />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Value</label>
+                                    <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={item.value} onChange={e => { const newData = [...data]; newData[idx] = { ...item, value: e.target.value }; setLocalData(newData); }} />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Icon</label>
+                                    <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={item.icon} onChange={e => { const newData = [...data]; newData[idx] = { ...item, icon: e.target.value }; setLocalData(newData); }} />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Trend</label>
+                                    <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={item.trend} onChange={e => { const newData = [...data]; newData[idx] = { ...item, trend: e.target.value }; setLocalData(newData); }} />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    <button onClick={() => setLocalData([...data, { label: 'New Stat', value: '0', icon: 'star', trend: '+0%' }])} className="w-full py-2 bg-secondary/10 text-secondary font-bold rounded hover:bg-secondary/20 dashed border-2 border-secondary/30">
+                        + Add Statistic
+                    </button>
+                </div>
+            );
+        }
+        return (
+            <div className="space-y-4">
+                {Object.keys(localData).map(key => (
+                    <div key={key}>
+                        <label className="block text-sm font-bold capitalize mb-1 dark:text-white">{key.replace('_', ' ')}</label>
+                        {typeof localData[key] === 'string' || typeof localData[key] === 'number' ? (
+                            <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={localData[key]} onChange={e => setLocalData({ ...localData, [key]: e.target.value })} />
+                        ) : null}
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold dark:text-white">General Settings</h2>
+                <button onClick={handleSave} className="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 shadow-md transition-colors">Save Changes</button>
+            </div>
+            <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+                {['contact_info', 'home_hero', 'about_hero', 'impact_stats'].map(s => (
+                    <button key={s} onClick={() => setSection(s)} className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${section === s ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-neutral-700 dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-600'}`}>
+                        {s.replace('_', ' ')}
+                    </button>
+                ))}
+            </div>
+            <div className="p-6 border rounded-xl dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 shadow-sm">
+                {renderForm()}
+            </div>
+        </div>
+    );
 };
 
 const MessagesViewer = () => {
