@@ -13,15 +13,22 @@ const Admin = () => {
 
     if (!isAuthenticated) {
         return (
-            <div className="flex items-center justify-center min-h-[60vh] py-20 px-4">
-                <div className="w-full max-w-md p-8 bg-white dark:bg-neutral-800 rounded-2xl shadow-lg border border-neutral-200 dark:border-neutral-700">
-                    <h1 className="text-2xl font-bold mb-6 text-center text-neutral-900 dark:text-white">Admin Access</h1>
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800 px-4">
+                <div className="w-full max-w-md p-8 bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700">
+                    <div className="text-center mb-8">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                            <span className="material-symbols-outlined text-primary text-4xl">admin_panel_settings</span>
+                        </div>
+                        <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Admin Panel</h1>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-2">Educate A Girl Foundation</p>
+                    </div>
                     <div className="flex flex-col gap-4">
                         <div>
-                            <label className="block text-sm font-medium mb-1 dark:text-neutral-300">Password</label>
+                            <label className="block text-sm font-medium mb-2 dark:text-neutral-300">Password</label>
                             <input
                                 type="password"
-                                className="w-full rounded-lg border border-neutral-300 px-4 py-2 dark:bg-neutral-900 dark:border-neutral-600 dark:text-white"
+                                className="w-full rounded-lg border border-neutral-300 px-4 py-3 dark:bg-neutral-900 dark:border-neutral-600 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                                placeholder="Enter admin password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 onKeyDown={e => {
@@ -37,8 +44,8 @@ const Admin = () => {
                                 if (password === 'admin123') setIsAuthenticated(true);
                                 else alert('Incorrect Password');
                             }}
-                            className="w-full bg-primary text-white py-2 rounded-lg font-bold hover:bg-primary-dark">
-                            Login
+                            className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary-dark transition-colors shadow-lg">
+                            Login to Dashboard
                         </button>
                     </div>
                 </div>
@@ -46,49 +53,58 @@ const Admin = () => {
         );
     }
 
-    return (
-        <div className="max-w-[1400px] mx-auto px-4 py-12">
-            <h1 className="text-3xl font-bold mb-8 dark:text-white">Admin Dashboard</h1>
 
-            <div className="flex flex-col lg:flex-row gap-8">
-                {/* Sidebar Navigation */}
-                <div className="w-full lg:w-64 flex flex-col gap-2 shrink-0">
-                    {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${activeTab === tab
-                                ? 'bg-primary text-white'
-                                : 'bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300'
-                                }`}
-                        >
-                            {tab.replace('_', ' ').charAt(0).toUpperCase() + tab.replace('_', ' ').slice(1)}
-                            {tab === 'reviews' && pendingReviews.length > 0 && (
-                                <span className="ml-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">{pendingReviews.length}</span>
-                            )}
-                        </button>
-                    ))}
+    return (
+        <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
+            <div className="max-w-[1400px] mx-auto px-4 py-8">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-700">
+                    <div>
+                        <h1 className="text-3xl font-bold dark:text-white">Admin Dashboard</h1>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Educate A Girl Foundation - Content Management</p>
+                    </div>
                     <button
                         onClick={() => setIsAuthenticated(false)}
-                        className="mt-8 text-left px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-                    >
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                        <span className="material-symbols-outlined text-xl">logout</span>
                         Logout
                     </button>
                 </div>
 
-                {/* Main Content Area */}
-                <div className="flex-1 bg-white dark:bg-neutral-800 rounded-2xl p-6 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden">
-                    {activeTab === 'products' && <ProductsEditor />}
-                    {activeTab === 'categories' && <CategoriesEditor />}
-                    {activeTab === 'gallery' && <GalleryEditor />}
-                    {activeTab === 'stories' && <StoriesEditor />}
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Sidebar Navigation */}
+                    <div className="w-full lg:w-64 flex flex-col gap-2 shrink-0">
+                        {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${activeTab === tab
+                                    ? 'bg-primary text-white shadow-md'
+                                    : 'bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300'
+                                    }`}
+                            >
+                                {tab.replace('_', ' ').charAt(0).toUpperCase() + tab.replace('_', ' ').slice(1)}
+                                {tab === 'reviews' && pendingReviews.length > 0 && (
+                                    <span className="ml-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">{pendingReviews.length}</span>
+                                )}
+                            </button>
+                        ))}
+                    </div>
 
-                    {activeTab === 'journey' && <JourneyEditor />}
-                    {activeTab === 'team' && <TeamEditor />}
-                    {activeTab === 'programs' && <ProgramsEditor />}
-                    {activeTab === 'settings' && <SettingsEditor />}
-                    {activeTab === 'messages' && <MessagesViewer />}
-                    {activeTab === 'reviews' && <ReviewsManager />}
+                    {/* Main Content Area */}
+                    <div className="flex-1 bg-white dark:bg-neutral-800 rounded-2xl p-6 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden">
+                        {activeTab === 'products' && <ProductsEditor />}
+                        {activeTab === 'categories' && <CategoriesEditor />}
+                        {activeTab === 'gallery' && <GalleryEditor />}
+                        {activeTab === 'stories' && <StoriesEditor />}
+
+                        {activeTab === 'journey' && <JourneyEditor />}
+                        {activeTab === 'team' && <TeamEditor />}
+                        {activeTab === 'programs' && <ProgramsEditor />}
+                        {activeTab === 'settings' && <SettingsEditor />}
+                        {activeTab === 'messages' && <MessagesViewer />}
+                        {activeTab === 'reviews' && <ReviewsManager />}
+                    </div>
                 </div>
             </div>
         </div>
@@ -272,7 +288,7 @@ const ProductsEditor = () => {
                             <textarea rows="3" className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-sm font-bold mb-1 dark:text-white">Image URLs (One per line)</label>
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Product Images</label>
                             <div className="mb-2 flex gap-2 items-start">
                                 <div className="flex-1">
                                     <ImageUploader
@@ -298,7 +314,114 @@ const ProductsEditor = () => {
                                     <span className="material-symbols-outlined">add</span>
                                 </button>
                             </div>
-                            <textarea rows="3" className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={formData.images ? formData.images.join('\n') : ''} onChange={e => handleArrayChange('images', e.target.value)} />
+
+                            {/* Bulk URL Textarea (for pasting multiple URLs) */}
+                            <div className="mb-3">
+                                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                                    Or paste multiple URLs (one per line):
+                                </label>
+                                <textarea
+                                    rows="2"
+                                    className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white text-xs"
+                                    placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                                    value={formData.images ? formData.images.join('\n') : ''}
+                                    onChange={e => handleArrayChange('images', e.target.value)}
+                                />
+                            </div>
+
+                            {/* Drag-and-Drop Image List */}
+                            {formData.images && formData.images.length > 0 && (
+                                <div className="space-y-2 bg-neutral-50 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-200 dark:border-neutral-700">
+                                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
+                                        <span className="material-symbols-outlined text-sm align-middle">info</span> Drag images to reorder, or use arrow buttons
+                                    </p>
+                                    {formData.images.map((img, idx) => (
+                                        <div
+                                            key={idx}
+                                            draggable
+                                            onDragStart={(e) => e.dataTransfer.setData('text/plain', idx.toString())}
+                                            onDragOver={(e) => e.preventDefault()}
+                                            onDrop={(e) => {
+                                                e.preventDefault();
+                                                const dragIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                                                const dropIdx = idx;
+                                                if (dragIdx === dropIdx) return;
+
+                                                const newImages = [...formData.images];
+                                                const [draggedItem] = newImages.splice(dragIdx, 1);
+                                                newImages.splice(dropIdx, 0, draggedItem);
+                                                setFormData({ ...formData, images: newImages });
+                                            }}
+                                            className="flex items-center gap-3 p-3 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:border-primary dark:hover:border-primary transition-colors cursor-move group"
+                                        >
+                                            {/* Drag Handle */}
+                                            <div className="flex items-center gap-2 text-neutral-400">
+                                                <span className="material-symbols-outlined text-xl">drag_indicator</span>
+                                                <span className="text-xs font-mono text-neutral-500">#{idx + 1}</span>
+                                            </div>
+
+                                            {/* Image Preview */}
+                                            <div className="w-16 h-16 rounded overflow-hidden bg-neutral-100 dark:bg-neutral-900 flex-shrink-0">
+                                                <img src={getImageUrl(img)} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" />
+                                            </div>
+
+                                            {/* Image URL */}
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{img}</p>
+                                            </div>
+
+                                            {/* Controls */}
+                                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {/* Move Up */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (idx === 0) return;
+                                                        const newImages = [...formData.images];
+                                                        [newImages[idx - 1], newImages[idx]] = [newImages[idx], newImages[idx - 1]];
+                                                        setFormData({ ...formData, images: newImages });
+                                                    }}
+                                                    disabled={idx === 0}
+                                                    className="p-1 text-neutral-600 hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed"
+                                                    title="Move up"
+                                                >
+                                                    <span className="material-symbols-outlined text-lg">arrow_upward</span>
+                                                </button>
+
+                                                {/* Move Down */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (idx === formData.images.length - 1) return;
+                                                        const newImages = [...formData.images];
+                                                        [newImages[idx], newImages[idx + 1]] = [newImages[idx + 1], newImages[idx]];
+                                                        setFormData({ ...formData, images: newImages });
+                                                    }}
+                                                    disabled={idx === formData.images.length - 1}
+                                                    className="p-1 text-neutral-600 hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed"
+                                                    title="Move down"
+                                                >
+                                                    <span className="material-symbols-outlined text-lg">arrow_downward</span>
+                                                </button>
+
+                                                {/* Delete */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const newImages = [...formData.images];
+                                                        newImages.splice(idx, 1);
+                                                        setFormData({ ...formData, images: newImages });
+                                                    }}
+                                                    className="p-1 text-red-600 hover:text-red-700"
+                                                    title="Remove image"
+                                                >
+                                                    <span className="material-symbols-outlined text-lg">delete</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         <div>
                             <label className="block text-sm font-bold mb-1 dark:text-white">Material</label>
@@ -832,184 +955,184 @@ const SettingsEditor = () => {
 };
 
 const MessagesViewer = () => {
-    const {messages, markMessageRead, deleteMessage} = useContent();
-                const [filter, setFilter] = useState('all'); // all, unread
-                const [search, setSearch] = useState('');
-                const [expandedId, setExpandedId] = useState(null);
+    const { messages, markMessageRead, deleteMessage } = useContent();
+    const [filter, setFilter] = useState('all'); // all, unread
+    const [search, setSearch] = useState('');
+    const [expandedId, setExpandedId] = useState(null);
 
     const filteredMessages = messages.filter(m => {
         const matchesFilter = filter === 'all' || (filter === 'unread' && !m.read);
-                const matchesSearch = m.name.toLowerCase().includes(search.toLowerCase()) ||
-                m.email.toLowerCase().includes(search.toLowerCase()) ||
-                m.message.toLowerCase().includes(search.toLowerCase());
-                return matchesFilter && matchesSearch;
+        const matchesSearch = m.name.toLowerCase().includes(search.toLowerCase()) ||
+            m.email.toLowerCase().includes(search.toLowerCase()) ||
+            m.message.toLowerCase().includes(search.toLowerCase());
+        return matchesFilter && matchesSearch;
     });
 
     const unreadCount = messages.filter(m => !m.read).length;
 
     const handleToggle = (msg) => {
         if (expandedId === msg.id) {
-                    setExpandedId(null);
+            setExpandedId(null);
         } else {
-                    setExpandedId(msg.id);
-                if (!msg.read) {
-                    markMessageRead(msg.id, true);
+            setExpandedId(msg.id);
+            if (!msg.read) {
+                markMessageRead(msg.id, true);
             }
         }
     };
 
     const handleDelete = (id) => {
         if (confirm('Are you sure you want to delete this message?')) {
-                    deleteMessage(id);
-                if (expandedId === id) setExpandedId(null);
+            deleteMessage(id);
+            if (expandedId === id) setExpandedId(null);
         }
     };
 
-                return (
-                <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold dark:text-white">
-                            Inbox <span className="text-sm font-normal text-gray-500 ml-2">({unreadCount} unread)</span>
-                        </h2>
-                        <div className="flex gap-4">
-                            <input
-                                placeholder="Search messages..."
-                                className="p-2 border rounded dark:bg-neutral-900 dark:text-white"
-                                value={search}
-                                onChange={e => setSearch(e.target.value)}
-                            />
-                            <div className="flex border rounded overflow-hidden">
-                                <button
-                                    onClick={() => setFilter('all')}
-                                    className={`px-4 py-2 text-sm font-medium ${filter === 'all' ? 'bg-primary text-white' : 'bg-white dark:bg-neutral-800 dark:text-gray-300'}`}
-                                >
-                                    All
-                                </button>
-                                <button
-                                    onClick={() => setFilter('unread')}
-                                    className={`px-4 py-2 text-sm font-medium ${filter === 'unread' ? 'bg-primary text-white' : 'bg-white dark:bg-neutral-800 dark:text-gray-300'}`}
-                                >
-                                    Unread
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        {filteredMessages.length === 0 ? (
-                            <p className="text-center text-gray-500 py-8">No messages found.</p>
-                        ) : (
-                            filteredMessages.map((m, i) => (
-                                <div key={m.id || i} className={`border rounded-lg transition-all ${!m.read ? 'border-primary/30 shadow-sm' : 'border-gray-200 dark:border-neutral-800'}`}>
-                                    <div
-                                        onClick={() => handleToggle(m)}
-                                        className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-900 transition-colors ${expandedId === m.id ? 'bg-gray-50 dark:bg-neutral-900' : 'bg-white dark:bg-neutral-800'}`}
-                                    >
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex-1">
-                                                <h3 className={`font-bold ${!m.read ? 'text-primary' : 'dark:text-white'}`}>
-                                                    {m.name}
-                                                    {!m.read && <span className="ml-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>}
-                                                </h3>
-                                                <div className="text-sm text-gray-500">{m.email}</div>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xs text-gray-400">{new Date(m.date).toLocaleDateString()}</span>
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDelete(m.id);
-                                                    }}
-                                                    className="text-red-600 hover:text-red-700 p-1"
-                                                    title="Delete message"
-                                                >
-                                                    <span className="material-symbols-outlined text-[20px]">delete</span>
-                                                </button>
-                                                <span className={`material-symbols-outlined text-gray-400 transition-transform ${expandedId === m.id ? 'rotate-180' : ''}`}>
-                                                    expand_more
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {expandedId === m.id && (
-                                        <div className="px-4 pb-4 border-t dark:border-neutral-700 pt-3 bg-gray-50 dark:bg-neutral-900">
-                                            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap text-sm">{m.message}</p>
-                                        </div>
-                                    )}
-                                </div>
-                            ))
-                        )}
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold dark:text-white">
+                    Inbox <span className="text-sm font-normal text-gray-500 ml-2">({unreadCount} unread)</span>
+                </h2>
+                <div className="flex gap-4">
+                    <input
+                        placeholder="Search messages..."
+                        className="p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                    />
+                    <div className="flex border rounded overflow-hidden">
+                        <button
+                            onClick={() => setFilter('all')}
+                            className={`px-4 py-2 text-sm font-medium ${filter === 'all' ? 'bg-primary text-white' : 'bg-white dark:bg-neutral-800 dark:text-gray-300'}`}
+                        >
+                            All
+                        </button>
+                        <button
+                            onClick={() => setFilter('unread')}
+                            className={`px-4 py-2 text-sm font-medium ${filter === 'unread' ? 'bg-primary text-white' : 'bg-white dark:bg-neutral-800 dark:text-gray-300'}`}
+                        >
+                            Unread
+                        </button>
                     </div>
                 </div>
-                );
+            </div>
+
+            <div className="space-y-2">
+                {filteredMessages.length === 0 ? (
+                    <p className="text-center text-gray-500 py-8">No messages found.</p>
+                ) : (
+                    filteredMessages.map((m, i) => (
+                        <div key={m.id || i} className={`border rounded-lg transition-all ${!m.read ? 'border-primary/30 shadow-sm' : 'border-gray-200 dark:border-neutral-800'}`}>
+                            <div
+                                onClick={() => handleToggle(m)}
+                                className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-900 transition-colors ${expandedId === m.id ? 'bg-gray-50 dark:bg-neutral-900' : 'bg-white dark:bg-neutral-800'}`}
+                            >
+                                <div className="flex justify-between items-start">
+                                    <div className="flex-1">
+                                        <h3 className={`font-bold ${!m.read ? 'text-primary' : 'dark:text-white'}`}>
+                                            {m.name}
+                                            {!m.read && <span className="ml-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>}
+                                        </h3>
+                                        <div className="text-sm text-gray-500">{m.email}</div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs text-gray-400">{new Date(m.date).toLocaleDateString()}</span>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(m.id);
+                                            }}
+                                            className="text-red-600 hover:text-red-700 p-1"
+                                            title="Delete message"
+                                        >
+                                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                                        </button>
+                                        <span className={`material-symbols-outlined text-gray-400 transition-transform ${expandedId === m.id ? 'rotate-180' : ''}`}>
+                                            expand_more
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            {expandedId === m.id && (
+                                <div className="px-4 pb-4 border-t dark:border-neutral-700 pt-3 bg-gray-50 dark:bg-neutral-900">
+                                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap text-sm">{m.message}</p>
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
 };
 
 const ReviewsManager = () => {
-    const {pendingReviews, approveReview, deleteReview} = useContent();
+    const { pendingReviews, approveReview, deleteReview } = useContent();
 
     const handleApprove = async (id) => {
-                    await approveReview(id);
-                toast.success('Review approved!');
+        await approveReview(id);
+        toast.success('Review approved!');
     };
 
     const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this review?')) {
-                    await deleteReview(id);
-                toast.success('Review deleted');
+            await deleteReview(id);
+            toast.success('Review deleted');
         }
     };
 
-                return (
-                <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold dark:text-white">
-                            Pending Reviews <span className="text-sm font-normal text-gray-500 ml-2">({pendingReviews.length})</span>
-                        </h2>
-                    </div>
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold dark:text-white">
+                    Pending Reviews <span className="text-sm font-normal text-gray-500 ml-2">({pendingReviews.length})</span>
+                </h2>
+            </div>
 
-                    <div className="space-y-4">
-                        {pendingReviews.length === 0 ? (
-                            <p className="text-center text-gray-500 py-8">No pending reviews.</p>
-                        ) : (
-                            pendingReviews.map(review => (
-                                <div key={review.id} className="p-4 border rounded-lg dark:border-neutral-700 bg-white dark:bg-neutral-800">
-                                    <div className="flex justify-between items-start mb-3">
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <h3 className="font-bold dark:text-white">{review.user_name}</h3>
-                                                <span className="text-xs text-gray-500">→</span>
-                                                <span className="text-sm text-primary font-medium">{review.product_name}</span>
-                                            </div>
-                                            <div className="flex gap-1 mb-2">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <span key={i} className={`material-symbols-outlined text-[16px] fill-current ${i < review.rating ? 'text-amber-400' : 'text-gray-300'}`}>star</span>
-                                                ))}
-                                            </div>
-                                            {review.user_email && <p className="text-xs text-gray-500">{review.user_email}</p>}
-                                        </div>
-                                        <span className="text-xs text-gray-400">{new Date(review.created_at).toLocaleDateString()}</span>
+            <div className="space-y-4">
+                {pendingReviews.length === 0 ? (
+                    <p className="text-center text-gray-500 py-8">No pending reviews.</p>
+                ) : (
+                    pendingReviews.map(review => (
+                        <div key={review.id} className="p-4 border rounded-lg dark:border-neutral-700 bg-white dark:bg-neutral-800">
+                            <div className="flex justify-between items-start mb-3">
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <h3 className="font-bold dark:text-white">{review.user_name}</h3>
+                                        <span className="text-xs text-gray-500">→</span>
+                                        <span className="text-sm text-primary font-medium">{review.product_name}</span>
                                     </div>
-                                    <p className="text-gray-700 dark:text-gray-300 mb-4">{review.comment}</p>
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => handleApprove(review.id)}
-                                            className="bg-green-600 text-white px-4 py-2 rounded font-bold hover:bg-green-700 transition-colors"
-                                        >
-                                            Approve
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(review.id)}
-                                            className="bg-red-600 text-white px-4 py-2 rounded font-bold hover:bg-red-700 transition-colors"
-                                        >
-                                            Delete
-                                        </button>
+                                    <div className="flex gap-1 mb-2">
+                                        {[...Array(5)].map((_, i) => (
+                                            <span key={i} className={`material-symbols-outlined text-[16px] fill-current ${i < review.rating ? 'text-amber-400' : 'text-gray-300'}`}>star</span>
+                                        ))}
                                     </div>
+                                    {review.user_email && <p className="text-xs text-gray-500">{review.user_email}</p>}
                                 </div>
-                            ))
-                        )}
-                    </div>
-                </div>
-                );
+                                <span className="text-xs text-gray-400">{new Date(review.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <p className="text-gray-700 dark:text-gray-300 mb-4">{review.comment}</p>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleApprove(review.id)}
+                                    className="bg-green-600 text-white px-4 py-2 rounded font-bold hover:bg-green-700 transition-colors"
+                                >
+                                    Approve
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(review.id)}
+                                    className="bg-red-600 text-white px-4 py-2 rounded font-bold hover:bg-red-700 transition-colors"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
 };
 
-                export default Admin;
+export default Admin;

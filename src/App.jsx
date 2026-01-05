@@ -20,6 +20,10 @@ import NotFound from './pages/NotFound';
 function App() {
   return (
     <Routes>
+      {/* Admin Route - Standalone (No Header/Footer) */}
+      <Route path="/admin" element={<Admin />} />
+
+      {/* Public Routes - With Header/Footer Layout */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
@@ -32,9 +36,10 @@ function App() {
         <Route path="wishlist" element={<Wishlist />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="terms-of-service" element={<TermsOfService />} />
-        <Route path="admin" element={<Admin />} />
         <Route path="*" element={<NotFound />} />
       </Route>
+
+      {/* Checkout Routes - Standalone (No Header/Footer) */}
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
     </Routes>
