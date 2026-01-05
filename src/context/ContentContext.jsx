@@ -42,12 +42,37 @@ export const ContentProvider = ({ children }) => {
     useEffect(() => {
         const loadData = async () => {
             try {
-                // Parallel fetch for speed
-                const [p, g, s, t, j, h, c, progs, msg, rev, contact, stats, hHero, aHero] = await Promise.all([
+                // Parallel fetch for speed - ALL SETTLED allows partial success
+                const results = await Promise.allSettled([
                     fetchProducts(), fetchGallery(), fetchStories(), fetchTeam(), fetchJourney(),
                     fetchHomeProductIds(), fetchCategories(), fetchPrograms(), fetchMessages(), fetchPendingReviews(),
                     fetchSettings('contact_info'), fetchSettings('impact_stats'), fetchSettings('home_hero'), fetchSettings('about_hero')
                 ]);
+
+                // Helper to get value or default
+                const getVal = (res, def) => res.status === 'fulfilled' ? res.value : def;
+
+                const p = getVal(results[0], []);
+                const g = getVal(results[1], []);
+                const s = getVal(results[2], []);
+                const t = getVal(results[3], []);
+                const j = getVal(results[4], []);
+                const h = getVal(results[5], []);
+                const c = getVal(results[6], []);
+                const progs = getVal(results[7], []);
+                const msg = getVal(results[8], []);
+                const rev = getVal(results[9], []);
+                const contact = getVal(results[10], null);
+                const stats = getVal(results[11], null);
+                const hHero = getVal(results[12], null);
+                const aHero = getVal(results[13], null);
+
+                // Log failures for debugging
+                results.forEach((res, index) => {
+                    if (res.status === 'rejected') {
+                        console.error(`Data fetch failed for index ${index}:`, res.reason);
+                    }
+                });
 
                 const normalizedProducts = (p || []).map(product => {
                     if (typeof product.images === 'string') {

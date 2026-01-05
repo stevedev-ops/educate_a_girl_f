@@ -7,10 +7,15 @@ const Gallery = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchGallery().then(data => {
-            setImages(data);
-            setLoading(false);
-        });
+        fetchGallery()
+            .then(data => {
+                setImages(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Failed to load gallery:", err);
+                setLoading(false);
+            });
     }, []);
 
     return (
