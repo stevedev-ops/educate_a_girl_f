@@ -12,7 +12,19 @@ export const getImageUrl = (path) => {
         } catch (e) { /* ignore */ }
     }
     if (typeof path !== 'string') return '';
-    if (path.startsWith('http') || path.startsWith('data:')) return path;
+    if (path.startsWith('data:')) return path; // Base64 images
+
+    // Apply Cloudinary transformations on-demand (q_auto, f_auto)
+    if (path.includes('cloudinary.com') && path.includes('/upload/')) {
+        // Only apply if not already transformed
+        if (!path.includes('q_auto')) {
+            path = path.replace('/upload/', '/upload/q_auto,f_auto/');
+        }
+        return path;
+    }
+
+    // For non-Cloudinary URLs or local paths
+    if (path.startsWith('http')) return path;
     const baseUrl = API_URL.replace('/api', '');
     return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
 };
