@@ -127,7 +127,7 @@ export const updateHomeProductIds = async (ids) => {
     return handleResponse(await fetch(`${API_URL}/settings/home_products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids })
+        body: JSON.stringify({ value: ids })
     }));
 };
 
@@ -137,7 +137,7 @@ export const updateCategories = async (categories) => {
     return handleResponse(await fetch(`${API_URL}/settings/categories`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ categories })
+        body: JSON.stringify({ value: categories })
     }));
 };
 
