@@ -89,6 +89,7 @@ export const ContentProvider = ({ children }) => {
                         try { product.story = JSON.parse(product.story); }
                         catch (e) { product.story = null; }
                     }
+                    product.price = parseFloat(product.price) || 0;
                     return product;
                 });
 
@@ -288,6 +289,7 @@ export const ContentProvider = ({ children }) => {
     };
 
     const getHomeProducts = () => {
+        if (!Array.isArray(homeProductIds)) return [];
         return allProducts.filter(p => homeProductIds.includes(p.id));
     };
 
