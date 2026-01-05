@@ -29,6 +29,7 @@ export const ContentProvider = ({ children }) => {
     const [programs, setPrograms] = useState([]);
     const [messages, setMessages] = useState([]);
     const [pendingReviews, setPendingReviews] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Settings State
     const [settings, setSettings] = useState({
@@ -112,6 +113,8 @@ export const ContentProvider = ({ children }) => {
 
             } catch (err) {
                 console.error("Failed to load content:", err);
+            } finally {
+                setIsLoading(false);
             }
         };
         loadData();
@@ -370,7 +373,8 @@ export const ContentProvider = ({ children }) => {
             programs, addProgram, updateProgram: updateProgramAction, deleteProgram: deleteProgramAction,
             settings, updateSetting,
             messages, sendContactMessage, markMessageRead, deleteMessage: deleteMessageAction,
-            pendingReviews, approveReview: approveReviewAction, deleteReview: deleteReviewAction
+            pendingReviews, approveReview: approveReviewAction, deleteReview: deleteReviewAction,
+            isLoading
         }}>
             {children}
         </ContentContext.Provider>
