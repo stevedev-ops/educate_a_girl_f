@@ -91,6 +91,8 @@ export const ContentProvider = ({ children }) => {
                         catch (e) { product.story = null; }
                     }
                     product.price = parseFloat(product.price) || 0;
+                    // Normalize offer_price from database
+                    product.offerPrice = product.offer_price ? parseFloat(product.offer_price) : null;
                     return product;
                 });
 
