@@ -7,10 +7,29 @@ import { validateProduct, sanitizeText } from '../utils/validation';
 
 
 const Admin = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        // Check sessionStorage on mount
+        return sessionStorage.getItem('adminAuth') === 'true';
+    });
     const [password, setPassword] = useState('');
     const [activeTab, setActiveTab] = useState('products');
     const { pendingReviews } = useContent();
+
+    // Handle login
+    const handleLogin = () => {
+        if (password === 'admin123') {
+            setIsAuthenticated(true);
+            sessionStorage.setItem('adminAuth', 'true');
+        } else {
+            alert('Incorrect Password');
+        }
+    };
+
+    // Handle logout
+    const handleLogout = () => {
+        setIsAuthenticated(false);
+        sessionStorage.removeItem('adminAuth');
+    };
 
     if (!isAuthenticated) {
         return (
@@ -33,18 +52,12 @@ const Admin = () => {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 onKeyDown={e => {
-                                    if (e.key === 'Enter') {
-                                        if (password === 'admin123') setIsAuthenticated(true);
-                                        else alert('Incorrect Password');
-                                    }
+                                    if (e.key === 'Enter') handleLogin();
                                 }}
                             />
                         </div>
                         <button
-                            onClick={() => {
-                                if (password === 'admin123') setIsAuthenticated(true);
-                                else alert('Incorrect Password');
-                            }}
+                            onClick={handleLogin}
                             className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary-dark transition-colors shadow-lg">
                             Login to Dashboard
                         </button>
@@ -65,7 +78,7 @@ const Admin = () => {
                         <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 truncate">Educate A RURAL Girl Foundation - Content Management</p>
                     </div>
                     <button
-                        onClick={() => setIsAuthenticated(false)}
+                        onClick={handleLogout}
                         className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors shrink-0">
                         <span className="material-symbols-outlined text-xl">logout</span>
                         <span className="hidden sm:inline">Logout</span>
