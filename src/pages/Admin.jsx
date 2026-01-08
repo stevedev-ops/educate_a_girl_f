@@ -59,41 +59,64 @@ const Admin = () => {
         <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
             <div className="max-w-[1400px] mx-auto px-4 py-8">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-700">
-                    <div>
-                        <h1 className="text-3xl font-bold dark:text-white">Admin Dashboard</h1>
-                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Educate A RURAL Girl Foundation - Content Management</p>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-neutral-200 dark:border-neutral-700">
+                    <div className="flex-1 min-w-0">
+                        <h1 className="text-2xl sm:text-3xl font-bold dark:text-white truncate">Admin Dashboard</h1>
+                        <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 truncate">Educate A RURAL Girl Foundation - Content Management</p>
                     </div>
                     <button
                         onClick={() => setIsAuthenticated(false)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors shrink-0">
                         <span className="material-symbols-outlined text-xl">logout</span>
-                        Logout
+                        <span className="hidden sm:inline">Logout</span>
                     </button>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-8">
+                <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
                     {/* Sidebar Navigation */}
-                    <div className="w-full lg:w-64 flex flex-col gap-2 shrink-0">
-                        {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
-                            <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${activeTab === tab
-                                    ? 'bg-primary text-white shadow-md'
-                                    : 'bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300'
-                                    }`}
-                            >
-                                {tab.replace('_', ' ').charAt(0).toUpperCase() + tab.replace('_', ' ').slice(1)}
-                                {tab === 'reviews' && pendingReviews.length > 0 && (
-                                    <span className="ml-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">{pendingReviews.length}</span>
-                                )}
-                            </button>
-                        ))}
+                    <div className="w-full lg:w-64 shrink-0">
+                        {/* Mobile: Horizontal Scroll */}
+                        <div className="lg:hidden overflow-x-auto pb-2 -mx-4 px-4">
+                            <div className="flex gap-2 min-w-max">
+                                {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
+                                    <button
+                                        key={tab}
+                                        onClick={() => setActiveTab(tab)}
+                                        className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap text-sm ${activeTab === tab
+                                            ? 'bg-primary text-white shadow-md'
+                                            : 'bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'
+                                            }`}
+                                    >
+                                        {tab.replace('_', ' ').charAt(0).toUpperCase() + tab.replace('_', ' ').slice(1)}
+                                        {tab === 'reviews' && pendingReviews.length > 0 && (
+                                            <span className="ml-1 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{pendingReviews.length}</span>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        {/* Desktop: Vertical Tabs */}
+                        <div className="hidden lg:flex flex-col gap-2">
+                            {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${activeTab === tab
+                                        ? 'bg-primary text-white shadow-md'
+                                        : 'bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300'
+                                        }`}
+                                >
+                                    {tab.replace('_', ' ').charAt(0).toUpperCase() + tab.replace('_', ' ').slice(1)}
+                                    {tab === 'reviews' && pendingReviews.length > 0 && (
+                                        <span className="ml-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">{pendingReviews.length}</span>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Main Content Area */}
-                    <div className="flex-1 bg-white dark:bg-neutral-800 rounded-2xl p-6 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden">
+                    <div className="flex-1 bg-white dark:bg-neutral-800 rounded-2xl p-4 sm:p-6 border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden">
                         {activeTab === 'products' && <ProductsEditor />}
                         {activeTab === 'categories' && <CategoriesEditor />}
                         {activeTab === 'gallery' && <GalleryEditor />}
@@ -138,18 +161,18 @@ const CategoriesEditor = () => {
 
     return (
         <div>
-            <h2 className="text-xl font-bold mb-6 dark:text-white">Category Manager</h2>
-            <div className="flex gap-4 mb-8">
+            <h2 className="text-lg sm:text-xl font-bold mb-6 dark:text-white">Category Manager</h2>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
                 <input
-                    className="flex-1 p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                    className="flex-1 p-3 sm:p-2 border rounded dark:bg-neutral-900 dark:text-white"
                     placeholder="Enter new category name..."
                     value={newCategory}
                     onChange={e => setNewCategory(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleAdd()}
                 />
-                <button onClick={handleAdd} className="bg-secondary text-white px-6 py-2 rounded-lg font-bold">Add Category</button>
+                <button onClick={handleAdd} className="w-full sm:w-auto bg-secondary text-white px-6 py-3 sm:py-2 rounded-lg font-bold">Add Category</button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {categories.map(cat => (
                     <div key={cat} className="p-3 border rounded-lg dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900">
                         {editingCat === cat ? (
@@ -272,10 +295,10 @@ const ProductsEditor = () => {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold dark:text-white">Shop Manager</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                <h2 className="text-lg sm:text-xl font-bold dark:text-white">Shop Manager</h2>
                 {!editingId && (
-                    <button onClick={startNew} className="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold">
+                    <button onClick={startNew} className="w-full sm:w-auto bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold">
                         + Add Product
                     </button>
                 )}
@@ -283,7 +306,7 @@ const ProductsEditor = () => {
 
             {editingId ? (
                 <div className="space-y-4 max-w-2xl">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="col-span-2">
                             <label className="block text-sm font-bold mb-1 dark:text-white">Product Name</label>
                             <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
@@ -477,26 +500,26 @@ const ProductsEditor = () => {
                             <p className="text-sm text-gray-500 mt-1 ml-7">If checked, this product will appear in the "Shop for a Cause" section on the home page.</p>
                         </div>
                     </div>
-                    <div className="flex gap-2 pt-4">
-                        <button onClick={handleSave} className="bg-green-600 text-white px-6 py-2 rounded font-bold">Save Product</button>
-                        <button onClick={() => setEditingId(null)} className="bg-gray-500 text-white px-6 py-2 rounded font-bold">Cancel</button>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4">
+                        <button onClick={handleSave} className="w-full sm:w-auto bg-green-600 text-white px-6 py-3 sm:py-2 rounded font-bold">Save Product</button>
+                        <button onClick={() => setEditingId(null)} className="w-full sm:w-auto bg-gray-500 text-white px-6 py-3 sm:py-2 rounded font-bold">Cancel</button>
                     </div>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-4">
                     {allProducts.map(product => (
-                        <div key={product.id} className="flex gap-4 p-4 border rounded-lg dark:border-neutral-700 items-center">
-                            <img src={getImageUrl(product.images && product.images[0])} alt={product.name} className="w-16 h-16 object-cover rounded bg-gray-100" />
-                            <div className="flex-1">
-                                <h3 className="font-bold dark:text-white flex items-center gap-2">
-                                    {product.name}
-                                    {homeProductIds.includes(product.id) && <span className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded border border-primary/20">Featured</span>}
+                        <div key={product.id} className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-4 border rounded-lg dark:border-neutral-700">
+                            <img src={getImageUrl(product.images && product.images[0])} alt={product.name} className="w-full sm:w-20 sm:h-20 h-48 object-cover rounded bg-gray-100" />
+                            <div className="flex-1 min-w-0">
+                                <h3 className="font-bold dark:text-white flex flex-wrap items-center gap-2 mb-1">
+                                    <span className="truncate">{product.name}</span>
+                                    {homeProductIds.includes(product.id) && <span className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded border border-primary/20 shrink-0">Featured</span>}
                                 </h3>
                                 <p className="text-sm text-gray-500">${product.price} - {product.category}</p>
                             </div>
-                            <div className="flex gap-2">
-                                <button onClick={() => startEdit(product)} className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded hover:bg-blue-100 font-medium">Edit</button>
-                                <button onClick={() => deleteProduct(product.id)} className="px-3 py-1 text-sm bg-red-50 text-red-600 rounded hover:bg-red-100 font-medium">Delete</button>
+                            <div className="flex gap-2 sm:flex-col sm:justify-center">
+                                <button onClick={() => startEdit(product)} className="flex-1 sm:flex-none px-4 py-2 text-sm bg-blue-50 text-blue-600 rounded hover:bg-blue-100 font-medium">Edit</button>
+                                <button onClick={() => deleteProduct(product.id)} className="flex-1 sm:flex-none px-4 py-2 text-sm bg-red-50 text-red-600 rounded hover:bg-red-100 font-medium">Delete</button>
                             </div>
                         </div>
                     ))}
@@ -518,16 +541,16 @@ const GalleryEditor = () => {
 
     return (
         <div>
-            <h2 className="text-xl font-bold mb-6 dark:text-white">Gallery Manager</h2>
+            <h2 className="text-lg sm:text-xl font-bold mb-6 dark:text-white">Gallery Manager</h2>
 
-            <div className="flex gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
                 <div className="flex-1">
                     <ImageUploader value={newUrl} onChange={setNewUrl} placeholder="Enter URL or Upload..." />
                 </div>
-                <button onClick={handleAdd} className="bg-secondary text-white px-6 py-2 rounded-lg font-bold">Add Photo</button>
+                <button onClick={handleAdd} className="w-full sm:w-auto bg-secondary text-white px-6 py-3 sm:py-2 rounded-lg font-bold">Add Photo</button>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {gallery.map(img => (
                     <div key={img.id} className="relative group rounded-lg overflow-hidden aspect-square border dark:border-neutral-700">
                         <img src={getImageUrl(img.url)} className="w-full h-full object-cover" />
@@ -565,11 +588,11 @@ const StoriesEditor = () => {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold dark:text-white">Stories Management</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                <h2 className="text-lg sm:text-xl font-bold dark:text-white">Stories Management</h2>
                 <button
                     onClick={() => { setEditingId('new'); setFormData({ name: '', role: '', quote: '', image: '', featured: false }); }}
-                    className="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold"
+                    className="w-full sm:w-auto bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold"
                 >
                     + Add New Story
                 </button>
@@ -676,11 +699,11 @@ const JourneyEditor = () => {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold dark:text-white">Our Journey (About Us)</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                <h2 className="text-lg sm:text-xl font-bold dark:text-white">Our Journey (About Us)</h2>
                 <button
                     onClick={() => { setEditingIndex('new'); setFormData({ year: '', title: '', description: '' }); }}
-                    className="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold"
+                    className="w-full sm:w-auto bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold"
                 >
                     + Add Milestone
                 </button>
@@ -692,9 +715,9 @@ const JourneyEditor = () => {
                     <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" placeholder="Year" value={formData.year} onChange={e => setFormData({ ...formData, year: e.target.value })} />
                     <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" placeholder="Title" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} />
                     <textarea className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" placeholder="Description" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
-                    <div className="flex gap-2">
-                        <button onClick={handleSave} className="bg-green-600 text-white px-3 py-1 rounded">Create</button>
-                        <button onClick={() => setEditingIndex(null)} className="bg-gray-500 text-white px-3 py-1 rounded">Cancel</button>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <button onClick={handleSave} className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 sm:px-3 sm:py-1 rounded">Create</button>
+                        <button onClick={() => setEditingIndex(null)} className="w-full sm:w-auto bg-gray-500 text-white px-4 py-2 sm:px-3 sm:py-1 rounded">Cancel</button>
                     </div>
                 </div>
             )}
@@ -707,9 +730,9 @@ const JourneyEditor = () => {
                                 <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={formData.year} onChange={e => setFormData({ ...formData, year: e.target.value })} />
                                 <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} />
                                 <textarea className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
-                                <div className="flex gap-2">
-                                    <button onClick={handleSave} className="bg-green-600 text-white px-3 py-1 rounded">Save</button>
-                                    <button onClick={() => setEditingIndex(null)} className="bg-gray-500 text-white px-3 py-1 rounded">Cancel</button>
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                    <button onClick={handleSave} className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 sm:px-3 sm:py-1 rounded">Save</button>
+                                    <button onClick={() => setEditingIndex(null)} className="w-full sm:w-auto bg-gray-500 text-white px-4 py-2 sm:px-3 sm:py-1 rounded">Cancel</button>
                                 </div>
                             </div>
                         ) : (
@@ -750,17 +773,17 @@ const TeamEditor = () => {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold dark:text-white">Team Management</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                <h2 className="text-lg sm:text-xl font-bold dark:text-white">Team Management</h2>
                 <button
                     onClick={() => { setEditingId('new'); setFormData({ name: '', role: '', image: '' }); }}
-                    className="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold"
+                    className="w-full sm:w-auto bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold"
                 >
                     + Add Team Member
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {editingId === 'new' && (
                     <div className="p-4 border rounded-lg border-green-200 bg-green-50 dark:bg-green-900/10 space-y-3">
                         <h3 className="font-bold text-green-800 dark:text-green-400">New Member</h3>
