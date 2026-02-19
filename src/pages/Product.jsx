@@ -161,7 +161,9 @@ const Product = () => {
                                 key={idx}
                                 onClick={() => setActiveImage(idx)}
                                 className={`aspect-square overflow-hidden rounded-lg border-2 ${activeImage === idx ? 'border-primary ring-offset-2' : 'border-transparent'} hover:border-slate-300 transition-colors`}>
-                                <img alt={`View ${idx + 1}`} className="h-full w-full rounded-md object-cover" src={getImageUrl(img)} />
+                                {img && (
+                                    <img alt={`View ${idx + 1}`} className="h-full w-full rounded-md object-cover" src={getImageUrl(img)} />
+                                )}
                             </button>
                         ))}
                     </div>

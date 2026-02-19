@@ -1,0 +1,148 @@
+export const donationItems = [
+    {
+        id: "d1",
+        name: "Sanitary Pads - 6 Month Supply",
+        price: 15.00,
+        category: "Hygiene",
+        description: "Provide a girl with essential sanitary products for 6 months, ensuring she can attend school with dignity and confidence during her menstrual cycle.",
+        impact: "Keeps 1 girl in school for 6 months",
+        beneficiaries: "1 girl",
+        duration: "6 months",
+        icon: "health_and_safety",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80"
+    },
+    {
+        id: "d2",
+        name: "Complete School Supplies Kit",
+        price: 25.00,
+        category: "Education",
+        description: "A comprehensive kit including notebooks, pens, pencils, erasers, rulers, and a geometry set. Everything a student needs for a full academic year.",
+        impact: "Equips 1 student for an entire school year",
+        beneficiaries: "1 student",
+        duration: "1 year",
+        icon: "school_supplies",
+        image: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=800&q=80"
+    },
+    {
+        id: "d3",
+        name: "School Uniform Set",
+        price: 35.00,
+        category: "Education",
+        description: "A complete school uniform including shirt, skirt/trousers, and sweater. Helps students attend school with dignity and meet dress code requirements.",
+        impact: "Provides proper school attire for 1 student",
+        beneficiaries: "1 student",
+        duration: "1 year",
+        icon: "checkroom",
+        image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80"
+    },
+    {
+        id: "d4",
+        name: "Textbook Set - Primary Level",
+        price: 45.00,
+        category: "Education",
+        description: "Essential textbooks for primary school subjects including Mathematics, English, Science, and Social Studies.",
+        impact: "Provides learning materials for 1 student",
+        beneficiaries: "1 student",
+        duration: "1 year",
+        icon: "menu_book",
+        image: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&q=80"
+    },
+    {
+        id: "d5",
+        name: "Hygiene Kit",
+        price: 20.00,
+        category: "Hygiene",
+        description: "Personal hygiene essentials including soap, toothbrush, toothpaste, towel, and basic first aid supplies.",
+        impact: "Promotes health and hygiene for 1 girl",
+        beneficiaries: "1 girl",
+        duration: "3 months",
+        icon: "soap",
+        image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80"
+    },
+    {
+        id: "d6",
+        name: "School Backpack",
+        price: 18.00,
+        category: "Education",
+        description: "Durable, water-resistant backpack with multiple compartments for books, supplies, and personal items.",
+        impact: "Helps 1 student carry supplies safely",
+        beneficiaries: "1 student",
+        duration: "2 years",
+        icon: "backpack",
+        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80"
+    },
+    {
+        id: "d7",
+        name: "Sanitary Pads - 1 Year Supply",
+        price: 28.00,
+        category: "Hygiene",
+        description: "A full year's supply of sanitary pads, ensuring uninterrupted school attendance throughout the academic year.",
+        impact: "Keeps 1 girl in school for 1 full year",
+        beneficiaries: "1 girl",
+        duration: "1 year",
+        icon: "health_and_safety",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80"
+    },
+    {
+        id: "d8",
+        name: "Scientific Calculator",
+        price: 22.00,
+        category: "Education",
+        description: "Essential scientific calculator for mathematics and science subjects at secondary school level.",
+        impact: "Enables advanced learning for 1 student",
+        beneficiaries: "1 student",
+        duration: "4 years",
+        icon: "calculate",
+        image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&q=80"
+    },
+    {
+        id: "d9",
+        name: "Art Supplies Bundle",
+        price: 30.00,
+        category: "Education",
+        description: "Encourage creativity with colored pencils, crayons, paint sets, brushes, and drawing paper.",
+        impact: "Nurtures creativity for 1 student",
+        beneficiaries: "1 student",
+        duration: "1 year",
+        icon: "palette",
+        image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80"
+    },
+    {
+        id: "d10",
+        name: "Sports Equipment Kit",
+        price: 40.00,
+        category: "Wellness",
+        description: "Promote physical health with sports equipment including a soccer ball, jump rope, and athletic shoes.",
+        impact: "Encourages physical activity for 1 student",
+        beneficiaries: "1 student",
+        duration: "1 year",
+        icon: "sports_soccer",
+        image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80"
+    },
+    {
+        id: "d11",
+        name: "Reusable Water Bottle & Lunch Box",
+        price: 12.00,
+        category: "Wellness",
+        description: "Eco-friendly water bottle and lunch box to ensure proper nutrition and hydration during school hours.",
+        impact: "Supports daily nutrition for 1 student",
+        beneficiaries: "1 student",
+        duration: "2 years",
+        icon: "lunch_dining",
+        image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=800&q=80"
+    },
+    {
+        id: "d12",
+        name: "Reading Books Collection",
+        price: 35.00,
+        category: "Education",
+        description: "A curated collection of age-appropriate storybooks and educational readers to foster a love of reading.",
+        impact: "Builds literacy skills for 1 student",
+        beneficiaries: "1 student",
+        duration: "Permanent",
+        icon: "auto_stories",
+        image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&q=80"
+    }
+];
+
+export const donationCategories = ["All", "Education", "Hygiene", "Wellness"];

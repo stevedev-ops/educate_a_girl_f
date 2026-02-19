@@ -53,7 +53,9 @@ const Wishlist = () => {
                     {wishlistItems.map((item) => (
                         <div key={item.id} className="bg-white dark:bg-surface-dark rounded-lg shadow-md overflow-hidden">
                             <Link to={`/product/${item.product_id}`}>
-                                <img src={getImageUrl(item.images[0])} alt={`${item.name} - Saved in my wishlist`} className="w-full h-48 object-cover" loading="lazy" />
+                                {item.images && item.images.length > 0 && (
+                                    <img src={getImageUrl(item.images[0])} alt={`${item.name} - Saved in my wishlist`} className="w-full h-48 object-cover" loading="lazy" />
+                                )}
                             </Link>
                             <div className="p-4">
                                 <Link to={`/product/${item.product_id}`}>

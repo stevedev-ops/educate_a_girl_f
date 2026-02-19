@@ -38,7 +38,7 @@ const Programs = () => {
 
             {/* Dynamic Programs List */}
             {programs.map((program, index) => (
-                <section key={program.id} className={`py-20 px-4 md:px-10 ${index % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-slate-50 dark:bg-slate-800/50'}`}>
+                <section id={program.id} key={program.id} className={`py-20 px-4 md:px-10 ${index % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-slate-50 dark:bg-slate-800/50'}`}>
                     <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
                         <div className={`order-2 ${index % 2 === 0 ? 'lg:order-1' : ''}`}>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary-dark dark:text-primary text-xs font-bold uppercase tracking-wider border border-primary/20 mb-6">

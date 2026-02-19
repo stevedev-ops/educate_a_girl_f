@@ -18,6 +18,7 @@ const OrderConfirmation = lazy(() => import('./pages/OrderConfirmation'));
 const Wishlist = lazy(() => import('./pages/Wishlist'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const BasketOfHope = lazy(() => import('./pages/BasketOfHope'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 
@@ -51,6 +52,7 @@ function App() {
             <Route path="gallery" element={<Gallery />} />
             <Route path="contact" element={<Contact />} />
             <Route path="donate" element={<Donate />} />
+            <Route path="basket-of-hope" element={<BasketOfHope />} />
 
             {/* Shop routes with error boundary */}
             <Route path="shop" element={
