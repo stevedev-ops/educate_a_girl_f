@@ -10,7 +10,8 @@ import {
     fetchPrograms, createProgram, updateProgram as apiUpdateProgram, deleteProgram as apiDeleteProgram,
     fetchSettings, updateSettings as apiUpdateSettings,
     fetchMessages, sendMessage, updateMessageRead as apiUpdateMessageRead, deleteMessage as apiDeleteMessage,
-    fetchPendingReviews, approveReview as apiApproveReview, deleteReview as apiDeleteReview
+    fetchPendingReviews, approveReview as apiApproveReview, deleteReview as apiDeleteReview,
+    fetchBlogPosts, createBlogPost, updateBlogPost as apiUpdateBlogPost, deleteBlogPost as apiDeleteBlogPost
 } from '../api';
 
 const ContentContext = createContext();
@@ -29,6 +30,7 @@ export const ContentProvider = ({ children }) => {
     const [programs, setPrograms] = useState([]);
     const [messages, setMessages] = useState([]);
     const [pendingReviews, setPendingReviews] = useState([]);
+    const [blogPosts, setBlogPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     // Settings State
@@ -47,7 +49,8 @@ export const ContentProvider = ({ children }) => {
                 const results = await Promise.allSettled([
                     fetchProducts(), fetchGallery(), fetchStories(), fetchTeam(), fetchJourney(),
                     fetchHomeProductIds(), fetchCategories(), fetchPrograms(), fetchMessages(), fetchPendingReviews(),
-                    fetchSettings('contact_info'), fetchSettings('impact_stats'), fetchSettings('home_hero'), fetchSettings('about_hero')
+                    fetchSettings('contact_info'), fetchSettings('impact_stats'), fetchSettings('home_hero'), fetchSettings('about_hero'),
+                    fetchBlogPosts(true)
                 ]);
 
                 // Helper to get value or default
@@ -67,6 +70,7 @@ export const ContentProvider = ({ children }) => {
                 const stats = getVal(results[11], null);
                 const hHero = getVal(results[12], null);
                 const aHero = getVal(results[13], null);
+                const blog = getVal(results[14], []);
 
                 // Log failures for debugging
                 results.forEach((res, index) => {
@@ -130,6 +134,7 @@ export const ContentProvider = ({ children }) => {
                 setPrograms(normalizedPrograms);
                 setMessages(msg || []);
                 setPendingReviews(rev || []);
+                setBlogPosts(blog || []);
                 setSettings({
                     contact_info: contact,
                     impact_stats: stats,
@@ -387,6 +392,29 @@ export const ContentProvider = ({ children }) => {
         } catch (err) { console.error("Failed to delete review", err); }
     };
 
+    // --- BLOG POSTS ---
+    const addBlogPost = async (post) => {
+        try {
+            const res = await createBlogPost(post);
+            if (res && res.id) setBlogPosts(prev => [res, ...prev]);
+            return res;
+        } catch (err) { console.error(err); }
+    };
+
+    const updateBlogPostAction = async (post) => {
+        try {
+            const res = await apiUpdateBlogPost(post);
+            setBlogPosts(prev => prev.map(p => p.id === post.id ? res : p));
+        } catch (err) { console.error(err); }
+    };
+
+    const deleteBlogPostAction = async (id) => {
+        try {
+            await apiDeleteBlogPost(id);
+            setBlogPosts(prev => prev.filter(p => p.id !== id));
+        } catch (err) { console.error(err); }
+    };
+
     return (
         <ContentContext.Provider value={{
             allProducts, addProduct, updateProduct, deleteProduct,
@@ -400,6 +428,7 @@ export const ContentProvider = ({ children }) => {
             settings, updateSetting,
             messages, sendContactMessage, markMessageRead, deleteMessage: deleteMessageAction,
             pendingReviews, approveReview: approveReviewAction, deleteReview: deleteReviewAction,
+            blogPosts, addBlogPost, updateBlogPost: updateBlogPostAction, deleteBlogPost: deleteBlogPostAction,
             isLoading
         }}>
             {children}

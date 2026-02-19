@@ -19,6 +19,8 @@ const Wishlist = lazy(() => import('./pages/Wishlist'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const BasketOfHope = lazy(() => import('./pages/BasketOfHope'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 
@@ -67,6 +69,8 @@ function App() {
             } />
 
             <Route path="wishlist" element={<Wishlist />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="blog/:slug" element={<BlogPost />} />
             <Route path="privacy-policy" element={<PrivacyPolicy />} />
             <Route path="terms-of-service" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />

@@ -91,7 +91,7 @@ const Admin = () => {
                         {/* Mobile: Horizontal Scroll */}
                         <div className="lg:hidden overflow-x-auto pb-2 -mx-4 px-4">
                             <div className="flex gap-2 min-w-max">
-                                {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
+                                {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'blog', 'settings', 'messages', 'reviews'].map(tab => (
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab)}
@@ -110,7 +110,7 @@ const Admin = () => {
                         </div>
                         {/* Desktop: Vertical Tabs */}
                         <div className="hidden lg:flex flex-col gap-2">
-                            {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
+                            {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'blog', 'settings', 'messages', 'reviews'].map(tab => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
@@ -138,6 +138,7 @@ const Admin = () => {
                         {activeTab === 'journey' && <JourneyEditor />}
                         {activeTab === 'team' && <TeamEditor />}
                         {activeTab === 'programs' && <ProgramsEditor />}
+                        {activeTab === 'blog' && <BlogEditor />}
                         {activeTab === 'settings' && <SettingsEditor />}
                         {activeTab === 'messages' && <MessagesViewer />}
                         {activeTab === 'reviews' && <ReviewsManager />}
@@ -1367,6 +1368,315 @@ const ReviewsManager = () => {
                     ))
                 )}
             </div>
+        </div>
+    );
+};
+
+const BlogEditor = () => {
+    const { blogPosts, addBlogPost, updateBlogPost, deleteBlogPost } = useContent();
+    const [editingId, setEditingId] = useState(null);
+    const [formData, setFormData] = useState({});
+    const [tagsInput, setTagsInput] = useState('');
+    const [confirmDelete, setConfirmDelete] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
+
+    const generateSlug = (title) =>
+        (title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+    const formatDate = (dateStr) => {
+        if (!dateStr) return '—';
+        return new Date(dateStr).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+    };
+
+    const startNew = () => {
+        setEditingId('new');
+        setFormData({
+            title: '', slug: '', author: 'EARG Team', excerpt: '',
+            content: '', cover_image: '', published: false, tags: []
+        });
+        setTagsInput('');
+    };
+
+    const startEdit = (post) => {
+        setEditingId(post.id);
+        setFormData({ ...post });
+        setTagsInput((post.tags || []).join(', '));
+    };
+
+    const handleSave = async () => {
+        if (!formData.title.trim()) {
+            toast.error('Title is required');
+            return;
+        }
+
+        setIsSaving(true);
+        try {
+            const tags = tagsInput
+                .split(',')
+                .map(t => t.trim())
+                .filter(Boolean);
+
+            const postToSave = {
+                ...formData,
+                slug: formData.slug || generateSlug(formData.title),
+                tags
+            };
+
+            if (editingId === 'new') {
+                await addBlogPost(postToSave);
+                toast.success('Blog post created!');
+            } else {
+                await updateBlogPost(postToSave);
+                toast.success('Blog post updated!');
+            }
+
+            setEditingId(null);
+            setFormData({});
+            setTagsInput('');
+        } catch (err) {
+            console.error(err);
+            toast.error(err.message || 'Failed to save blog post. Check backend connection.');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        setIsSaving(true);
+        try {
+            await deleteBlogPost(id);
+            toast.success('Blog post deleted');
+            setConfirmDelete(null);
+        } catch (err) {
+            console.error(err);
+            toast.error('Failed to delete blog post.');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    return (
+        <div>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                <h2 className="text-lg sm:text-xl font-bold dark:text-white">Blog Manager</h2>
+                {!editingId && (
+                    <button
+                        onClick={startNew}
+                        disabled={isSaving}
+                        className="w-full sm:w-auto bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50"
+                    >
+                        + New Post
+                    </button>
+                )}
+            </div>
+
+            {editingId ? (
+                <div className="space-y-4 max-w-2xl">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="col-span-2">
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Title</label>
+                            <input
+                                disabled={isSaving}
+                                className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white disabled:opacity-70"
+                                value={formData.title}
+                                onChange={e => {
+                                    const title = e.target.value;
+                                    setFormData({
+                                        ...formData,
+                                        title,
+                                        slug: editingId === 'new' ? generateSlug(title) : formData.slug
+                                    });
+                                }}
+                                placeholder="Post title"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Slug</label>
+                            <input
+                                disabled={isSaving}
+                                className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white text-sm disabled:opacity-70"
+                                value={formData.slug}
+                                onChange={e => setFormData({ ...formData, slug: e.target.value })}
+                                placeholder="auto-generated-from-title"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Author</label>
+                            <input
+                                disabled={isSaving}
+                                className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white disabled:opacity-70"
+                                value={formData.author}
+                                onChange={e => setFormData({ ...formData, author: e.target.value })}
+                                placeholder="EARG Team"
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Excerpt <span className="text-xs font-normal text-neutral-500">(Short summary)</span></label>
+                            <textarea
+                                disabled={isSaving}
+                                rows="2"
+                                className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white disabled:opacity-70"
+                                value={formData.excerpt}
+                                onChange={e => setFormData({ ...formData, excerpt: e.target.value })}
+                                placeholder="A brief summary shown in the blog listing..."
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Content</label>
+                            <textarea
+                                disabled={isSaving}
+                                rows="12"
+                                className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white font-mono text-sm disabled:opacity-70"
+                                value={formData.content}
+                                onChange={e => setFormData({ ...formData, content: e.target.value })}
+                                placeholder="Write the full blog post content here..."
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Cover Image</label>
+                            <ImageUploader
+                                value={formData.cover_image || ''}
+                                onChange={url => setFormData({ ...formData, cover_image: url })}
+                                placeholder="Upload or paste cover image URL..."
+                            />
+                            {formData.cover_image && (
+                                <div className="mt-2 rounded-lg overflow-hidden border dark:border-neutral-700 max-h-48">
+                                    <img src={getImageUrl(formData.cover_image)} alt="Cover preview" className="w-full h-48 object-cover" />
+                                </div>
+                            )}
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Tags <span className="text-xs font-normal text-neutral-500">(comma separated)</span></label>
+                            <input
+                                disabled={isSaving}
+                                className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white disabled:opacity-70"
+                                value={tagsInput}
+                                onChange={e => setTagsInput(e.target.value)}
+                                placeholder="Education, Impact, News"
+                            />
+                            {tagsInput && (
+                                <div className="flex flex-wrap gap-1.5 mt-2">
+                                    {tagsInput.split(',').map(t => t.trim()).filter(Boolean).map((tag, i) => (
+                                        <span key={i} className="px-2 py-0.5 bg-primary/10 text-primary text-xs font-bold rounded-full">{tag}</span>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <div className="col-span-2 bg-yellow-50 dark:bg-yellow-900/10 p-4 rounded border border-yellow-200 dark:border-yellow-700">
+                            <label className="flex items-center gap-2 cursor-pointer font-bold dark:text-white">
+                                <input
+                                    disabled={isSaving}
+                                    type="checkbox"
+                                    className="size-5 rounded border-gray-300 text-primary focus:ring-primary disabled:opacity-70"
+                                    checked={formData.published || false}
+                                    onChange={e => setFormData({ ...formData, published: e.target.checked })}
+                                />
+                                Publish Post
+                            </label>
+                            <p className="text-sm text-gray-500 mt-1 ml-7">
+                                {formData.published
+                                    ? 'This post is visible on the public blog page.'
+                                    : 'This post is saved as a draft and will not be visible publicly.'}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4">
+                        <button
+                            onClick={handleSave}
+                            disabled={isSaving}
+                            className="w-full sm:w-auto bg-green-600 text-white px-6 py-3 sm:py-2 rounded font-bold disabled:opacity-50 flex items-center justify-center gap-2"
+                        >
+                            {isSaving && <div className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>}
+                            {isSaving ? 'Saving...' : 'Save Post'}
+                        </button>
+                        <button
+                            onClick={() => { setEditingId(null); setFormData({}); setTagsInput(''); }}
+                            disabled={isSaving}
+                            className="w-full sm:w-auto bg-gray-500 text-white px-6 py-3 sm:py-2 rounded font-bold disabled:opacity-50"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    {blogPosts.length === 0 ? (
+                        <div className="text-center py-16">
+                            <span className="material-symbols-outlined text-5xl text-neutral-300 dark:text-neutral-600 mb-4 block">edit_note</span>
+                            <p className="text-neutral-500 dark:text-neutral-400 font-medium">No blog posts yet. Click "+ New Post" to get started.</p>
+                        </div>
+                    ) : (
+                        blogPosts.map(post => (
+                            <div key={post.id} className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-4 border rounded-lg dark:border-neutral-700">
+                                {post.cover_image ? (
+                                    <img src={getImageUrl(post.cover_image)} alt={post.title} className="w-full sm:w-20 sm:h-20 h-48 object-cover rounded bg-gray-100" />
+                                ) : (
+                                    <div className="w-full sm:w-20 sm:h-20 h-48 bg-gradient-to-br from-primary/10 to-secondary/10 rounded flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-primary/40">article</span>
+                                    </div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="font-bold dark:text-white flex flex-wrap items-center gap-2 mb-1">
+                                        <span className="truncate">{post.title}</span>
+                                        {post.published ? (
+                                            <span className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs px-2 py-0.5 rounded-full font-bold shrink-0">Published</span>
+                                        ) : (
+                                            <span className="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 text-xs px-2 py-0.5 rounded-full font-bold shrink-0">Draft</span>
+                                        )}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">{post.author || 'EARG Team'} · {formatDate(post.created_at)}</p>
+                                    {post.excerpt && <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-1">{post.excerpt}</p>}
+                                    {(post.tags || []).length > 0 && (
+                                        <div className="flex flex-wrap gap-1 mt-2">
+                                            {post.tags.map(tag => (
+                                                <span key={tag} className="px-1.5 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded-full">{tag}</span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex gap-2 sm:flex-col sm:justify-center">
+                                    <button
+                                        onClick={() => startEdit(post)}
+                                        disabled={isSaving}
+                                        className="flex-1 sm:flex-none px-4 py-2 text-sm bg-blue-50 text-blue-600 rounded hover:bg-blue-100 font-medium disabled:opacity-50"
+                                    >
+                                        Edit
+                                    </button>
+                                    {confirmDelete === post.id ? (
+                                        <div className="flex gap-1">
+                                            <button
+                                                onClick={() => handleDelete(post.id)}
+                                                disabled={isSaving}
+                                                className="px-3 py-2 text-sm bg-red-600 text-white rounded font-medium disabled:opacity-50 flex items-center gap-2"
+                                            >
+                                                {isSaving && <div className="size-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>}
+                                                Confirm
+                                            </button>
+                                            <button
+                                                onClick={() => setConfirmDelete(null)}
+                                                disabled={isSaving}
+                                                className="px-3 py-2 text-sm bg-gray-200 dark:bg-neutral-700 text-gray-600 dark:text-neutral-300 rounded font-medium disabled:opacity-50"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={() => setConfirmDelete(post.id)}
+                                            disabled={isSaving}
+                                            className="flex-1 sm:flex-none px-4 py-2 text-sm bg-red-50 text-red-600 rounded hover:bg-red-100 font-medium disabled:opacity-50"
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
         </div>
     );
 };
