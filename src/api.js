@@ -14,6 +14,11 @@ export const getImageUrl = (path) => {
     if (typeof path !== 'string') return '';
     if (path.startsWith('data:')) return path; // Base64 images
 
+    // Fix for legacy data from when backend was running on port 5000
+    if (path.includes('localhost:5000')) {
+        path = path.replace('http://localhost:5000', '').replace('https://localhost:5000', '');
+    }
+
     // Apply Cloudinary transformations on-demand (q_auto, f_auto)
     if (path.includes('cloudinary.com') && path.includes('/upload/')) {
         // Only apply if not already transformed

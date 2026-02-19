@@ -93,7 +93,31 @@ export const ContentProvider = ({ children }) => {
                     product.price = parseFloat(product.price) || 0;
                     // Normalize offer_price from database
                     product.offerPrice = product.offer_price ? parseFloat(product.offer_price) : null;
+
+                    // Handle Donation Items
+                    if (product.category === 'Donation') {
+                        product.itemType = 'donation';
+                    }
+
                     return product;
+                });
+
+                const normalizedPrograms = (progs || []).map((program) => {
+                    const normalized = { ...program };
+                    if (typeof normalized.features === 'string') {
+                        try {
+                            normalized.features = JSON.parse(normalized.features);
+                        } catch (e) {
+                            normalized.features = normalized.features
+                                .split('\n')
+                                .map((line) => line.trim())
+                                .filter(Boolean);
+                        }
+                    }
+                    if (!Array.isArray(normalized.features)) {
+                        normalized.features = [];
+                    }
+                    return normalized;
                 });
 
                 setAllProducts(normalizedProducts);
@@ -103,7 +127,7 @@ export const ContentProvider = ({ children }) => {
                 setJourney(j || []);
                 setHomeProductIds(h || []);
                 setCategories(c || []);
-                setPrograms(progs || []);
+                setPrograms(normalizedPrograms);
                 setMessages(msg || []);
                 setPendingReviews(rev || []);
                 setSettings({

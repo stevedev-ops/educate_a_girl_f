@@ -56,7 +56,21 @@ const About = () => {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-8 mt-4">
+
+                    <div id="our-story" className="scroll-mt-24 flex flex-col gap-6 text-left max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center md:text-left">Our Story</h3>
+                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                            Educate a Rural Girl (EARG) is a community based organization that was founded in 2019 by three young girls who had a few things in common; Firstly, they were born and raised in the rural areas of Tharaka Nithi County. Secondly, they were raised by either their mothers or grandmothers. They grew up seeing the women in their lives work so hard and in most cases under unpaid labour.
+                        </p>
+                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                            Most women in rural areas are farmers and family fulltime care takers. The three girls shared similar motivation and drive to ensure that women and girls in rural areas are economically empowered enough to change the world they live in. They believed that when a woman is empowered, she contributes to her family income and becomes an active change agent in the society. They had the opinion that when the women are empowered their families, their generation, community and country are all empowered.
+                        </p>
+                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                            The organization, EARG, was founded to empower rural women and girls economically through education and agriculture. The organization leveraged on education and agriculture as these are economic activities that are already existing within the target communities. The programs implemented by the organization entailed investing and building the capacity of women to improve their economic, social, and financial skills. This was informed by the premise that when women are empowered in all aspects of life they become confident and can advocate for their rights. They will be in a position to speak against Gender Based Violence and become voices of positive change through advocacy for justice and equality.
+                        </p>
+                    </div>
+
+                    <div id="vision-mission" className="scroll-mt-24 grid md:grid-cols-2 gap-8 mt-4">
                         <div className="p-8 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-gray-700">
                             <div className="size-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-6">
                                 <span className="material-symbols-outlined text-3xl">visibility</span>
@@ -80,7 +94,7 @@ const About = () => {
             </section>
 
             {/* Core Values */}
-            <section className="py-16 px-4 md:px-10 bg-white dark:bg-gray-900">
+            <section id="core-values" className="scroll-mt-20 py-16 px-4 md:px-10 bg-white dark:bg-gray-900">
                 <div className="max-w-[1100px] mx-auto">
                     <div className="flex flex-col gap-4 mb-12 text-center md:text-left">
                         <h2 className="text-gray-900 dark:text-white text-3xl md:text-4xl font-bold">Our Core Values</h2>
@@ -111,7 +125,7 @@ const About = () => {
             </section>
 
             {/* Our Approach */}
-            <section className="py-20 px-4 md:px-10 bg-background-light dark:bg-background-dark">
+            <section id="our-approach" className="scroll-mt-20 py-20 px-4 md:px-10 bg-background-light dark:bg-background-dark">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
                         <span className="text-secondary font-bold tracking-wider uppercase text-sm">How We Work</span>
@@ -171,7 +185,7 @@ const About = () => {
             </section>
 
             {/* Journey */}
-            <section className="py-20 px-4 md:px-10 bg-background-light dark:bg-background-dark">
+            <section id="our-journey" className="scroll-mt-20 py-20 px-4 md:px-10 bg-background-light dark:bg-background-dark">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-900 dark:text-white">Our Journey</h2>
                     <div className="relative border-l-2 border-primary/20 ml-4 md:ml-auto md:mr-auto md:w-full space-y-12">
@@ -205,7 +219,7 @@ const About = () => {
             </section>
 
             {/* Impact Section */}
-            <section className="py-20 px-4 bg-primary dark:bg-green-900 text-white">
+            <section id="our-impact" className="scroll-mt-20 py-20 px-4 bg-primary dark:bg-green-900 text-white">
                 <div className="max-w-5xl mx-auto">
                     <h2 className="text-3xl md:text-5xl font-black text-center mb-16">Our Impact</h2>
 
@@ -256,7 +270,7 @@ const About = () => {
             </section>
 
             {/* Team */}
-            <section className="py-20 px-4 md:px-10 bg-white dark:bg-gray-900">
+            <section id="meet-team" className="scroll-mt-20 py-20 px-4 md:px-10 bg-white dark:bg-gray-900">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-12">
                         <h2 className="text-gray-900 dark:text-white text-3xl md:text-4xl font-bold mb-4">Meet the Team</h2>

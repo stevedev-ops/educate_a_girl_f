@@ -19,9 +19,14 @@ const Shop = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(12);
 
-    // Filter products
+    // Filter products: Only standard products (not donation items)
     const products = useMemo(() => {
-        return allProducts;
+        return allProducts.filter(p => {
+            // Check for explicit "donation" type OR check details/category clues if legacy data
+            // New items use p.itemType === 'donation'
+            // We can also exclude category 'Donation' just in case
+            return p.itemType !== 'donation' && p.category !== 'Donation';
+        });
     }, [allProducts]);
 
     const filteredProducts = useMemo(() => {
@@ -85,6 +90,20 @@ const Shop = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Basket of Hope Promo Banner */}
+            <div className="bg-amber-50 dark:bg-amber-900/20 border-y border-amber-100 dark:border-amber-800 py-3">
+                <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center sm:text-left">
+                    <span className="material-symbols-outlined text-amber-500">volunteer_activism</span>
+                    <p className="text-sm font-medium text-amber-900 dark:text-amber-100">
+                        Looking to donate items directly to girls in need? Check out our
+                        <Link to="/basket-of-hope" className="font-bold underline ml-1 hover:text-amber-600 dark:hover:text-amber-300">
+                            Basket of Hope
+                        </Link>
+                    </p>
+                </div>
+            </div>
+
             <div className="flex-grow layout-container w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 py-8 lg:py-12">
                 <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
                     <aside className="w-full lg:w-72 flex-shrink-0 space-y-8">
@@ -192,7 +211,9 @@ const Shop = () => {
                                         <Link to={`/product/${product.id}`} key={product.id} className="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border-light dark:border-border-dark bg-white dark:bg-gray-800">
                                             <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
                                                 {/* Handle JSON parsed images vs potential array issues, though API ensures array */}
-                                                <img className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100" src={getImageUrl(product.images && product.images[0])} alt={product.name} loading="lazy" />
+                                                {product.images && product.images.length > 0 && (
+                                                    <img className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-[0.8] group-hover:saturate-100" src={getImageUrl(product.images[0])} alt={product.name} loading="lazy" />
+                                                )}
                                                 {product.stock <= 0 && (
                                                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                                                         <span className="text-white font-black text-2xl tracking-wider">OUT OF STOCK</span>

@@ -227,24 +227,51 @@ const ProductsEditor = () => {
     const { allProducts, addProduct, updateProduct, deleteProduct, categories, homeProductIds, toggleHomeProduct } = useContent();
     const [editingId, setEditingId] = useState(null);
     const [formData, setFormData] = useState({});
+    // For Details handling
+    const [isDonationItem, setIsDonationItem] = useState(false);
+    // Standard Details (Array of strings)
+    const [newDetail, setNewDetail] = useState('');
+    // Donation Details (Object)
+    const [donationDetails, setDonationDetails] = useState({
+        subCategory: '',
+        beneficiaries: '',
+        duration: '',
+        icon: ''
+    });
 
-    // Simple string array handling for images/details
+    // Simple string array handling for images
     const handleArrayChange = (field, value) => {
         setFormData({ ...formData, [field]: value.split('\n') });
     };
 
     const handleSave = async () => {
         let savedId = editingId;
+        let finalImages = formData.images || [];
 
         // Auto-add tempImage if exists and user didn't click add
-        let finalImages = formData.images || [];
         if (formData.tempImage) {
             finalImages = [...finalImages, formData.tempImage];
         }
 
+        // Prepare Details based on type
+        let finalDetails;
+        if (isDonationItem) {
+            // For Donation items, details is an Object
+            finalDetails = { ...donationDetails };
+            // Ensure category is set correctly for filtering if needed, though product.category is main one
+            // We might want to set itemType='donation' if backend supports it, or just rely on structure
+        } else {
+            // For Standard items, details is an Array of strings
+            finalDetails = formData.details || [];
+        }
+
         const productToSave = {
             ...formData,
+            category: isDonationItem ? 'Donation' : formData.category, // Force category if donation? Or let user choose? 
+            // Better: Let user choose category, but save details as object/array
             images: finalImages,
+            details: finalDetails,
+            itemType: isDonationItem ? 'donation' : 'product', // Helpful flag for frontend filtering
             tempImage: '' // Clear temp
         };
 
@@ -289,6 +316,10 @@ const ProductsEditor = () => {
 
     const startNew = () => {
         setEditingId('new');
+        setIsDonationItem(false);
+        setNewDetail('');
+        setDonationDetails({ subCategory: '', beneficiaries: '', duration: '', icon: '' });
+
         setFormData({
             name: '', price: '', category: categories[0] || 'Handmade Crafts', description: '',
             material: '', dimensions: '', origin: '', impact: '',
@@ -304,6 +335,39 @@ const ProductsEditor = () => {
             stock: product.stock !== undefined ? product.stock : 0
         };
         setFormData(p);
+
+        // Determine if it's a donation item based on details structure or existing itemType
+        const isDonation = product.itemType === 'donation' || (product.details && !Array.isArray(product.details));
+        setIsDonationItem(isDonation);
+
+        if (isDonation) {
+            setDonationDetails({
+                subCategory: product.details?.subCategory || '',
+                beneficiaries: product.details?.beneficiaries || '',
+                duration: product.details?.duration || '',
+                icon: product.details?.icon || ''
+            });
+            setNewDetail(''); // Clear standard
+        } else {
+            // Standard product, ensure details is array
+            if (!Array.isArray(p.details)) p.details = [];
+            setFormData(p); // Re-set with array details
+            setNewDetail('');
+        }
+    };
+
+    const addDetailItem = () => {
+        if (!newDetail.trim()) return;
+        const currentDetails = Array.isArray(formData.details) ? formData.details : [];
+        setFormData({ ...formData, details: [...currentDetails, newDetail.trim()] });
+        setNewDetail('');
+    };
+
+    const removeDetailItem = (index) => {
+        const currentDetails = Array.isArray(formData.details) ? formData.details : [];
+        const newDetails = [...currentDetails];
+        newDetails.splice(index, 1);
+        setFormData({ ...formData, details: newDetails });
     };
 
     return (
@@ -419,7 +483,9 @@ const ProductsEditor = () => {
 
                                             {/* Image Preview */}
                                             <div className="w-16 h-16 rounded overflow-hidden bg-neutral-100 dark:bg-neutral-900 flex-shrink-0">
-                                                <img src={getImageUrl(img)} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" />
+                                                {img && (
+                                                    <img src={getImageUrl(img)} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" />
+                                                )}
                                             </div>
 
                                             {/* Image URL */}
@@ -500,6 +566,107 @@ const ProductsEditor = () => {
                             <label className="block text-sm font-bold mb-1 dark:text-white">Impact Statement</label>
                             <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" value={formData.impact} onChange={e => setFormData({ ...formData, impact: e.target.value })} />
                         </div>
+                        <div className="col-span-2 p-4 border rounded-lg bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700">
+                            <label className="flex items-center gap-2 font-bold dark:text-white mb-4">
+                                <input
+                                    type="checkbox"
+                                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                                    checked={isDonationItem}
+                                    onChange={e => setIsDonationItem(e.target.checked)}
+                                />
+                                Is this a "Basket of Hope" Donation Item?
+                            </label>
+
+                            {isDonationItem ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="col-span-2 bg-blue-50 dark:bg-blue-900/20 p-3 rounded mb-2 border border-blue-100 dark:border-blue-800">
+                                        <p className="text-sm text-blue-800 dark:text-blue-300">
+                                            <span className="font-bold">Donation Item Mode:</span> Details entered here will create the impact card on the "Basket of Hope" page.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold mb-1 dark:text-white">Sub-Category <span className="text-xs font-normal">(e.g., Hygiene, Education)</span></label>
+                                        <input
+                                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                            value={donationDetails.subCategory}
+                                            onChange={e => setDonationDetails({ ...donationDetails, subCategory: e.target.value })}
+                                            placeholder="Filters on donation page"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold mb-1 dark:text-white">Beneficiaries <span className="text-xs font-normal">(e.g., 1 girl)</span></label>
+                                        <input
+                                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                            value={donationDetails.beneficiaries}
+                                            onChange={e => setDonationDetails({ ...donationDetails, beneficiaries: e.target.value })}
+                                            placeholder="Who gets this?"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold mb-1 dark:text-white">Duration <span className="text-xs font-normal">(e.g., 1 year)</span></label>
+                                        <input
+                                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                            value={donationDetails.duration}
+                                            onChange={e => setDonationDetails({ ...donationDetails, duration: e.target.value })}
+                                            placeholder="How long it lasts?"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold mb-1 dark:text-white">Icon Name <span className="text-xs font-normal">(Google Material Symbol)</span></label>
+                                        <input
+                                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                            value={donationDetails.icon}
+                                            onChange={e => setDonationDetails({ ...donationDetails, icon: e.target.value })}
+                                            placeholder="e.g., school, checkroom"
+                                        />
+                                        <a href="https://fonts.google.com/icons" target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline mt-1 inline-block">
+                                            Browse Icons ↗
+                                        </a>
+                                    </div>
+                                    {donationDetails.icon && (
+                                        <div className="flex items-center gap-2 mt-2">
+                                            <span className="text-sm">Preview:</span>
+                                            <span className="material-symbols-outlined text-2xl text-primary">{donationDetails.icon}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div>
+                                    <label className="block text-sm font-bold mb-2 dark:text-white">Product Details (Bullet Points)</label>
+                                    <div className="flex gap-2 mb-3">
+                                        <input
+                                            className="flex-1 p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                            value={newDetail}
+                                            onChange={e => setNewDetail(e.target.value)}
+                                            onKeyDown={e => e.key === 'Enter' && addDetailItem()}
+                                            placeholder="e.g., Handmade in Kenya"
+                                        />
+                                        <button
+                                            onClick={addDetailItem}
+                                            className="bg-secondary text-white px-4 py-2 rounded font-bold"
+                                        >
+                                            Add
+                                        </button>
+                                    </div>
+                                    <ul className="space-y-2">
+                                        {Array.isArray(formData.details) && formData.details.map((detail, idx) => (
+                                            <li key={idx} className="flex justify-between items-center bg-white dark:bg-neutral-900 p-2 rounded border dark:border-neutral-700">
+                                                <span className="dark:text-white text-sm">{detail}</span>
+                                                <button
+                                                    onClick={() => removeDetailItem(idx)}
+                                                    className="text-red-500 hover:text-red-700 p-1"
+                                                >
+                                                    <span className="material-symbols-outlined text-lg">close</span>
+                                                </button>
+                                            </li>
+                                        ))}
+                                        {(!formData.details || formData.details.length === 0) && (
+                                            <li className="text-sm text-gray-500 italic">No details added yet.</li>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
                         <div className="col-span-2 bg-yellow-50 dark:bg-yellow-900/10 p-4 rounded border border-yellow-200 dark:border-yellow-700">
                             <label className="flex items-center gap-2 cursor-pointer font-bold dark:text-white">
                                 <input
@@ -522,7 +689,13 @@ const ProductsEditor = () => {
                 <div className="grid grid-cols-1 gap-4">
                     {allProducts.map(product => (
                         <div key={product.id} className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-4 border rounded-lg dark:border-neutral-700">
-                            <img src={getImageUrl(product.images && product.images[0])} alt={product.name} className="w-full sm:w-20 sm:h-20 h-48 object-cover rounded bg-gray-100" />
+                            {product.images && product.images.length > 0 ? (
+                                <img src={getImageUrl(product.images[0])} alt={product.name} className="w-full sm:w-20 sm:h-20 h-48 object-cover rounded bg-gray-100" />
+                            ) : (
+                                <div className="w-full sm:w-20 sm:h-20 h-48 bg-gray-100 rounded flex items-center justify-center text-gray-400">
+                                    <span className="material-symbols-outlined">image</span>
+                                </div>
+                            )}
                             <div className="flex-1 min-w-0">
                                 <h3 className="font-bold dark:text-white flex flex-wrap items-center gap-2 mb-1">
                                     <span className="truncate">{product.name}</span>
@@ -566,7 +739,9 @@ const GalleryEditor = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {gallery.map(img => (
                     <div key={img.id} className="relative group rounded-lg overflow-hidden aspect-square border dark:border-neutral-700">
-                        <img src={getImageUrl(img.url)} className="w-full h-full object-cover" />
+                        {img.url && (
+                            <img src={getImageUrl(img.url)} className="w-full h-full object-cover" />
+                        )}
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <button onClick={() => removeImageFromGallery(img.id)} className="bg-red-600 text-white p-2 rounded-full">
                                 <span className="material-symbols-outlined">delete</span>
@@ -824,7 +999,9 @@ const TeamEditor = () => {
                             </div>
                         ) : (
                             <div className="flex gap-4 items-center">
-                                <img src={getImageUrl(member.image)} alt={member.name} className="size-12 rounded-full object-cover" />
+                                {member.image && (
+                                    <img src={getImageUrl(member.image)} alt={member.name} className="size-12 rounded-full object-cover" />
+                                )}
                                 <div className="flex-1">
                                     <h3 className="font-bold dark:text-white">{member.name}</h3>
                                     <p className="text-xs text-primary">{member.role}</p>
@@ -857,14 +1034,16 @@ const ProgramsEditor = () => {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold dark:text-white">Programs Manager</h2>
-                <button onClick={() => { setEditing('new'); setFormData({ title: '', description: '', features: [], image: '' }); }} className="bg-secondary text-white px-4 py-2 rounded-lg font-bold">+ New Program</button>
+                <button onClick={() => { setEditing('new'); setFormData({ title: '', description: '', features: [], image: '', header: '', dropdown_title: '' }); }} className="bg-secondary text-white px-4 py-2 rounded-lg font-bold">+ New Program</button>
             </div>
             {editing && (
                 <div className="space-y-4 mb-8 p-4 border rounded dark:border-neutral-700">
                     <input placeholder="Title" className="w-full p-2 border rounded dark:bg-neutral-900" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} />
+                    <input placeholder="Dropdown Title (shown in nav menu)" className="w-full p-2 border rounded dark:bg-neutral-900" value={formData.dropdown_title || ''} onChange={e => setFormData({ ...formData, dropdown_title: e.target.value })} />
                     <textarea placeholder="Description" className="w-full p-2 border rounded dark:bg-neutral-900" rows="3" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                     <ImageUploader value={formData.image} onChange={url => setFormData({ ...formData, image: url })} placeholder="Image URL" />
                     <textarea placeholder="Features (one per line)" className="w-full p-2 border rounded dark:bg-neutral-900" rows="3" value={(formData.features || []).join('\n')} onChange={e => setFormData({ ...formData, features: e.target.value.split('\n') })} />
+
                     <div className="flex gap-2">
                         <button onClick={handleSave} className="bg-primary text-white px-4 py-2 rounded font-bold">Save</button>
                         <button onClick={() => setEditing(null)} className="bg-gray-500 text-white px-4 py-2 rounded font-bold">Cancel</button>

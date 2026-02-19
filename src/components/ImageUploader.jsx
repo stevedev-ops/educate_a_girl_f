@@ -48,7 +48,9 @@ const ImageUploader = ({ value, onChange, placeholder = "Image URL" }) => {
             {error && <p className="text-red-500 text-sm">{error}</p>}
             {value && (
                 <div className="mt-2 w-full h-32 bg-gray-100 dark:bg-neutral-900 rounded-lg overflow-hidden border dark:border-neutral-700 relative">
-                    <img src={getImageUrl(value)} alt="Preview" className="w-full h-full object-contain" />
+                    {value && (
+                        <img src={getImageUrl(value)} alt="Preview" className="w-full h-full object-contain" />
+                    )}
                 </div>
             )}
         </div>

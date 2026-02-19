@@ -24,11 +24,15 @@ export const CartProvider = ({ children }) => {
         setCartItems(prev => {
             const existing = prev.find(item => item.id === product.id);
             const currentQty = existing ? existing.quantity : 0;
-            const availableStock = product.stock || 0;
+            const isDonation = product.itemType === 'donation';
 
-            if (currentQty + quantity > availableStock) {
-                toast.error(`Cannot add more. Only ${availableStock} items in stock.`);
-                return prev;
+            // Skip stock validation for donation items
+            if (!isDonation) {
+                const availableStock = product.stock || 0;
+                if (currentQty + quantity > availableStock) {
+                    toast.error(`Cannot add more. Only ${availableStock} items in stock.`);
+                    return prev;
+                }
             }
 
             if (existing) {
@@ -52,7 +56,8 @@ export const CartProvider = ({ children }) => {
         if (newQuantity < 1) return;
         setCartItems(prev => prev.map(item => {
             if (item.id === productId) {
-                if (newQuantity > item.stock) {
+                // Skip stock validation for donation items
+                if (item.itemType !== 'donation' && newQuantity > item.stock) {
                     toast.error(`Limit reached. Only ${item.stock} available.`);
                     return item;
                 }
@@ -64,8 +69,14 @@ export const CartProvider = ({ children }) => {
 
     const clearCart = () => setCartItems([]);
 
+    // Helper functions to separate donation and shop items
+    const getDonationItems = () => cartItems.filter(item => item.itemType === 'donation');
+    const getShopItems = () => cartItems.filter(item => item.itemType !== 'donation');
+
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const donationTotal = getDonationItems().reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shopTotal = getShopItems().reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     return (
         <CartContext.Provider value={{
@@ -75,7 +86,11 @@ export const CartProvider = ({ children }) => {
             updateQuantity,
             clearCart,
             cartCount,
-            cartTotal
+            cartTotal,
+            getDonationItems,
+            getShopItems,
+            donationTotal,
+            shopTotal
         }}>
             {children}
         </CartContext.Provider>

@@ -188,6 +188,77 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Basket of Hope Section */}
+            <section className="w-full py-16 bg-gradient-to-br from-green-50 to-blue-50 dark:from-neutral-900 dark:to-neutral-800 border-y border-neutral-200 dark:border-neutral-700">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col lg:flex-row items-center gap-12">
+                        {/* Content */}
+                        <div className="flex-1 text-center lg:text-left">
+                            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-4">
+                                <span className="material-symbols-outlined text-primary text-sm">favorite</span>
+                                <span className="text-sm font-bold text-primary">New Way to Give</span>
+                            </div>
+                            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 dark:text-white mb-4">
+                                Basket of Hope
+                            </h2>
+                            <p className="text-lg text-neutral-600 dark:text-neutral-300 mb-6 leading-relaxed">
+                                Sponsor essential items like sanitary pads, school supplies, and uniforms that are donated directly to girls in need. You pay for the item, but instead of receiving it yourself, it goes straight to a girl who needs it most.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-center lg:justify-start">
+                                <div className="flex items-center gap-3 bg-white dark:bg-neutral-800 rounded-lg p-4 shadow-sm">
+                                    <span className="material-symbols-outlined text-3xl text-green-600">check_circle</span>
+                                    <div className="text-left">
+                                        <p className="text-sm font-bold text-neutral-900 dark:text-white">Direct Impact</p>
+                                        <p className="text-xs text-neutral-500 dark:text-neutral-400">100% goes to girls</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3 bg-white dark:bg-neutral-800 rounded-lg p-4 shadow-sm">
+                                    <span className="material-symbols-outlined text-3xl text-blue-600">inventory</span>
+                                    <div className="text-left">
+                                        <p className="text-sm font-bold text-neutral-900 dark:text-white">Essential Items</p>
+                                        <p className="text-xs text-neutral-500 dark:text-neutral-400">Real needs met</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <Link
+                                to="/basket-of-hope"
+                                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-lg text-base font-bold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
+                            >
+                                <span>Explore Basket of Hope</span>
+                                <span className="material-symbols-outlined">arrow_forward</span>
+                            </Link>
+                        </div>
+
+                        {/* Visual */}
+                        <div className="flex-1 relative">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg border border-neutral-200 dark:border-neutral-700 transform hover:-translate-y-1 transition-transform">
+                                    <span className="material-symbols-outlined text-5xl text-pink-500 mb-3">health_and_safety</span>
+                                    <h3 className="font-bold text-neutral-900 dark:text-white mb-1">Sanitary Pads</h3>
+                                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Keep girls in school</p>
+                                </div>
+                                <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg border border-neutral-200 dark:border-neutral-700 transform hover:-translate-y-1 transition-transform mt-8">
+                                    <span className="material-symbols-outlined text-5xl text-blue-500 mb-3">school_supplies</span>
+                                    <h3 className="font-bold text-neutral-900 dark:text-white mb-1">School Supplies</h3>
+                                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Enable learning</p>
+                                </div>
+                                <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg border border-neutral-200 dark:border-neutral-700 transform hover:-translate-y-1 transition-transform">
+                                    <span className="material-symbols-outlined text-5xl text-green-500 mb-3">checkroom</span>
+                                    <h3 className="font-bold text-neutral-900 dark:text-white mb-1">Uniforms</h3>
+                                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Provide dignity</p>
+                                </div>
+                                <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg border border-neutral-200 dark:border-neutral-700 transform hover:-translate-y-1 transition-transform mt-8">
+                                    <span className="material-symbols-outlined text-5xl text-purple-500 mb-3">menu_book</span>
+                                    <h3 className="font-bold text-neutral-900 dark:text-white mb-1">Textbooks</h3>
+                                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Support education</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section className="w-full pt-12 pb-8 bg-white dark:bg-neutral-800/50">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-4xl">

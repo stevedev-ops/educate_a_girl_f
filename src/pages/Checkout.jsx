@@ -19,20 +19,26 @@ const CheckoutContent = () => {
     const [email, setEmail] = useState('');
 
     // Helper to get current stock for a cart item
-    const getCurrentStock = (itemId) => {
-        const currentProduct = allProducts?.find(p => p.id === itemId);
+    const getCurrentStock = (item) => {
+        // Donation items have unlimited stock (or logic handled elsewhere)
+        if (item.itemType === 'donation') return 999999;
+
+        const currentProduct = allProducts?.find(p => p.id === item.id);
         return currentProduct?.stock ?? 0;
     };
 
     // Check if products data has loaded (to avoid false positives during loading)
     const isDataLoaded = allProducts && allProducts.length > 0;
 
-    // Check if any cart items are out of stock
-    const hasOutOfStockItems = isDataLoaded && cartItems.some(item => getCurrentStock(item.id) <= 0);
+    // Check if any cart items are out of stock (exclude donations)
+    const hasOutOfStockItems = isDataLoaded && cartItems.some(item =>
+        item.itemType !== 'donation' && getCurrentStock(item) <= 0
+    );
 
     // Check if any cart items have quantity exceeding available stock
     const hasExcessQuantity = isDataLoaded && cartItems.some(item => {
-        const stock = getCurrentStock(item.id);
+        if (item.itemType === 'donation') return false;
+        const stock = getCurrentStock(item);
         return stock > 0 && item.quantity > stock;
     });
 
@@ -52,7 +58,7 @@ const CheckoutContent = () => {
     const handleSuccess = async () => {
         try {
             // Call backend to decrement stock
-            const items = cartItems.map(item => ({ id: item.id, quantity: item.quantity }));
+            const items = cartItems.map(item => ({ id: item.id, quantity: item.quantity, itemType: item.itemType }));
             await checkout(items);
 
             // Create order record
@@ -95,7 +101,7 @@ const CheckoutContent = () => {
             const cardElement = elements.getElement(CardElement);
 
             // In a real app, you would create a PaymentIntent on the server here
-            // and confirm it. For this client-only demo, we'll create a token/method
+            // and verify it. for this client-only demo, we'll create a token/method
             // to verify interaction.
             const { error, paymentMethod: stripeMethod } = await stripe.createPaymentMethod({
                 type: 'card',
@@ -125,6 +131,9 @@ const CheckoutContent = () => {
             </div>
         );
     }
+
+    // Check if order requires shipping (has non-donation items)
+    const requiresShipping = cartItems.some(item => item.itemType !== 'donation');
 
     return (
         <div className="min-h-screen flex flex-col lg:flex-row bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary/30">
@@ -161,25 +170,38 @@ const CheckoutContent = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </label>
+
+                            {!requiresShipping && (
+                                <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 p-4 rounded-lg text-sm flex gap-3 items-start">
+                                    <span className="material-symbols-outlined shrink-0 text-xl">volunteer_activism</span>
+                                    <div>
+                                        <p className="font-bold mb-1">Donation Only Order</p>
+                                        <p>Your basket of hope items will be donated directly to girls in need. No shipping address required.</p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </section>
-                    <section className="mb-10">
-                        <h2 className="text-xl font-bold tracking-tight mb-4">Shipping Address</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <label className="block">
-                                <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">First name</span>
-                                <input className="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" type="text" />
-                            </label>
-                            <label className="block">
-                                <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Last name</span>
-                                <input className="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" type="text" />
-                            </label>
-                            <label className="block md:col-span-2">
-                                <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Address</span>
-                                <input className="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" placeholder="123 Ocean Drive" type="text" />
-                            </label>
-                        </div>
-                    </section>
+
+                    {requiresShipping && (
+                        <section className="mb-10">
+                            <h2 className="text-xl font-bold tracking-tight mb-4">Shipping Address</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <label className="block">
+                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">First name</span>
+                                    <input className="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" type="text" />
+                                </label>
+                                <label className="block">
+                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Last name</span>
+                                    <input className="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" type="text" />
+                                </label>
+                                <label className="block md:col-span-2">
+                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 block">Address</span>
+                                    <input className="w-full h-12 px-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow" placeholder="123 Ocean Drive" type="text" />
+                                </label>
+                            </div>
+                        </section>
+                    )}
                     <section className="mb-10">
                         <h2 className="text-xl font-bold tracking-tight mb-4">Payment Method</h2>
                         <p className="text-sm text-slate-500 mb-4">Select your preferred payment gateway.</p>
@@ -264,21 +286,31 @@ const CheckoutContent = () => {
                     {/* Cart Summary Content (Same as before) */}
                     <div className="space-y-6">
                         {cartItems.map(item => {
-                            const currentStock = getCurrentStock(item.id);
+                            const currentStock = getCurrentStock(item);
                             const isOutOfStock = currentStock <= 0;
+                            const isDonation = item.itemType === 'donation';
+                            const imageUrl = isDonation ? item.image : (item.images && item.images[0]);
+
                             return (
                                 <div key={item.id} className="flex gap-4 items-center">
                                     <div className="relative size-16 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-background-dark overflow-hidden">
-                                        <img alt={item.name} className="w-full h-full object-cover" src={item.images[0]} />
+                                        {imageUrl && (
+                                            <img alt={item.name} className="w-full h-full object-cover" src={imageUrl} />
+                                        )}
                                         <span className="absolute -top-2 -right-2 size-5 rounded-full bg-slate-500 text-white text-xs font-bold flex items-center justify-center">{item.quantity}</span>
                                     </div>
                                     <div className="flex-1">
                                         <h3 className="font-bold text-slate-900 dark:text-white">{item.name}</h3>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">{item.category}</p>
-                                        {isOutOfStock && (
+                                        <div className="flex items-center gap-2">
+                                            <p className="text-xs text-slate-500 dark:text-slate-400">{item.category}</p>
+                                            {isDonation && (
+                                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">DONATION</span>
+                                            )}
+                                        </div>
+                                        {isOutOfStock && !isDonation && (
                                             <p className="text-xs font-bold text-red-600 mt-1">⚠️ OUT OF STOCK</p>
                                         )}
-                                        {!isOutOfStock && item.quantity > currentStock && (
+                                        {!isOutOfStock && !isDonation && item.quantity > currentStock && (
                                             <p className="text-xs font-bold text-orange-600 mt-1">
                                                 ⚠️ Only {currentStock} available (you have {item.quantity} in cart)
                                             </p>
