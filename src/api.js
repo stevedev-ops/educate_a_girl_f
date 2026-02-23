@@ -253,3 +253,25 @@ export const createOrder = async (orderData) => {
         body: JSON.stringify(orderData)
     }));
 };
+
+// BLOG
+export const fetchBlogPosts = async () => handleResponse(await fetch(`${API_URL}/blog`));
+export const fetchAllBlogPosts = async () => handleResponse(await fetch(`${API_URL}/blog/all`));
+export const fetchBlogPostBySlug = async (slug) => handleResponse(await fetch(`${API_URL}/blog/${slug}`));
+export const createBlogPost = async (post) => {
+    return handleResponse(await fetch(`${API_URL}/blog`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(post)
+    }));
+};
+export const updateBlogPost = async (post) => {
+    return handleResponse(await fetch(`${API_URL}/blog/${post.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(post)
+    }));
+};
+export const deleteBlogPost = async (id) => {
+    return handleResponse(await fetch(`${API_URL}/blog/${id}`, { method: 'DELETE' }));
+};

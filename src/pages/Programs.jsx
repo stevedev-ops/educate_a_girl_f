@@ -5,7 +5,10 @@ import SEO from '../components/SEO';
 import { getImageUrl } from '../api';
 
 const Programs = () => {
-    const { programs } = useContent();
+    const { programs, settings } = useContent();
+
+    const programsImages = settings.programs_images || {};
+    const heroImage = programsImages.hero_bg || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCeNpgQ1Z-gZk5SLrWR-scqmjnywuWx-1KRnrSG-RIgARm8zqgSfGY1A9KWvuq7T1_Q-7BuVdcUqz_-OSmaPS8WQT4l3GAz0wyHqlpi_tejkH1uQCzNm59MF2ecybxjoIWyMTSchwkdYu9P3WQ3bnk88dTL1lcfAMdXhHzIsqc1tHJatVvauur28mZ8TcNh-OdnK6k-cfTkXmUo4iuldRV6_cZBYlF83XAnvzj0082bixaRBHr2bDptJtCMtEMEni3wbcMpFErDS1E';
 
 
     return (
@@ -21,7 +24,7 @@ const Programs = () => {
                     <img
                         alt="Eager students in a rural classroom raising hands"
                         className="w-full h-full object-cover opacity-30"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeNpgQ1Z-gZk5SLrWR-scqmjnywuWx-1KRnrSG-RIgARm8zqgSfGY1A9KWvuq7T1_Q-7BuVdcUqz_-OSmaPS8WQT4l3GAz0wyHqlpi_tejkH1uQCzNm59MF2ecybxjoIWyMTSchwkdYu9P3WQ3bnk88dTL1lcfAMdXhHzIsqc1tHJatVvauur28mZ8TcNh-OdnK6k-cfTkXmUo4iuldRV6_cZBYlF83XAnvzj0082bixaRBHr2bDptJtCMtEMEni3wbcMpFErDS1E"
+                        src={heroImage}
                         loading="eager"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
