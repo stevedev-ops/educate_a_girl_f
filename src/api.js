@@ -41,7 +41,7 @@ const handleResponse = async (response) => {
         throw new Error(error.error || 'Request failed');
     }
     const json = await response.json();
-    return json.data || json; // Some endpoints return data, some just success message
+    return json && json.data ? json.data : json; // Safe check for null responses
 };
 
 // PRODUCTS
