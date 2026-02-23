@@ -36,7 +36,9 @@ export const ContentProvider = ({ children }) => {
         contact_info: null,
         impact_stats: null,
         home_hero: null,
-        about_hero: null
+        about_hero: null,
+        about_images: null,
+        programs_images: null
     });
 
     // Initial Load
@@ -47,7 +49,8 @@ export const ContentProvider = ({ children }) => {
                 const results = await Promise.allSettled([
                     fetchProducts(), fetchGallery(), fetchStories(), fetchTeam(), fetchJourney(),
                     fetchHomeProductIds(), fetchCategories(), fetchPrograms(), fetchMessages(), fetchPendingReviews(),
-                    fetchSettings('contact_info'), fetchSettings('impact_stats'), fetchSettings('home_hero'), fetchSettings('about_hero')
+                    fetchSettings('contact_info'), fetchSettings('impact_stats'), fetchSettings('home_hero'), fetchSettings('about_hero'),
+                    fetchSettings('about_images'), fetchSettings('programs_images')
                 ]);
 
                 // Helper to get value or default
@@ -67,6 +70,8 @@ export const ContentProvider = ({ children }) => {
                 const stats = getVal(results[11], null);
                 const hHero = getVal(results[12], null);
                 const aHero = getVal(results[13], null);
+                const aImages = getVal(results[14], null);
+                const pImages = getVal(results[15], null);
 
                 // Log failures for debugging
                 results.forEach((res, index) => {
@@ -134,7 +139,9 @@ export const ContentProvider = ({ children }) => {
                     contact_info: contact,
                     impact_stats: stats,
                     home_hero: hHero,
-                    about_hero: aHero
+                    about_hero: aHero,
+                    about_images: aImages,
+                    programs_images: pImages
                 });
 
             } catch (err) {

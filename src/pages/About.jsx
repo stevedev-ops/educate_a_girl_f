@@ -16,6 +16,10 @@ const About = () => {
         subtitle: "We are dedicated to building a sustainable future through education, compassion, and direct action."
     };
 
+    const aboutImages = settings.about_images || {};
+    const heroImage = aboutImages.hero_bg || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwKFTiczEuQ-ehaNvzkO0qYa5Fpt042FUrH6F_iB98KnOqubm8OucgrrJmEhPEQPPkUq2qX_DewL78K7U8g906fSO7biU00UWZyl_qpjje3fnZRKeVC4ryrGdiy8P1pZ1HgqgPW9gSf_ysE_vFNDqrAjCE87dDxzw9ucsOeCTu86MeHbIEaeVHZmZKSwcDO7_6ZldApz_18UOYlWUTKEDY8WEYPdDKdMSIZG1wBFPfAusA6y-LY88IKYxfdXrZ7Z-w6sL7w2hKLTA';
+    const shopImage = aboutImages.shop_bg || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCvdGcxmyXzknxw_MCjBscVt9IIHhIqJfXUUqTLr98a5Aldzk_yyCH86E1_J1G3WrWCj1mU-PDid5CHR5_4p97xT_T6eL-MRGPjt-Y2IMmc2FSE9sDmjOxpFkAdzUjpnhGitTuhaVD47tvZo88qxoQnFUGMLK69uhfIsJ_QFVWAsfRwTC8Jy8pnDiDR3EzwxKj587Lc-cAsatIeeZ3SH1QKUe7fqwxQzDrJZmQfTTKf_lj2zPrDQVLROlxj7_A4F9cpxy4UBl2g9EY';
+
     return (
         <div className="w-full">
             <SEO
@@ -24,7 +28,7 @@ const About = () => {
                 keywords="about EARG, mission, vision, team, Tharaka Nithi, rural girl empowerment, Kenya NGO"
             />
             {/* Hero Section */}
-            <section className="relative flex flex-col items-center justify-center min-h-[600px] px-4 py-20 bg-cover bg-center" style={{ backgroundImage: 'linear-gradient(rgba(6, 78, 59, 0.6) 0%, rgba(17, 24, 39, 0.8) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwKFTiczEuQ-ehaNvzkO0qYa5Fpt042FUrH6F_iB98KnOqubm8OucgrrJmEhPEQPPkUq2qX_DewL78K7U8g906fSO7biU00UWZyl_qpjje3fnZRKeVC4ryrGdiy8P1pZ1HgqgPW9gSf_ysE_vFNDqrAjCE87dDxzw9ucsOeCTu86MeHbIEaeVHZmZKSwcDO7_6ZldApz_18UOYlWUTKEDY8WEYPdDKdMSIZG1wBFPfAusA6y-LY88IKYxfdXrZ7Z-w6sL7w2hKLTA")' }}>
+            <section className="relative flex flex-col items-center justify-center min-h-[600px] px-4 py-20 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(rgba(6, 78, 59, 0.6) 0%, rgba(17, 24, 39, 0.8) 100%), url("${heroImage}")` }}>
                 <div className="max-w-4xl w-full text-center flex flex-col gap-6 animate-fade-in-up">
                     <h1 className="text-white text-4xl md:text-6xl font-black leading-tight tracking-tight drop-shadow-sm">
                         {hero.title}
@@ -334,7 +338,7 @@ const About = () => {
                     <img
                         alt="A glimpse of our sustainable shop products"
                         className="w-full h-full object-cover opacity-60 mix-blend-overlay"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvdGcxmyXzknxw_MCjBscVt9IIHhIqJfXUUqTLr98a5Aldzk_yyCH86E1_J1G3WrWCj1mU-PDid5CHR5_4p97xT_T6eL-MRGPjt-Y2IMmc2FSE9sDmjOxpFkAdzUjpnhGitTuhaVD47tvZo88qxoQnFUGMLK69uhfIsJ_QFVWAsfRwTC8Jy8pnDiDR3EzwxKj587Lc-cAsatIeeZ3SH1QKUe7fqwxQzDrJZmQfTTKf_lj2zPrDQVLROlxj7_A4F9cpxy4UBl2g9EY"
+                        src={shopImage}
                         loading="lazy"
                     />
                 </div>

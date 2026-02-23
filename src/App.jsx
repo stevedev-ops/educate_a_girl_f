@@ -19,6 +19,8 @@ const Wishlist = lazy(() => import('./pages/Wishlist'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const BasketOfHope = lazy(() => import('./pages/BasketOfHope'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 
@@ -50,6 +52,8 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="programs" element={<Programs />} />
             <Route path="gallery" element={<Gallery />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="blog/:slug" element={<BlogPost />} />
             <Route path="contact" element={<Contact />} />
             <Route path="donate" element={<Donate />} />
             <Route path="basket-of-hope" element={<BasketOfHope />} />

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useContent } from '../context/ContentContext';
 import ImageUploader from '../components/ImageUploader';
 import toast from 'react-hot-toast';
-import { getImageUrl } from '../api';
+import { getImageUrl, fetchAllBlogPosts, createBlogPost, updateBlogPost, deleteBlogPost } from '../api';
 import { validateProduct, sanitizeText } from '../utils/validation';
 
 
@@ -91,7 +91,7 @@ const Admin = () => {
                         {/* Mobile: Horizontal Scroll */}
                         <div className="lg:hidden overflow-x-auto pb-2 -mx-4 px-4">
                             <div className="flex gap-2 min-w-max">
-                                {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
+                                {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'blog', 'settings', 'messages', 'reviews'].map(tab => (
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab)}
@@ -110,7 +110,7 @@ const Admin = () => {
                         </div>
                         {/* Desktop: Vertical Tabs */}
                         <div className="hidden lg:flex flex-col gap-2">
-                            {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'settings', 'messages', 'reviews'].map(tab => (
+                            {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'blog', 'settings', 'messages', 'reviews'].map(tab => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
@@ -138,6 +138,7 @@ const Admin = () => {
                         {activeTab === 'journey' && <JourneyEditor />}
                         {activeTab === 'team' && <TeamEditor />}
                         {activeTab === 'programs' && <ProgramsEditor />}
+                        {activeTab === 'blog' && <BlogEditor />}
                         {activeTab === 'settings' && <SettingsEditor />}
                         {activeTab === 'messages' && <MessagesViewer />}
                         {activeTab === 'reviews' && <ReviewsManager />}
@@ -1073,6 +1074,15 @@ const SettingsEditor = () => {
     const [section, setSection] = useState('contact_info');
     const [localData, setLocalData] = useState(null);
 
+    const sectionLabels = {
+        contact_info: 'Contact Info',
+        impact_stats: 'Impact Stats',
+        home_hero: 'Home Hero',
+        about_hero: 'About Hero',
+        about_images: 'About Page Images',
+        programs_images: 'Programs Page Images'
+    };
+
     React.useEffect(() => {
         setLocalData(settings[section] || {});
     }, [section, settings]);
@@ -1101,6 +1111,38 @@ const SettingsEditor = () => {
                     <div>
                         <label className="block text-sm font-bold mb-1 dark:text-white">Background Image</label>
                         <ImageUploader value={merged.image || ''} onChange={url => setLocalData({ ...merged, image: url })} placeholder="Image URL" />
+                    </div>
+                </div>
+            );
+        }
+        if (section === 'about_images') {
+            const merged = { hero_bg: '', shop_bg: '', ...localData };
+            return (
+                <div className="space-y-6">
+                    <div className="p-4 bg-slate-50 dark:bg-neutral-900 rounded-lg border dark:border-neutral-700">
+                        <label className="block text-sm font-bold mb-2 dark:text-white">Hero Background Image</label>
+                        <p className="text-xs text-slate-500 mb-3">The full-screen background image at the top of the About page.</p>
+                        <ImageUploader value={merged.hero_bg || ''} onChange={url => setLocalData({ ...merged, hero_bg: url })} placeholder="Upload or paste image URL..." />
+                        {merged.hero_bg && <img src={merged.hero_bg} alt="About hero preview" className="mt-3 w-full h-32 object-cover rounded-lg" />}
+                    </div>
+                    <div className="p-4 bg-slate-50 dark:bg-neutral-900 rounded-lg border dark:border-neutral-700">
+                        <label className="block text-sm font-bold mb-2 dark:text-white">"Shop for Good" Section Background</label>
+                        <p className="text-xs text-slate-500 mb-3">The background image for the Shop for Good section near the bottom of the About page.</p>
+                        <ImageUploader value={merged.shop_bg || ''} onChange={url => setLocalData({ ...merged, shop_bg: url })} placeholder="Upload or paste image URL..." />
+                        {merged.shop_bg && <img src={merged.shop_bg} alt="Shop bg preview" className="mt-3 w-full h-32 object-cover rounded-lg" />}
+                    </div>
+                </div>
+            );
+        }
+        if (section === 'programs_images') {
+            const merged = { hero_bg: '', ...localData };
+            return (
+                <div className="space-y-6">
+                    <div className="p-4 bg-slate-50 dark:bg-neutral-900 rounded-lg border dark:border-neutral-700">
+                        <label className="block text-sm font-bold mb-2 dark:text-white">Programs Hero Background Image</label>
+                        <p className="text-xs text-slate-500 mb-3">The background image in the hero section at the top of the Programs page.</p>
+                        <ImageUploader value={merged.hero_bg || ''} onChange={url => setLocalData({ ...merged, hero_bg: url })} placeholder="Upload or paste image URL..." />
+                        {merged.hero_bg && <img src={merged.hero_bg} alt="Programs hero preview" className="mt-3 w-full h-32 object-cover rounded-lg" />}
                     </div>
                 </div>
             );
@@ -1177,9 +1219,9 @@ const SettingsEditor = () => {
                 <button onClick={handleSave} className="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 shadow-md transition-colors">Save Changes</button>
             </div>
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-                {['contact_info', 'home_hero', 'about_hero', 'impact_stats'].map(s => (
+                {['contact_info', 'home_hero', 'about_hero', 'about_images', 'programs_images', 'impact_stats'].map(s => (
                     <button key={s} onClick={() => setSection(s)} className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${section === s ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-neutral-700 dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-600'}`}>
-                        {s.replace('_', ' ')}
+                        {sectionLabels[s] || s.replace(/_/g, ' ')}
                     </button>
                 ))}
             </div>
@@ -1367,6 +1409,191 @@ const ReviewsManager = () => {
                     ))
                 )}
             </div>
+        </div>
+    );
+};
+
+// ─── BLOG EDITOR ────────────────────────────────────────────────────────────
+const BlogEditor = () => {
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [editingId, setEditingId] = useState(null);
+    const [form, setForm] = useState({});
+
+    const slugify = (text) =>
+        text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+
+    const load = () => {
+        setLoading(true);
+        fetchAllBlogPosts()
+            .then(data => { setPosts(Array.isArray(data) ? data : []); setLoading(false); })
+            .catch(() => setLoading(false));
+    };
+
+    useEffect(() => { load(); }, []);
+
+    const startNew = () => {
+        setEditingId('new');
+        setForm({ title: '', slug: '', excerpt: '', content: '', image: '', author: 'EARG Team', published: false });
+    };
+
+    const startEdit = (post) => {
+        setEditingId(post.id);
+        setForm({ ...post });
+    };
+
+    const handleSave = async () => {
+        if (!form.title?.trim()) { toast.error('Title is required'); return; }
+        if (!form.slug?.trim()) { toast.error('Slug is required'); return; }
+        try {
+            if (editingId === 'new') {
+                await createBlogPost(form);
+                toast.success('Post created!');
+            } else {
+                await updateBlogPost({ ...form, id: editingId });
+                toast.success('Post updated!');
+            }
+            setEditingId(null);
+            setForm({});
+            load();
+        } catch (err) {
+            toast.error(err.message || 'Failed to save post');
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Delete this post?')) return;
+        try {
+            await deleteBlogPost(id);
+            toast.success('Post deleted');
+            load();
+        } catch (err) {
+            toast.error('Failed to delete');
+        }
+    };
+
+    const fld = (key, val) => setForm(f => ({ ...f, [key]: val }));
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg sm:text-xl font-bold dark:text-white">Blog Manager</h2>
+                {!editingId && (
+                    <button onClick={startNew} className="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold">
+                        + New Post
+                    </button>
+                )}
+            </div>
+
+            {editingId ? (
+                <div className="space-y-4 max-w-2xl">
+                    <div>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Title *</label>
+                        <input
+                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                            value={form.title || ''}
+                            onChange={e => { fld('title', e.target.value); if (editingId === 'new') fld('slug', slugify(e.target.value)); }}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Slug (URL) *</label>
+                        <input
+                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white font-mono text-sm"
+                            value={form.slug || ''}
+                            onChange={e => fld('slug', slugify(e.target.value))}
+                        />
+                        <p className="text-xs text-slate-400 mt-1">URL: /blog/<strong>{form.slug || 'post-slug'}</strong></p>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Author</label>
+                        <input
+                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                            value={form.author || ''}
+                            onChange={e => fld('author', e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Excerpt</label>
+                        <textarea
+                            rows="2"
+                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                            placeholder="Short summary shown in blog listing..."
+                            value={form.excerpt || ''}
+                            onChange={e => fld('excerpt', e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Cover Image</label>
+                        <ImageUploader
+                            value={form.image || ''}
+                            onChange={url => fld('image', url)}
+                            placeholder="Upload or paste image URL..."
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Content</label>
+                        <textarea
+                            rows="14"
+                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white font-mono text-sm"
+                            placeholder="Write your blog post content here..."
+                            value={form.content || ''}
+                            onChange={e => fld('content', e.target.value)}
+                        />
+                    </div>
+                    <label className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            className="size-5 rounded accent-primary"
+                            checked={form.published || false}
+                            onChange={e => fld('published', e.target.checked)}
+                        />
+                        <div>
+                            <span className="font-bold dark:text-white">Published</span>
+                            <p className="text-xs text-slate-500">If checked, this post will be visible on the public Blog page.</p>
+                        </div>
+                    </label>
+                    <div className="flex gap-3 pt-2">
+                        <button onClick={handleSave} className="bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-700">Save Post</button>
+                        <button onClick={() => { setEditingId(null); setForm({}); }} className="bg-slate-500 text-white px-6 py-2 rounded font-bold hover:bg-slate-600">Cancel</button>
+                    </div>
+                </div>
+            ) : loading ? (
+                <div className="flex justify-center py-12">
+                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+            ) : posts.length === 0 ? (
+                <div className="text-center py-16 text-slate-400">
+                    <span className="material-symbols-outlined text-5xl mb-3 block">article</span>
+                    <p>No blog posts yet. Click <strong>+ New Post</strong> to create one.</p>
+                </div>
+            ) : (
+                <div className="space-y-3">
+                    {posts.map(post => (
+                        <div key={post.id} className="flex flex-col sm:flex-row gap-3 p-4 border rounded-lg dark:border-neutral-700 items-start sm:items-center">
+                            {post.image ? (
+                                <img src={getImageUrl(post.image)} alt={post.title} className="w-full sm:w-16 sm:h-16 h-32 object-cover rounded-lg shrink-0" />
+                            ) : (
+                                <div className="w-full sm:w-16 sm:h-16 h-32 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center shrink-0">
+                                    <span className="material-symbols-outlined text-slate-400">article</span>
+                                </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center gap-2 mb-1">
+                                    <h3 className="font-bold dark:text-white truncate">{post.title}</h3>
+                                    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${post.published ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400'}`}>
+                                        {post.published ? 'Published' : 'Draft'}
+                                    </span>
+                                </div>
+                                <p className="text-xs text-slate-400">/blog/{post.slug} · {post.author}</p>
+                            </div>
+                            <div className="flex gap-2 sm:flex-col sm:justify-center w-full sm:w-auto">
+                                <button onClick={() => startEdit(post)} className="flex-1 sm:flex-none px-4 py-2 text-sm bg-blue-50 text-blue-600 rounded hover:bg-blue-100 font-medium">Edit</button>
+                                <button onClick={() => handleDelete(post.id)} className="flex-1 sm:flex-none px-4 py-2 text-sm bg-red-50 text-red-600 rounded hover:bg-red-100 font-medium">Delete</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

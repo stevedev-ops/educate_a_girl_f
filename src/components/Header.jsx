@@ -93,6 +93,7 @@ const Header = () => {
                         </div>
 
                         <Link to="/gallery" className={linkClass('/gallery')}>Gallery</Link>
+                        <Link to="/blog" className={linkClass('/blog')}>Blog</Link>
                         <Link to="/contact" className={linkClass('/contact')}>Contact</Link>
                         <div className="w-px h-4 bg-slate-300 dark:bg-slate-600"></div>
                         <Link to="/shop" className={linkClass('/shop')}>Shop</Link>
@@ -179,6 +180,7 @@ const Header = () => {
                             </div>
                         </div>
                         <Link onClick={() => setIsMenuOpen(false)} to="/gallery" className="p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-slate-900 dark:text-white">Gallery</Link>
+                        <Link onClick={() => setIsMenuOpen(false)} to="/blog" className="p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-slate-900 dark:text-white">Blog</Link>
                         <Link onClick={() => setIsMenuOpen(false)} to="/shop" className="p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-slate-900 dark:text-white">Shop</Link>
                         <Link onClick={() => setIsMenuOpen(false)} to="/basket-of-hope" className="p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-slate-900 dark:text-white">Basket of Hope</Link>
                         <Link onClick={() => setIsMenuOpen(false)} to="/contact" className="p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-slate-900 dark:text-white">Contact</Link>
