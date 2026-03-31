@@ -57,11 +57,6 @@ const Home = () => {
                                 <p className="mb-8 text-lg font-medium text-neutral-200 md:text-xl">
                                     {hero.subtitle}
                                 </p>
-                                <div className="flex flex-wrap gap-4">
-                                    <Link to="/shop" className="flex h-12 items-center justify-center rounded-lg bg-white/10 backdrop-blur-md border border-white/20 px-8 text-base font-bold text-white shadow-md transition-all hover:bg-white/20">
-                                        Shop Merch
-                                    </Link>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -85,59 +80,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            {partners.length > 0 && (
-                <section className="w-full py-10 border-y border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/60">
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-                            <div className="max-w-xl">
-                                <p className="text-sm font-bold uppercase tracking-[0.2em] text-primary-dark dark:text-primary">In Partnership With</p>
-                                <h2 className="mt-2 text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
-                                    Organizations helping extend our reach
-                                </h2>
-                            </div>
-                            <p className="max-w-2xl text-sm text-neutral-600 dark:text-neutral-300">
-                                We work alongside trusted partners who strengthen delivery, advocacy, and long-term impact for girls and women in rural communities.
-                            </p>
-                        </div>
-                        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-                            {partners.map((partner) => {
-                                const content = (
-                                    <div className="group flex h-full min-h-[140px] flex-col items-center justify-center gap-3 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-5 py-6 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
-                                        <img
-                                            alt={`${partner.name} logo`}
-                                            className="h-14 w-auto max-w-full object-contain grayscale transition duration-300 group-hover:grayscale-0"
-                                            src={getImageUrl(partner.logo)}
-                                            loading="lazy"
-                                        />
-                                        <div>
-                                            <p className="text-sm font-bold text-neutral-900 dark:text-white">{partner.name}</p>
-                                            {partner.description && (
-                                                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">{partner.description}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                );
-
-                                return partner.website ? (
-                                    <a
-                                        key={partner.id}
-                                        href={partner.website}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        aria-label={`Visit ${partner.name}`}
-                                    >
-                                        {content}
-                                    </a>
-                                ) : (
-                                    <div key={partner.id}>
-                                        {content}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </section>
-            )}
+            
             <section className="w-full py-16">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
@@ -190,6 +133,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+            
             <section className="w-full py-16 bg-neutral-50 dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="text-center max-w-3xl mx-auto mb-12">
@@ -221,9 +165,9 @@ const Home = () => {
                             <p className="text-neutral-600 dark:text-neutral-400 mb-8 flex-1">
                                 Join our global network of mentors and field workers. Share your skills to make a tangible difference.
                             </p>
-                            <a href="#" className="w-full rounded-lg border-2 border-secondary px-6 py-3 text-sm font-bold text-secondary dark:text-purple-400 shadow-sm transition-colors hover:bg-secondary hover:text-white">
+                            <Link to="/contact" className="w-full rounded-lg border-2 border-secondary px-6 py-3 text-sm font-bold text-secondary dark:text-purple-400 shadow-sm transition-colors hover:bg-secondary hover:text-white">
                                 Join the Team
-                            </a>
+                            </Link>
                         </div>
                         <div className="flex flex-col items-center text-center p-8 rounded-2xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-100 dark:border-neutral-700 transition-transform hover:-translate-y-1 hover:shadow-md">
                             <div className="h-16 w-16 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center mb-6 text-neutral-700 dark:text-neutral-300">
@@ -378,6 +322,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
             <section className="w-full py-16">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <h2 className="mb-10 text-center text-3xl font-bold text-neutral-900 dark:text-white">Stories of Change</h2>
@@ -414,6 +359,60 @@ const Home = () => {
                     )}
                 </div>
             </section>
+            
+            {partners.length > 0 && (
+                <section className="w-full py-10 border-y border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/60">
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                            <div className="max-w-xl">
+                                <p className="text-sm font-bold uppercase tracking-[0.2em] text-primary-dark dark:text-primary">In Partnership With</p>
+                                <h2 className="mt-2 text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                                    Organizations helping extend our reach
+                                </h2>
+                            </div>
+                            <p className="max-w-2xl text-sm text-neutral-600 dark:text-neutral-300">
+                                We work alongside trusted partners who strengthen delivery, advocacy, and long-term impact for girls and women in rural communities.
+                            </p>
+                        </div>
+                        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+                            {partners.map((partner) => {
+                                const content = (
+                                    <div className="group flex h-full min-h-[140px] flex-col items-center justify-center gap-3 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-5 py-6 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
+                                        <img
+                                            alt={`${partner.name} logo`}
+                                            className="h-14 w-auto max-w-full object-contain grayscale transition duration-300 group-hover:grayscale-0"
+                                            src={getImageUrl(partner.logo)}
+                                            loading="lazy"
+                                        />
+                                        <div>
+                                            <p className="text-sm font-bold text-neutral-900 dark:text-white">{partner.name}</p>
+                                            {partner.description && (
+                                                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">{partner.description}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+
+                                return partner.website ? (
+                                    <a
+                                        key={partner.id}
+                                        href={partner.website}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        aria-label={`Visit ${partner.name}`}
+                                    >
+                                        {content}
+                                    </a>
+                                ) : (
+                                    <div key={partner.id}>
+                                        {content}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </section>
+            )}
         </div>
     );
 };
