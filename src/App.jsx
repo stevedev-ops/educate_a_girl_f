@@ -34,7 +34,15 @@ const PageLoader = () => (
   </div>
 );
 
+import { useContent } from './context/ContentContext';
+
 function App() {
+  const { isLoading } = useContent();
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
   return (
     <ErrorBoundary title="Application Error" message="The app encountered an unexpected error.">
       <Suspense fallback={<PageLoader />}>

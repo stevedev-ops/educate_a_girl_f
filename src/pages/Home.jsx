@@ -8,8 +8,7 @@ import { getImageUrl } from '../api';
 
 const Home = () => {
     const { addToCart, cartItems } = useCart();
-    const { stories, getHomeProducts, settings } = useContent();
-
+    const { stories, partners, getHomeProducts, settings } = useContent();
 
     // Get products configured for home page
     const featuredProducts = getHomeProducts().slice(0, 4);
@@ -22,6 +21,9 @@ const Home = () => {
         subtitle: "Join us in making a sustainable difference today.",
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBhU7Qa5X8bQZAmozj6UOUyhfUtLh0QeRPPzX07Aohu3yhFZMHNT9_eikiL5-idRDYF3vNhzKyHkcbW9ZfEAdBMG81GzeRwgqZfIXkVc3avQvMPq-qTN0z9HHhlWSGXHpBkxe80Vd5YaYimu8V129mTLWFzOBBOowEWGYAkRwNX4LOrMdXlSt1JnLUmsqNPMGAnbu7zGecP1Pubw41J6TqErGnvGT7ZgqXQNvaMcbQhTTys-CzjT_TdiocTr8HkezE5aFvg21HpSt0"
     };
+    const homeImages = settings.home_images || {};
+    const visionImage = homeImages.vision_bg || "https://lh3.googleusercontent.com/aida-public/AB6AXuBpSG3vKSIDcEwfSFpSBP2QaHklhtBl6LYnkOLWS-nUIRHqLmii_s5Vyh5AASo99AAQJYLp35ohbrFVX3_ShuQNGHtMQ9QpHAsUyiF5UYCl1QAHalU3n37uJjtFhhv4rsT9ASGxA7G8z7alBAs826C2dh7SupPrTXcFNYwyuTnLyDyzUkUz3KVuLiVNtX-5Oun817rOyk-nagI0GZClaMqCTk5zWUR0O0mHplA8Es3N5wkHv5MX8ip2JmBk3Ts2FTi7aitq6y-ChXA";
+
     const stats = settings.impact_stats || [
         { label: "Lives Impacted", value: "500+", icon: "favorite", trend: "+12% this month" },
         { label: "Schools Supported", value: "120", icon: "school", trend: "+5% this year" },
@@ -86,6 +88,59 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+            {partners.length > 0 && (
+                <section className="w-full py-10 border-y border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/60">
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                            <div className="max-w-xl">
+                                <p className="text-sm font-bold uppercase tracking-[0.2em] text-primary-dark dark:text-primary">In Partnership With</p>
+                                <h2 className="mt-2 text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                                    Organizations helping extend our reach
+                                </h2>
+                            </div>
+                            <p className="max-w-2xl text-sm text-neutral-600 dark:text-neutral-300">
+                                We work alongside trusted partners who strengthen delivery, advocacy, and long-term impact for girls and women in rural communities.
+                            </p>
+                        </div>
+                        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+                            {partners.map((partner) => {
+                                const content = (
+                                    <div className="group flex h-full min-h-[140px] flex-col items-center justify-center gap-3 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-5 py-6 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
+                                        <img
+                                            alt={`${partner.name} logo`}
+                                            className="h-14 w-auto max-w-full object-contain grayscale transition duration-300 group-hover:grayscale-0"
+                                            src={getImageUrl(partner.logo)}
+                                            loading="lazy"
+                                        />
+                                        <div>
+                                            <p className="text-sm font-bold text-neutral-900 dark:text-white">{partner.name}</p>
+                                            {partner.description && (
+                                                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">{partner.description}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+
+                                return partner.website ? (
+                                    <a
+                                        key={partner.id}
+                                        href={partner.website}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        aria-label={`Visit ${partner.name}`}
+                                    >
+                                        {content}
+                                    </a>
+                                ) : (
+                                    <div key={partner.id}>
+                                        {content}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </section>
+            )}
             <section className="w-full py-16">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
@@ -130,7 +185,7 @@ const Home = () => {
                                 <img
                                     alt="Volunteers working together to empower rural communities"
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpSG3vKSIDcEwfSFpSBP2QaHklhtBl6LYnkOLWS-nUIRHqLmii_s5Vyh5AASo99AAQJYLp35ohbrFVX3_ShuQNGHtMQ9QpHAsUyiF5UYCl1QAHalU3n37uJjtFhhv4rsT9ASGxA7G8z7alBAs826C2dh7SupPrTXcFNYwyuTnLyDyzUkUz3KVuLiVNtX-5Oun817rOyk-nagI0GZClaMqCTk5zWUR0O0mHplA8Es3N5wkHv5MX8ip2JmBk3Ts2FTi7aitq6y-ChXA"
+                                    src={getImageUrl(visionImage)}
                                     loading="lazy"
                                 />
                             </div>
@@ -271,8 +326,17 @@ const Home = () => {
             </section>
             <section className="w-full pb-16 bg-white dark:bg-neutral-800/50">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                        {featuredProducts.map((product) => (
+                    {featuredProducts.length === 0 ? (
+                        <div className="py-16 flex flex-col items-center justify-center text-center bg-background-light dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-700 shadow-sm">
+                            <div className="w-16 h-16 bg-neutral-200 dark:bg-neutral-800 rounded-full flex items-center justify-center mb-4">
+                                <span className="material-symbols-outlined text-4xl text-neutral-500 dark:text-neutral-400">inventory_2</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Restocking Soon</h3>
+                            <p className="text-neutral-500 dark:text-neutral-400 max-w-sm mx-auto">We are preparing new merchandise for our store. Check back soon for beautiful fair-trade products.</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                            {featuredProducts.map((product) => (
                             <Link to={`/product/${product.id}`} key={product.id} className="group flex flex-col overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background-light dark:bg-neutral-900 transition-all hover:shadow-lg h-full">
                                 <div className="relative aspect-square overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                                     <img
@@ -308,7 +372,8 @@ const Home = () => {
                                 </div>
                             </Link>
                         ))}
-                    </div>
+                        </div>
+                    )}
                     <div className="mt-10 flex justify-center">
                         <Link to="/shop" className="inline-flex items-center gap-2 text-sm font-bold text-primary-dark dark:text-primary hover:underline">
                             View All Products <span className="material-symbols-outlined text-sm">arrow_forward</span>
@@ -319,8 +384,17 @@ const Home = () => {
             <section className="w-full py-16">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <h2 className="mb-10 text-center text-3xl font-bold text-neutral-900 dark:text-white">Stories of Change</h2>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        {homeStories.map((story) => (
+                    {homeStories.length === 0 ? (
+                        <div className="py-16 flex flex-col items-center justify-center text-center bg-white dark:bg-neutral-800 rounded-3xl border border-neutral-100 dark:border-neutral-700 shadow-sm">
+                            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                <span className="material-symbols-outlined text-4xl text-primary">auto_stories</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Inspiring Stories Coming Soon</h3>
+                            <p className="text-neutral-500 dark:text-neutral-400 max-w-sm mx-auto">We are actively compiling stories from our community. Check back soon for updates!</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            {homeStories.map((story) => (
                             <div key={story.id} className="flex flex-col gap-4 rounded-2xl bg-white dark:bg-neutral-800 p-8 shadow-sm border border-neutral-100 dark:border-neutral-700">
                                 <div className="flex items-center gap-4">
                                     <img
@@ -339,7 +413,8 @@ const Home = () => {
                                 </p>
                             </div>
                         ))}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

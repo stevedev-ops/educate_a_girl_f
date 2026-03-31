@@ -9,7 +9,7 @@ import SEO from '../components/SEO';
 import Pagination from '../components/Pagination';
 
 const Shop = () => {
-    const { allProducts, categories } = useContent();
+    const { allProducts, categories, settings } = useContent();
     const { cartItems, addToCart } = useCart();
     const { isInWishlist, addToWishlist, removeFromWishlist, wishlistItems } = useWishlist();
     const [filter, setFilter] = useState('All');
@@ -70,6 +70,9 @@ const Shop = () => {
         setCurrentPage(1);
     };
 
+    const shopImages = settings.shop_images || {};
+    const shopHeroBg = shopImages.hero_bg || 'https://lh3.googleusercontent.com/aida-public/AB6AXuB8V2Y0FPs9AQ-wkvMriEOsh6jc1DXkcceSvB6Wz6g69DuoqeYJw7xON0WZHUeb6oNHo2eEdoYAVqDMx3iiPTQlL1bmoy9F5YVRZT0EFKcJsPo-tUcOh9B4Fp-oN1SBBOPJg_29FKD-ugLND0FouT-wDlv8zZP6ijpQod34V5qn23wcEFap1b_mXCPxQvwBx9bog4wCxMl1ve70i9aJCQFEOnZJeACnolaHTrxzbpalfOd8bcZBtqj7eVDz0GzaKWJ-HNd_15WdCA0';
+
     return (
         <div className="w-full">
             <SEO
@@ -79,7 +82,7 @@ const Shop = () => {
             />
             <section className="relative">
                 <div className="w-full flex flex-col gap-6 bg-cover bg-center bg-no-repeat min-h-[360px] items-center justify-center p-8"
-                    style={{ backgroundImage: 'linear-gradient(rgba(20, 83, 45, 0.7) 0%, rgba(20, 83, 45, 0.9) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuB8V2Y0FPs9AQ-wkvMriEOsh6jc1DXkcceSvB6Wz6g69DuoqeYJw7xON0WZHUeb6oNHo2eEdoYAVqDMx3iiPTQlL1bmoy9F5YVRZT0EFKcJsPo-tUcOh9B4Fp-oN1SBBOPJg_29FKD-ugLND0FouT-wDlv8zZP6ijpQod34V5qn23wcEFap1b_mXCPxQvwBx9bog4wCxMl1ve70i9aJCQFEOnZJeACnolaHTrxzbpalfOd8bcZBtqj7eVDz0GzaKWJ-HNd_15WdCA0")' }}>
+                    style={{ backgroundImage: `linear-gradient(rgba(20, 83, 45, 0.7) 0%, rgba(20, 83, 45, 0.9) 100%), url("${getImageUrl(shopHeroBg)}")` }}>
                     <div className="flex flex-col gap-3 text-center max-w-[700px] animate-fade-in-up">
                         <h1 className="text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] drop-shadow-md">
                             Shop with Purpose

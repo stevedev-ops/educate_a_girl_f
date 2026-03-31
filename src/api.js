@@ -138,6 +138,26 @@ export const deleteJourney = async (id) => {
     return handleResponse(await fetch(`${API_URL}/journey/${id}`, { method: 'DELETE' }));
 };
 
+// PARTNERS
+export const fetchPartners = async () => handleResponse(await fetch(`${API_URL}/partners`));
+export const createPartner = async (partner) => {
+    return handleResponse(await fetch(`${API_URL}/partners`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(partner)
+    }));
+};
+export const updatePartner = async (partner) => {
+    return handleResponse(await fetch(`${API_URL}/partners/${partner.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(partner)
+    }));
+};
+export const deletePartner = async (id) => {
+    return handleResponse(await fetch(`${API_URL}/partners/${id}`, { method: 'DELETE' }));
+};
+
 // SETTINGS (Home Products)
 export const fetchHomeProductIds = async () => handleResponse(await fetch(`${API_URL}/settings/home_products`));
 export const updateHomeProductIds = async (ids) => {

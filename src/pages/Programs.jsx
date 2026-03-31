@@ -40,8 +40,19 @@ const Programs = () => {
             </section>
 
             {/* Dynamic Programs List */}
-            {programs.map((program, index) => (
-                <section id={program.id} key={program.id} className={`py-20 px-4 md:px-10 ${index % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-slate-50 dark:bg-slate-800/50'}`}>
+            {programs.length === 0 ? (
+                <section className="py-32 px-4 md:px-10 bg-slate-50 dark:bg-slate-800/50 flex flex-col items-center justify-center text-center">
+                    <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <span className="material-symbols-outlined text-4xl text-primary">volunteer_activism</span>
+                    </div>
+                    <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-4">New Initiatives Coming Soon</h2>
+                    <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                        We are currently planning impactful new programs to continue our mission. Please check back soon to explore our upcoming initiatives!
+                    </p>
+                </section>
+            ) : (
+                programs.map((program, index) => (
+                    <section id={program.id} key={program.id} className={`py-20 px-4 md:px-10 ${index % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-slate-50 dark:bg-slate-800/50'}`}>
                     <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
                         <div className={`order-2 ${index % 2 === 0 ? 'lg:order-1' : ''}`}>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary-dark dark:text-primary text-xs font-bold uppercase tracking-wider border border-primary/20 mb-6">
@@ -77,9 +88,10 @@ const Programs = () => {
                                 loading="lazy"
                             />
                         </div>
-                    </div>
-                </section>
-            ))}
+                        </div>
+                    </section>
+                ))
+            )}
         </div>
     );
 };
