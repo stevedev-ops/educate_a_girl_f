@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { fetchBlogPostBySlug, fetchBlogPosts, getImageUrl } from '../api';
 import SEO from '../components/SEO';
+import { getRenderableBlocks, normalizeBlogPost, parseTags } from '../utils/blog';
 
 const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -10,7 +11,6 @@ const formatDate = (dateStr) => {
 
 const BlogPost = () => {
     const { slug } = useParams();
-    const navigate = useNavigate();
     const [post, setPost] = useState(null);
     const [related, setRelated] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -22,11 +22,25 @@ const BlogPost = () => {
         fetchBlogPostBySlug(slug)
             .then(data => {
                 if (!data || !data.id) { setNotFound(true); setLoading(false); return; }
-                setPost(data);
+                const normalizedPost = normalizeBlogPost(data);
+                setPost(normalizedPost);
                 setLoading(false);
                 // Fetch related posts
                 fetchBlogPosts().then(all => {
-                    setRelated((Array.isArray(all) ? all : []).filter(p => p.slug !== slug).slice(0, 3));
+                    const normalized = (Array.isArray(all) ? all : []).map(normalizeBlogPost);
+                    const scored = normalized
+                        .filter(p => p.slug !== slug)
+                        .map((candidate) => {
+                            let score = 0;
+                            if (normalizedPost.category && candidate.category === normalizedPost.category) score += 3;
+                            const sharedTags = parseTags(candidate.tags).filter((tag) => parseTags(normalizedPost.tags).includes(tag));
+                            score += sharedTags.length * 2;
+                            return { candidate, score };
+                        })
+                        .sort((a, b) => b.score - a.score || new Date(b.candidate.published_at) - new Date(a.candidate.published_at))
+                        .map(({ candidate }) => candidate)
+                        .slice(0, 3);
+                    setRelated(scored);
                 }).catch(() => { });
             })
             .catch(() => { setNotFound(true); setLoading(false); });
@@ -111,11 +125,68 @@ const BlogPost = () => {
                     )}
 
                     {/* Content */}
-                    <div
-                        className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-a:text-primary prose-img:rounded-xl prose-p:leading-relaxed text-slate-700 dark:text-slate-300"
-                        style={{ whiteSpace: 'pre-wrap', lineHeight: '1.9', fontSize: '1.07rem' }}
-                    >
-                        {post.content || <em className="text-slate-400">No content yet.</em>}
+                    <div className="space-y-8 text-slate-700 dark:text-slate-300">
+                        {post.category || parseTags(post.tags).length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                                {post.category && (
+                                    <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                        {post.category}
+                                    </span>
+                                )}
+                                {parseTags(post.tags).map((tag) => (
+                                    <span key={tag} className="px-3 py-1 rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                        ) : null}
+
+                        {getRenderableBlocks(post).length > 0 ? (
+                            <div className="space-y-8">
+                                {getRenderableBlocks(post).map((block, index) => {
+                                    if (block.type === 'heading') {
+                                        return (
+                                            <h2 key={index} className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">
+                                                {block.text}
+                                            </h2>
+                                        );
+                                    }
+
+                                    if (block.type === 'image') {
+                                        return (
+                                            <figure key={index} className="space-y-3">
+                                                <img
+                                                    src={getImageUrl(block.url)}
+                                                    alt={block.caption || post.title}
+                                                    className="w-full rounded-2xl object-cover shadow-sm"
+                                                />
+                                                {block.caption && (
+                                                    <figcaption className="text-sm text-center text-slate-500 dark:text-slate-400">
+                                                        {block.caption}
+                                                    </figcaption>
+                                                )}
+                                            </figure>
+                                        );
+                                    }
+
+                                    if (block.type === 'quote') {
+                                        return (
+                                            <blockquote key={index} className="border-l-4 border-primary pl-5 italic text-xl text-slate-600 dark:text-slate-300">
+                                                {block.text}
+                                            </blockquote>
+                                        );
+                                    }
+
+                                    return (
+                                        <p key={index} className="text-lg leading-relaxed">
+                                            {block.text}
+                                        </p>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <em className="text-slate-400">No content yet.</em>
+                        )}
                     </div>
 
                     {/* Share */}
