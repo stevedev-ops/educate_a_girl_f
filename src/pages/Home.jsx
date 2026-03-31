@@ -58,9 +58,6 @@ const Home = () => {
                                     {hero.subtitle}
                                 </p>
                                 <div className="flex flex-wrap gap-4">
-                                    <Link to="/donate" className="flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-bold text-white shadow-md transition-all hover:bg-primary-dark hover:shadow-lg">
-                                        Donate Now
-                                    </Link>
                                     <Link to="/shop" className="flex h-12 items-center justify-center rounded-lg bg-white/10 backdrop-blur-md border border-white/20 px-8 text-base font-bold text-white shadow-md transition-all hover:bg-white/20">
                                         Shop Merch
                                     </Link>
