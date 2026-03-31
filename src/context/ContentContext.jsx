@@ -5,6 +5,7 @@ import {
     fetchStories, createStory, updateStory as apiUpdateStory, deleteStory as apiDeleteStory,
     fetchTeam, createTeamMember, updateTeamMember as apiUpdateTeamMember, deleteTeamMember as apiDeleteTeamMember,
     fetchJourney, createJourney, updateJourneyMilestone as apiUpdateJourneyMilestone, deleteJourney as apiDeleteJourney,
+    fetchPartners, createPartner, updatePartner as apiUpdatePartner, deletePartner as apiDeletePartner,
     fetchHomeProductIds, updateHomeProductIds,
     fetchCategories, updateCategories as apiUpdateCategories,
     fetchPrograms, createProgram, updateProgram as apiUpdateProgram, deleteProgram as apiDeleteProgram,
@@ -24,6 +25,7 @@ export const ContentProvider = ({ children }) => {
     const [stories, setStories] = useState([]);
     const [team, setTeam] = useState([]);
     const [journey, setJourney] = useState([]);
+    const [partners, setPartners] = useState([]);
     const [homeProductIds, setHomeProductIds] = useState([]);
     const [categories, setCategories] = useState([]);
     const [programs, setPrograms] = useState([]);
@@ -48,9 +50,9 @@ export const ContentProvider = ({ children }) => {
                 // Parallel fetch for speed - ALL SETTLED allows partial success
                 const results = await Promise.allSettled([
                     fetchProducts(), fetchGallery(), fetchStories(), fetchTeam(), fetchJourney(),
-                    fetchHomeProductIds(), fetchCategories(), fetchPrograms(), fetchMessages(), fetchPendingReviews(),
+                    fetchPartners(), fetchHomeProductIds(), fetchCategories(), fetchPrograms(), fetchMessages(), fetchPendingReviews(),
                     fetchSettings('contact_info'), fetchSettings('impact_stats'), fetchSettings('home_hero'), fetchSettings('about_hero'),
-                    fetchSettings('about_images'), fetchSettings('programs_images')
+                    fetchSettings('about_images'), fetchSettings('programs_images'), fetchSettings('home_images'), fetchSettings('shop_images')
                 ]);
 
                 // Helper to get value or default
@@ -61,17 +63,20 @@ export const ContentProvider = ({ children }) => {
                 const s = getVal(results[2], []);
                 const t = getVal(results[3], []);
                 const j = getVal(results[4], []);
-                const h = getVal(results[5], []);
-                const c = getVal(results[6], []);
-                const progs = getVal(results[7], []);
-                const msg = getVal(results[8], []);
-                const rev = getVal(results[9], []);
-                const contact = getVal(results[10], null);
-                const stats = getVal(results[11], null);
-                const hHero = getVal(results[12], null);
-                const aHero = getVal(results[13], null);
-                const aImages = getVal(results[14], null);
-                const pImages = getVal(results[15], null);
+                const partnersList = getVal(results[5], []);
+                const h = getVal(results[6], []);
+                const c = getVal(results[7], []);
+                const progs = getVal(results[8], []);
+                const msg = getVal(results[9], []);
+                const rev = getVal(results[10], []);
+                const contact = getVal(results[11], null);
+                const stats = getVal(results[12], null);
+                const hHero = getVal(results[13], null);
+                const aHero = getVal(results[14], null);
+                const aImages = getVal(results[15], null);
+                const pImages = getVal(results[16], null);
+                const homeImages = getVal(results[17], null);
+                const shopImages = getVal(results[18], null);
 
                 // Log failures for debugging
                 results.forEach((res, index) => {
@@ -130,6 +135,7 @@ export const ContentProvider = ({ children }) => {
                 setStories(s || []);
                 setTeam(t || []);
                 setJourney(j || []);
+                setPartners(partnersList || []);
                 setHomeProductIds(h || []);
                 setCategories(c || []);
                 setPrograms(normalizedPrograms);
@@ -141,7 +147,9 @@ export const ContentProvider = ({ children }) => {
                     home_hero: hHero,
                     about_hero: aHero,
                     about_images: aImages,
-                    programs_images: pImages
+                    programs_images: pImages,
+                    home_images: homeImages,
+                    shop_images: shopImages
                 });
 
             } catch (err) {
@@ -309,6 +317,26 @@ export const ContentProvider = ({ children }) => {
         } catch (err) { console.error(err); }
     };
 
+    // -- PARTNERS --
+    const addPartner = async (partner) => {
+        try {
+            const res = await createPartner(partner);
+            if (res && res.id) setPartners(prev => [...prev, res]);
+        } catch (err) { console.error(err); }
+    };
+    const updatePartner = async (partner) => {
+        try {
+            await apiUpdatePartner(partner);
+            setPartners(prev => prev.map(p => p.id === partner.id ? partner : p));
+        } catch (err) { console.error(err); }
+    };
+    const deletePartner = async (id) => {
+        try {
+            await apiDeletePartner(id);
+            setPartners(prev => prev.filter(p => p.id !== id));
+        } catch (err) { console.error(err); }
+    };
+
     // -- HOME PRODUCTS --
     const toggleHomeProduct = async (id) => {
         let newIds;
@@ -402,6 +430,7 @@ export const ContentProvider = ({ children }) => {
             stories, addStory, updateStory, deleteStory,
             team, addTeamMember, updateTeamMember, deleteTeamMember,
             journey, addJourney, updateJourney, deleteJourney,
+            partners, addPartner, updatePartner, deletePartner,
             homeProductIds, toggleHomeProduct, getHomeProducts,
             programs, addProgram, updateProgram: updateProgramAction, deleteProgram: deleteProgramAction,
             settings, updateSetting,

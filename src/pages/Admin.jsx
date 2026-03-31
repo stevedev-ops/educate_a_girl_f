@@ -91,7 +91,7 @@ const Admin = () => {
                         {/* Mobile: Horizontal Scroll */}
                         <div className="lg:hidden overflow-x-auto pb-2 -mx-4 px-4">
                             <div className="flex gap-2 min-w-max">
-                                {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'blog', 'settings', 'messages', 'reviews'].map(tab => (
+                                {['products', 'categories', 'gallery', 'stories', 'partners', 'journey', 'team', 'programs', 'blog', 'settings', 'messages', 'reviews'].map(tab => (
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab)}
@@ -110,7 +110,7 @@ const Admin = () => {
                         </div>
                         {/* Desktop: Vertical Tabs */}
                         <div className="hidden lg:flex flex-col gap-2">
-                            {['products', 'categories', 'gallery', 'stories', 'journey', 'team', 'programs', 'blog', 'settings', 'messages', 'reviews'].map(tab => (
+                            {['products', 'categories', 'gallery', 'stories', 'partners', 'journey', 'team', 'programs', 'blog', 'settings', 'messages', 'reviews'].map(tab => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
@@ -134,6 +134,7 @@ const Admin = () => {
                         {activeTab === 'categories' && <CategoriesEditor />}
                         {activeTab === 'gallery' && <GalleryEditor />}
                         {activeTab === 'stories' && <StoriesEditor />}
+                        {activeTab === 'partners' && <PartnersEditor />}
 
                         {activeTab === 'journey' && <JourneyEditor />}
                         {activeTab === 'team' && <TeamEditor />}
@@ -867,6 +868,116 @@ const StoriesEditor = () => {
     );
 };
 
+const PartnersEditor = () => {
+    const { partners, addPartner, updatePartner, deletePartner } = useContent();
+    const [editingId, setEditingId] = useState(null);
+    const [formData, setFormData] = useState({});
+
+    const startCreate = () => {
+        setEditingId('new');
+        setFormData({ name: '', logo: '', website: '', description: '', sort_order: partners.length });
+    };
+
+    const handleEdit = (partner) => {
+        setEditingId(partner.id);
+        setFormData({
+            ...partner,
+            website: partner.website || '',
+            description: partner.description || '',
+            sort_order: partner.sort_order ?? 0
+        });
+    };
+
+    const handleSave = () => {
+        const payload = {
+            ...formData,
+            name: (formData.name || '').trim(),
+            logo: formData.logo || '',
+            website: (formData.website || '').trim(),
+            description: (formData.description || '').trim(),
+            sort_order: Number(formData.sort_order) || 0
+        };
+
+        if (!payload.name || !payload.logo) {
+            alert('Partner name and logo are required.');
+            return;
+        }
+
+        if (editingId === 'new') addPartner(payload);
+        else updatePartner(payload);
+
+        setEditingId(null);
+        setFormData({});
+    };
+
+    const renderForm = (submitLabel) => (
+        <div className="space-y-3">
+            <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" placeholder="Partner name" value={formData.name || ''} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+            <ImageUploader value={formData.logo || ''} onChange={url => setFormData({ ...formData, logo: url })} placeholder="Logo URL or upload..." />
+            <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" placeholder="Website URL (optional)" value={formData.website || ''} onChange={e => setFormData({ ...formData, website: e.target.value })} />
+            <textarea className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" rows="3" placeholder="Short description (optional)" value={formData.description || ''} onChange={e => setFormData({ ...formData, description: e.target.value })} />
+            <input className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white" type="number" placeholder="Display order" value={formData.sort_order ?? 0} onChange={e => setFormData({ ...formData, sort_order: e.target.value })} />
+            <div className="flex gap-2">
+                <button onClick={handleSave} className="bg-green-600 text-white px-3 py-1 rounded">{submitLabel}</button>
+                <button onClick={() => { setEditingId(null); setFormData({}); }} className="bg-gray-500 text-white px-3 py-1 rounded">Cancel</button>
+            </div>
+        </div>
+    );
+
+    return (
+        <div>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                <h2 className="text-lg sm:text-xl font-bold dark:text-white">Partners Management</h2>
+                <button
+                    onClick={startCreate}
+                    className="w-full sm:w-auto bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold"
+                >
+                    + Add New Partner
+                </button>
+            </div>
+
+            {editingId === 'new' && (
+                <div className="p-4 mb-6 border rounded-lg border-green-200 bg-green-50 dark:bg-green-900/10">
+                    <h3 className="font-bold text-green-800 dark:text-green-400 mb-3">New Partner</h3>
+                    {renderForm('Create')}
+                </div>
+            )}
+
+            <div className="space-y-4">
+                {[...partners]
+                    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || a.id - b.id)
+                    .map(partner => (
+                        <div key={partner.id} className="p-4 border rounded-lg dark:border-neutral-700 flex justify-between items-start gap-4">
+                            {editingId === partner.id ? (
+                                <div className="w-full">
+                                    {renderForm('Save')}
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="flex items-start gap-4">
+                                        {partner.logo && (
+                                            <img src={getImageUrl(partner.logo)} alt={partner.name} className="h-14 w-20 rounded object-contain border bg-white p-2" />
+                                        )}
+                                        <div>
+                                            <h3 className="font-bold dark:text-white">{partner.name}</h3>
+                                            {partner.website && <p className="text-sm text-blue-600 break-all">{partner.website}</p>}
+                                            {partner.description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{partner.description}</p>}
+                                            <p className="text-xs text-gray-400 mt-2">Display order: {partner.sort_order ?? 0}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => handleEdit(partner)} className="text-blue-600 hover:underline text-sm">Edit</button>
+                                        <button onClick={() => deletePartner(partner.id)} className="text-red-600 hover:underline text-sm">Delete</button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    ))}
+            </div>
+        </div>
+    );
+};
+
 
 
 const JourneyEditor = () => {
@@ -1078,9 +1189,11 @@ const SettingsEditor = () => {
         contact_info: 'Contact Info',
         impact_stats: 'Impact Stats',
         home_hero: 'Home Hero',
+        home_images: 'Home Vision Image',
         about_hero: 'About Hero',
         about_images: 'About Page Images',
-        programs_images: 'Programs Page Images'
+        programs_images: 'Programs Page Images',
+        shop_images: 'Shop Hero'
     };
 
     React.useEffect(() => {
@@ -1143,6 +1256,32 @@ const SettingsEditor = () => {
                         <p className="text-xs text-slate-500 mb-3">The background image in the hero section at the top of the Programs page.</p>
                         <ImageUploader value={merged.hero_bg || ''} onChange={url => setLocalData({ ...merged, hero_bg: url })} placeholder="Upload or paste image URL..." />
                         {merged.hero_bg && <img src={merged.hero_bg} alt="Programs hero preview" className="mt-3 w-full h-32 object-cover rounded-lg" />}
+                    </div>
+                </div>
+            );
+        }
+        if (section === 'home_images') {
+            const merged = { vision_bg: '', ...localData };
+            return (
+                <div className="space-y-6">
+                    <div className="p-4 bg-slate-50 dark:bg-neutral-900 rounded-lg border dark:border-neutral-700">
+                        <label className="block text-sm font-bold mb-2 dark:text-white">Vision Section Background Image</label>
+                        <p className="text-xs text-slate-500 mb-3">The image corresponding to "Our Vision for a Better Future" on the Home page.</p>
+                        <ImageUploader value={merged.vision_bg || ''} onChange={url => setLocalData({ ...merged, vision_bg: url })} placeholder="Upload or paste image URL..." />
+                        {merged.vision_bg && <img src={merged.vision_bg} alt="Vision section preview" className="mt-3 w-full h-32 object-cover rounded-lg" />}
+                    </div>
+                </div>
+            );
+        }
+        if (section === 'shop_images') {
+            const merged = { hero_bg: '', ...localData };
+            return (
+                <div className="space-y-6">
+                    <div className="p-4 bg-slate-50 dark:bg-neutral-900 rounded-lg border dark:border-neutral-700">
+                        <label className="block text-sm font-bold mb-2 dark:text-white">Shop Hero Background Image</label>
+                        <p className="text-xs text-slate-500 mb-3">The background image in the hero section at the top of the Shop page.</p>
+                        <ImageUploader value={merged.hero_bg || ''} onChange={url => setLocalData({ ...merged, hero_bg: url })} placeholder="Upload or paste image URL..." />
+                        {merged.hero_bg && <img src={merged.hero_bg} alt="Shop hero preview" className="mt-3 w-full h-32 object-cover rounded-lg" />}
                     </div>
                 </div>
             );
@@ -1219,7 +1358,7 @@ const SettingsEditor = () => {
                 <button onClick={handleSave} className="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 shadow-md transition-colors">Save Changes</button>
             </div>
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-                {['contact_info', 'home_hero', 'about_hero', 'about_images', 'programs_images', 'impact_stats'].map(s => (
+                {['contact_info', 'home_hero', 'home_images', 'about_hero', 'about_images', 'programs_images', 'shop_images', 'impact_stats'].map(s => (
                     <button key={s} onClick={() => setSection(s)} className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${section === s ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-neutral-700 dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-600'}`}>
                         {sectionLabels[s] || s.replace(/_/g, ' ')}
                     </button>

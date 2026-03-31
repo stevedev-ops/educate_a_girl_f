@@ -6,6 +6,7 @@ import { Outlet, useLocation, Link } from 'react-router-dom';
 const Layout = () => {
     const location = useLocation();
     const isDonatePage = location.pathname === '/donate';
+    const isHomePage = location.pathname === '/';
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -15,7 +16,7 @@ const Layout = () => {
             </main>
 
             {/* Sticky Mobile CTA */}
-            {!isDonatePage && (
+            {!isDonatePage && !isHomePage && (
                 <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-sm">
                     <Link
                         to="/donate"

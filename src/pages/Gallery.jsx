@@ -39,6 +39,14 @@ const Gallery = () => {
                     <div className="flex justify-center py-20">
                         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
                     </div>
+                ) : images.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <span className="material-symbols-outlined text-4xl text-primary">photo_camera</span>
+                        </div>
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Our Gallery is Updating</h3>
+                        <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">Please check back soon to see the latest photos highlighting our community impact and volunteer work.</p>
+                    </div>
                 ) : (
                     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {images.map((img, index) => (
