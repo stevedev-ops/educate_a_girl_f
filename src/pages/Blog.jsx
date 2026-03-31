@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchBlogPosts, getImageUrl } from '../api';
 import SEO from '../components/SEO';
+import { normalizeBlogPost, parseTags } from '../utils/blog';
 
 const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -24,20 +25,49 @@ const Blog = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [selectedTag, setSelectedTag] = useState('All');
+    const [page, setPage] = useState(1);
+    const PAGE_SIZE = 6;
 
     useEffect(() => {
         fetchBlogPosts()
-            .then(data => { setPosts(Array.isArray(data) ? data : []); setLoading(false); })
+            .then(data => {
+                setPosts((Array.isArray(data) ? data : []).map(normalizeBlogPost));
+                setLoading(false);
+            })
             .catch(() => setLoading(false));
     }, []);
 
-    const filtered = posts.filter(p =>
-        p.title?.toLowerCase().includes(search.toLowerCase()) ||
-        p.excerpt?.toLowerCase().includes(search.toLowerCase()) ||
-        p.author?.toLowerCase().includes(search.toLowerCase())
-    );
+    const categories = ['All', ...new Set(posts.map((post) => post.category).filter(Boolean))];
+    const tags = ['All', ...new Set(posts.flatMap((post) => parseTags(post.tags)))];
 
-    const [featured, ...rest] = filtered;
+    const filtered = posts.filter((p) => {
+        const matchesSearch =
+            p.title?.toLowerCase().includes(search.toLowerCase()) ||
+            p.excerpt?.toLowerCase().includes(search.toLowerCase()) ||
+            p.author?.toLowerCase().includes(search.toLowerCase()) ||
+            p.category?.toLowerCase().includes(search.toLowerCase()) ||
+            parseTags(p.tags).some((tag) => tag.toLowerCase().includes(search.toLowerCase()));
+
+        const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+        const matchesTag = selectedTag === 'All' || parseTags(p.tags).includes(selectedTag);
+
+        return matchesSearch && matchesCategory && matchesTag;
+    });
+
+    const featured = !search && selectedCategory === 'All' && selectedTag === 'All'
+        ? filtered.find((post) => post.featured) || filtered[0]
+        : null;
+
+    const listPosts = featured ? filtered.filter((post) => post.id !== featured.id) : filtered;
+    const totalPages = Math.max(1, Math.ceil(listPosts.length / PAGE_SIZE));
+    const currentPage = Math.min(page, totalPages);
+    const paginated = listPosts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+    useEffect(() => {
+        setPage(1);
+    }, [search, selectedCategory, selectedTag]);
 
     return (
         <div className="w-full">
@@ -75,6 +105,26 @@ const Blog = () => {
                             className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                         />
                     </div>
+                    <div className="mt-6 grid gap-3 md:grid-cols-2 max-w-2xl mx-auto">
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                        >
+                            {categories.map((category) => (
+                                <option key={category} value={category}>{category === 'All' ? 'All Categories' : category}</option>
+                            ))}
+                        </select>
+                        <select
+                            value={selectedTag}
+                            onChange={(e) => setSelectedTag(e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                        >
+                            {tags.map((tag) => (
+                                <option key={tag} value={tag}>{tag === 'All' ? 'All Tags' : tag}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
             </section>
 
@@ -100,7 +150,7 @@ const Blog = () => {
                     ) : (
                         <>
                             {/* Featured post */}
-                            {featured && !search && (
+                            {featured && (
                                 <Link
                                     to={`/blog/${featured.slug}`}
                                     className="group flex flex-col lg:flex-row gap-0 bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-xl border border-slate-100 dark:border-slate-700 mb-12 hover:shadow-2xl transition-all duration-300"
@@ -123,6 +173,18 @@ const Blog = () => {
                                             <span className="material-symbols-outlined text-sm">star</span>
                                             Featured
                                         </span>
+                                        <div className="flex flex-wrap gap-2 mb-4">
+                                            {featured.category && (
+                                                <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-200">
+                                                    {featured.category}
+                                                </span>
+                                            )}
+                                            {parseTags(featured.tags).slice(0, 3).map((tag) => (
+                                                <span key={tag} className="px-3 py-1 rounded-full bg-secondary/10 text-xs font-semibold text-secondary">
+                                                    #{tag}
+                                                </span>
+                                            ))}
+                                        </div>
                                         <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white mb-4 group-hover:text-primary transition-colors leading-tight">
                                             {featured.title}
                                         </h2>
@@ -144,7 +206,7 @@ const Blog = () => {
 
                             {/* Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {(search ? filtered : rest).map(post => (
+                                {paginated.map(post => (
                                     <Link
                                         key={post.id}
                                         to={`/blog/${post.slug}`}
@@ -169,6 +231,18 @@ const Blog = () => {
                                                 <span className="material-symbols-outlined text-sm">calendar_today</span>
                                                 {formatDate(post.published_at)}
                                             </div>
+                                            <div className="flex flex-wrap gap-2 mb-3">
+                                                {post.category && (
+                                                    <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-[11px] font-semibold text-slate-600 dark:text-slate-200">
+                                                        {post.category}
+                                                    </span>
+                                                )}
+                                                {parseTags(post.tags).slice(0, 2).map((tag) => (
+                                                    <span key={tag} className="px-2.5 py-1 rounded-full bg-primary/10 text-[11px] font-semibold text-primary">
+                                                        #{tag}
+                                                    </span>
+                                                ))}
+                                            </div>
                                             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors line-clamp-2 flex-1">
                                                 {post.title}
                                             </h3>
@@ -187,6 +261,27 @@ const Blog = () => {
                                     </Link>
                                 ))}
                             </div>
+                            {totalPages > 1 && (
+                                <div className="mt-10 flex justify-center gap-3">
+                                    <button
+                                        onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                                        disabled={currentPage === 1}
+                                        className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-50 dark:text-white"
+                                    >
+                                        Previous
+                                    </button>
+                                    <span className="px-4 py-2 text-sm font-semibold text-slate-500 dark:text-slate-300">
+                                        Page {currentPage} of {totalPages}
+                                    </span>
+                                    <button
+                                        onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-50 dark:text-white"
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>

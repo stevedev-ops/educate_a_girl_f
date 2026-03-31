@@ -4,6 +4,7 @@ import ImageUploader from '../components/ImageUploader';
 import toast from 'react-hot-toast';
 import { getImageUrl, fetchAllBlogPosts, createBlogPost, updateBlogPost, deleteBlogPost } from '../api';
 import { validateProduct, sanitizeText } from '../utils/validation';
+import { blocksFromLegacyContent, normalizeBlogPost, parseContentBlocks, parseTags } from '../utils/blog';
 
 
 const Admin = () => {
@@ -1565,31 +1566,81 @@ const BlogEditor = () => {
     const load = () => {
         setLoading(true);
         fetchAllBlogPosts()
-            .then(data => { setPosts(Array.isArray(data) ? data : []); setLoading(false); })
+            .then(data => { setPosts((Array.isArray(data) ? data : []).map(normalizeBlogPost)); setLoading(false); })
             .catch(() => setLoading(false));
     };
 
     useEffect(() => { load(); }, []);
 
+    const createBlock = (type = 'paragraph') => (
+        type === 'image'
+            ? { type: 'image', url: '', caption: '' }
+            : { type, text: '' }
+    );
+
     const startNew = () => {
         setEditingId('new');
-        setForm({ title: '', slug: '', excerpt: '', content: '', image: '', author: 'EARG Team', published: false });
+        setForm({
+            title: '',
+            slug: '',
+            excerpt: '',
+            content: '',
+            image: '',
+            author: 'EARG Team',
+            category: '',
+            tagsInput: '',
+            tags: [],
+            featured: false,
+            published: false,
+            content_blocks: [createBlock('paragraph')]
+        });
     };
 
     const startEdit = (post) => {
         setEditingId(post.id);
-        setForm({ ...post });
+        const normalized = normalizeBlogPost(post);
+        const blocks = parseContentBlocks(normalized.content_blocks);
+        setForm({
+            ...normalized,
+            tags: parseTags(normalized.tags),
+            tagsInput: parseTags(normalized.tags).join(', '),
+            content_blocks: blocks.length > 0 ? blocks : blocksFromLegacyContent(normalized.content)
+        });
     };
 
     const handleSave = async () => {
         if (!form.title?.trim()) { toast.error('Title is required'); return; }
         if (!form.slug?.trim()) { toast.error('Slug is required'); return; }
+        const sanitizedBlocks = (Array.isArray(form.content_blocks) ? form.content_blocks : [])
+            .map((block) => {
+                if (block.type === 'image') {
+                    return { type: 'image', url: (block.url || '').trim(), caption: (block.caption || '').trim() };
+                }
+                return { type: block.type || 'paragraph', text: (block.text || '').trim() };
+            })
+            .filter((block) => (block.type === 'image' ? block.url : block.text));
+
+        const payload = {
+            ...form,
+            category: (form.category || '').trim(),
+            tags: (form.tagsInput || '')
+                .split(',')
+                .map((tag) => tag.trim())
+                .filter(Boolean),
+            content_blocks: sanitizedBlocks,
+            content: form.content || sanitizedBlocks
+                .filter((block) => block.type !== 'image')
+                .map((block) => block.text || '')
+                .filter(Boolean)
+                .join('\n\n')
+        };
+
         try {
             if (editingId === 'new') {
-                await createBlogPost(form);
+                await createBlogPost(payload);
                 toast.success('Post created!');
             } else {
-                await updateBlogPost({ ...form, id: editingId });
+                await updateBlogPost({ ...payload, id: editingId });
                 toast.success('Post updated!');
             }
             setEditingId(null);
@@ -1612,6 +1663,22 @@ const BlogEditor = () => {
     };
 
     const fld = (key, val) => setForm(f => ({ ...f, [key]: val }));
+    const updateBlock = (index, patch) => {
+        setForm((current) => {
+            const nextBlocks = [...(current.content_blocks || [])];
+            nextBlocks[index] = { ...nextBlocks[index], ...patch };
+            return { ...current, content_blocks: nextBlocks };
+        });
+    };
+    const addBlock = (type) => {
+        setForm((current) => ({ ...current, content_blocks: [...(current.content_blocks || []), createBlock(type)] }));
+    };
+    const removeBlock = (index) => {
+        setForm((current) => ({
+            ...current,
+            content_blocks: (current.content_blocks || []).filter((_, blockIndex) => blockIndex !== index)
+        }));
+    };
 
     return (
         <div>
@@ -1651,6 +1718,26 @@ const BlogEditor = () => {
                             onChange={e => fld('author', e.target.value)}
                         />
                     </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Category</label>
+                            <input
+                                className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                placeholder="Education, Advocacy, Field Updates..."
+                                value={form.category || ''}
+                                onChange={e => fld('category', e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold mb-1 dark:text-white">Tags</label>
+                            <input
+                                className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                placeholder="girls, education, mentorship"
+                                value={form.tagsInput || ''}
+                                onChange={e => fld('tagsInput', e.target.value)}
+                            />
+                        </div>
+                    </div>
                     <div>
                         <label className="block text-sm font-bold mb-1 dark:text-white">Excerpt</label>
                         <textarea
@@ -1669,16 +1756,81 @@ const BlogEditor = () => {
                             placeholder="Upload or paste image URL..."
                         />
                     </div>
+                    <div className="space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div>
+                                <label className="block text-sm font-bold dark:text-white">Content Blocks</label>
+                                <p className="text-xs text-slate-400 mt-1">Build the post as paragraph, image, heading, quote, paragraph and so on.</p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                <button onClick={() => addBlock('paragraph')} type="button" className="px-3 py-2 rounded bg-slate-100 dark:bg-neutral-700 dark:text-white text-sm font-semibold">+ Paragraph</button>
+                                <button onClick={() => addBlock('image')} type="button" className="px-3 py-2 rounded bg-slate-100 dark:bg-neutral-700 dark:text-white text-sm font-semibold">+ Image</button>
+                                <button onClick={() => addBlock('heading')} type="button" className="px-3 py-2 rounded bg-slate-100 dark:bg-neutral-700 dark:text-white text-sm font-semibold">+ Heading</button>
+                                <button onClick={() => addBlock('quote')} type="button" className="px-3 py-2 rounded bg-slate-100 dark:bg-neutral-700 dark:text-white text-sm font-semibold">+ Quote</button>
+                            </div>
+                        </div>
+
+                        {(form.content_blocks || []).length === 0 && (
+                            <div className="p-4 rounded-lg border border-dashed dark:border-neutral-700 text-sm text-slate-400">
+                                No blocks yet. Add a paragraph or image to start.
+                            </div>
+                        )}
+
+                        {(form.content_blocks || []).map((block, index) => (
+                            <div key={index} className="p-4 rounded-xl border dark:border-neutral-700 space-y-3 bg-slate-50 dark:bg-neutral-900">
+                                <div className="flex items-center justify-between gap-3">
+                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{block.type}</span>
+                                    <button onClick={() => removeBlock(index)} type="button" className="text-red-600 text-sm font-semibold">Remove</button>
+                                </div>
+
+                                {block.type === 'image' ? (
+                                    <>
+                                        <ImageUploader
+                                            value={block.url || ''}
+                                            onChange={(url) => updateBlock(index, { url })}
+                                            placeholder="Upload or paste image URL..."
+                                        />
+                                        <input
+                                            className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                            placeholder="Image caption (optional)"
+                                            value={block.caption || ''}
+                                            onChange={e => updateBlock(index, { caption: e.target.value })}
+                                        />
+                                    </>
+                                ) : (
+                                    <textarea
+                                        rows={block.type === 'heading' ? 2 : 5}
+                                        className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white"
+                                        placeholder={`Write ${block.type} text...`}
+                                        value={block.text || ''}
+                                        onChange={e => updateBlock(index, { text: e.target.value })}
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </div>
                     <div>
-                        <label className="block text-sm font-bold mb-1 dark:text-white">Content</label>
+                        <label className="block text-sm font-bold mb-1 dark:text-white">Legacy Plain Text Fallback</label>
                         <textarea
-                            rows="14"
+                            rows="6"
                             className="w-full p-2 border rounded dark:bg-neutral-900 dark:text-white font-mono text-sm"
-                            placeholder="Write your blog post content here..."
+                            placeholder="Optional fallback for older readers or imported posts..."
                             value={form.content || ''}
                             onChange={e => fld('content', e.target.value)}
                         />
                     </div>
+                    <label className="flex items-center gap-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            className="size-5 rounded accent-primary"
+                            checked={form.featured || false}
+                            onChange={e => fld('featured', e.target.checked)}
+                        />
+                        <div>
+                            <span className="font-bold dark:text-white">Feature this post</span>
+                            <p className="text-xs text-slate-500">Featured posts are prioritized at the top of the blog landing page.</p>
+                        </div>
+                    </label>
                     <label className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700 cursor-pointer">
                         <input
                             type="checkbox"
@@ -1719,11 +1871,30 @@ const BlogEditor = () => {
                             <div className="flex-1 min-w-0">
                                 <div className="flex flex-wrap items-center gap-2 mb-1">
                                     <h3 className="font-bold dark:text-white truncate">{post.title}</h3>
+                                    {post.featured && (
+                                        <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-amber-100 text-amber-700">
+                                            Featured
+                                        </span>
+                                    )}
                                     <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${post.published ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400'}`}>
                                         {post.published ? 'Published' : 'Draft'}
                                     </span>
                                 </div>
                                 <p className="text-xs text-slate-400">/blog/{post.slug} · {post.author}</p>
+                                {(post.category || parseTags(post.tags).length > 0) && (
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        {post.category && (
+                                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 dark:text-white">
+                                                {post.category}
+                                            </span>
+                                        )}
+                                        {parseTags(post.tags).slice(0, 3).map((tag) => (
+                                            <span key={tag} className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                                                #{tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             <div className="flex gap-2 sm:flex-col sm:justify-center w-full sm:w-auto">
                                 <button onClick={() => startEdit(post)} className="flex-1 sm:flex-none px-4 py-2 text-sm bg-blue-50 text-blue-600 rounded hover:bg-blue-100 font-medium">Edit</button>
