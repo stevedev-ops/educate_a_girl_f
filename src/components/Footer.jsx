@@ -47,7 +47,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="text-center mt-8 text-xs text-gray-500">
-                © 2023 Educate a Rural Girl. All rights reserved.
+                © {new Date().getFullYear()} Educate a Rural Girl. All rights reserved.
             </div>
         </footer>
     );
