@@ -10,7 +10,7 @@ const Footer = () => {
         <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12 px-4 md:px-10">
             <div className="max-w-[960px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
                 <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-secondary text-2xl">volunteer_activism</span>
+                    <img src="/logo.webp" alt="Educate a Rural Girl Logo" className="h-8 w-auto object-contain" />
                     <span className="font-bold text-xl text-primary">Educate a Rural Girl</span>
                 </div>
                 <div className="flex gap-6 flex-wrap justify-center">

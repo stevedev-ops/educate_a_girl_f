@@ -25,8 +25,8 @@ const Header = () => {
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-3 group">
-                        <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                            <span className="material-symbols-outlined text-2xl">school</span>
+                        <div className="size-10 flex items-center justify-center shrink-0">
+                            <img src="/logo.webp" alt="EARG Logo" className="w-full h-full object-contain" />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-xl font-black tracking-tight leading-none text-slate-900 dark:text-white">EARG</span>

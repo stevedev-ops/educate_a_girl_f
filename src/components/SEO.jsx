@@ -5,9 +5,10 @@ const SEO = ({
     title = 'EARG - Educate a Rural Girl',
     description = 'Empowering rural girls through education, mentorship, and vocational training. Join us in transforming futures.',
     keywords = 'education, rural girls, empowerment, NGO, Kenya, charity, donate',
-    ogImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBhU7Qa5X8bQZAmozj6UOUyhfUtLh0QeRPPzX07Aohu3yhFZMHNT9_eikiL5-idRDYF3vNhzKyHkcbW9ZfEAdBMG81GzeRwgqZfIXkVc3avQvMPq-qTN0z9HHhlWSGXHpBkxe80Vd5YaYimu8V129mTLWFzOBBOowEWGYAkRwNX4LOrMdXlSt1JnLUmsqNPMGAnbu7zGecP1Pubw41J6TqErGnvGT7ZgqXQNvaMcbQhTTys-CzjT_TdiocTr8HkezE5aFvg21HpSt0',
+    ogImage = 'https://educatearuralgirl.org/logo.webp',
     ogType = 'website',
-    twitterCard = 'summary_large_image'
+    twitterCard = 'summary_large_image',
+    schema = null
 }) => {
     const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
     const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
@@ -40,6 +41,13 @@ const SEO = ({
             <meta name="language" content="English" />
             <meta name="author" content="EARG - Educate a Rural Girl" />
             <link rel="canonical" href={currentUrl} />
+
+            {/* Structured Data / JSON-LD */}
+            {schema && (
+                <script type="application/ld+json">
+                    {JSON.stringify(schema)}
+                </script>
+            )}
         </Helmet>
     );
 };
