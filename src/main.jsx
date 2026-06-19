@@ -9,6 +9,9 @@ import { WishlistProvider } from './context/WishlistContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import { Toaster } from 'react-hot-toast'
 import { HelmetProvider } from 'react-helmet-async'
+import { registerSW } from 'virtual:pwa-register'
+
+registerSW({ immediate: true })
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
