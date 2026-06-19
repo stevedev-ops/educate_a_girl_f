@@ -97,15 +97,6 @@ const Admin = () => {
                         <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-1 truncate">Educate A RURAL Girl Foundation - Content Management</p>
                     </div>
                     <div className="flex items-center gap-2">
-                        {deferredPrompt && (
-                            <button
-                                onClick={handleInstallClick}
-                                className="flex items-center gap-2 px-4 py-2 bg-secondary text-white rounded-lg font-medium hover:bg-secondary-dark transition-colors shrink-0 shadow-sm"
-                            >
-                                <span className="material-symbols-outlined text-xl">install_mobile</span>
-                                <span className="hidden sm:inline">Install App</span>
-                            </button>
-                        )}
                         <button
                             onClick={handleLogout}
                             className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors shrink-0">
@@ -176,6 +167,28 @@ const Admin = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Fixed Bottom Install Banner */}
+            {deferredPrompt && (
+                <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50 flex items-center justify-between sm:justify-center sm:gap-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                            <span className="material-symbols-outlined text-primary">admin_panel_settings</span>
+                        </div>
+                        <div>
+                            <p className="font-bold text-sm dark:text-white">EARG Admin App</p>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400">Install for quick access</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={handleInstallClick}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-secondary text-white rounded-lg font-bold hover:bg-secondary-dark transition-colors shadow-sm"
+                    >
+                        <span className="material-symbols-outlined text-lg">install_mobile</span>
+                        <span>Install</span>
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
