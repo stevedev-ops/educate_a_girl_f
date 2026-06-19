@@ -98,6 +98,25 @@ const Admin = () => {
                     </div>
                     <div className="flex items-center gap-2">
                         <button
+                            onClick={() => {
+                                if ('serviceWorker' in navigator) {
+                                    navigator.serviceWorker.getRegistrations().then((registrations) => {
+                                        for (let registration of registrations) {
+                                            registration.unregister();
+                                        }
+                                        window.location.reload(true);
+                                    });
+                                } else {
+                                    window.location.reload(true);
+                                }
+                            }}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors shrink-0"
+                            title="Force refresh app and clear cache"
+                        >
+                            <span className="material-symbols-outlined text-xl">refresh</span>
+                            <span className="hidden sm:inline">Refresh</span>
+                        </button>
+                        <button
                             onClick={handleLogout}
                             className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors shrink-0">
                             <span className="material-symbols-outlined text-xl">logout</span>
